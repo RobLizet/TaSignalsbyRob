@@ -1,1892 +1,644 @@
 <!DOCTYPE html>
-
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sigaretten Prijsvergelijker — NL · DE · BE · LU</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Crypto Trading Signals</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00ff88">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Signals">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="description" content="AI crypto trading signalen">
 <style>
-:root {
-  /* Licht thema — content */
-  --bg:     #f4f5fb;
-  --bg2:    #ffffff;
-  --bg3:    #edf0f9;
-  --bg4:    #e2e6f4;
-  --line:   rgba(0,0,0,.07);
-  --line2:  rgba(0,0,0,.12);
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* Header/toolbar donker */
-–hdr-bg: #0d0f1c;
-–hdr-bg2: #13162a;
+  :root {
+    --bg: #060608;
+    --surface: #0d0d12;
+    --card: #111118;
+    --border: #1a1a28;
+    --green: #00ff88;
+    --red: #ff3355;
+    --yellow: #ffcc00;
+    --blue: #00aaff;
+    --text: #e8eaf0;
+    --muted: #555577;
+    --gold: #ffaa00;
+  }
 
-–nl:     #f03020;
-–nl2:    #e8402e;
-–nl-bg:  rgba(240,48,32,.10);
-–nl-grd: linear-gradient(135deg,#f03020,#ff6040);
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-–de:     #1a6aff;
-–de2:    #2979ff;
-–de-bg:  rgba(26,106,255,.10);
-–de-grd: linear-gradient(135deg,#1a6aff,#448aff);
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
 
-–be:     #f5a800;
-–be2:    #e09600;
-–be-bg:  rgba(245,168,0,.12);
-–be-grd: linear-gradient(135deg,#f5a800,#ffd740);
+  /* Scanline effect */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,255,136,0.012) 2px,
+      rgba(0,255,136,0.012) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
 
-–lu:     #00a85e;
-–lu2:    #00c875;
-–lu-bg:  rgba(0,168,94,.10);
-–lu-grd: linear-gradient(135deg,#00a85e,#00e676);
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1.2rem 4rem;
+    padding-top: max(1.5rem, env(safe-area-inset-top));
+    padding-bottom: max(4rem, env(safe-area-inset-bottom));
+  }
 
-–win:    #00a85e;
-–white:  #ffffff;
-–cream:  #1a1e36;
-–muted:  #5a607a;
-–dim:    #9aa0b8;
+  #installBanner {
+    display: none;
+    background: rgba(0,255,136,0.07);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  #installBanner.show { display: flex; }
+  #installBanner p { font-size: 0.72rem; color: var(--text); flex: 1; line-height: 1.4; font-family: 'IBM Plex Mono', monospace; }
+  #installBanner p span { color: var(--green); }
+  .install-btn { background: var(--green); color: #000; border: none; border-radius: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 700; padding: 6px 12px; cursor: pointer; letter-spacing: 0.06em; white-space: nowrap; }
+  .dismiss-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 4px; }
 
-–r: 10px;
-–r2: 16px;
-}
+  /* TOP BAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-font-family:‘Barlow’,sans-serif;
-background-color:#f4f5fb;
-background-image: radial-gradient(rgba(26,106,255,.06) 1px, transparent 1px);
-background-size: 28px 28px;
-color:#1a1e36;
-min-height:100vh;
-}
+  .topbar-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--green);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(0,255,136,0.5);
+  }
 
-/* ══ HEADER ══ */
-header {
-position: sticky; top:0; z-index:60;
-background: #0d0f1c;
-backdrop-filter: blur(16px);
-border-bottom: 1px solid rgba(255,255,255,.12);
-padding: 0 20px;
-}
-.hdr {
-max-width:1060px; margin:0 auto;
-display:flex; align-items:center; justify-content:space-between;
-height:56px; gap:12px;
-}
-.logo {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:22px; font-weight:900; letter-spacing:-0.5px;
-display:flex; align-items:center; gap:8px;
-}
-.logo-smoke { font-size:20px; }
-.logo span { color:var(–white); }
-.logo em { font-style:normal; color:var(–be); }
-.country-pills { display:flex; gap:5px; }
-.cpill {
-display:inline-flex; align-items:center; gap:4px;
-padding:4px 10px; border-radius:20px;
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:12px; font-weight:700; letter-spacing:.5px;
-text-transform:uppercase; cursor:pointer;
-transition:all .18s; user-select:none;
-}
-.cpill:hover { transform:scale(1.08); }
-.cpill.nl { background:var(–nl-bg); border:1px solid rgba(255,61,46,.35); color:var(–nl2); }
-.cpill.de { background:var(–de-bg); border:1px solid rgba(41,121,255,.35); color:var(–de2); }
-.cpill.be { background:var(–be-bg); border:1px solid rgba(255,193,7,.35);  color:var(–be2); }
-.cpill.lu { background:var(–lu-bg); border:1px solid rgba(0,200,117,.35);  color:var(–lu2); }
-.cpill.active.nl { background:var(–nl); color:white; border-color:var(–nl); box-shadow:0 0 14px rgba(255,61,46,.6); transform:scale(1.08); }
-.cpill.active.de { background:var(–de); color:white; border-color:var(–de); box-shadow:0 0 14px rgba(41,121,255,.6); transform:scale(1.08); }
-.cpill.active.be { background:var(–be); color:#1a1400; border-color:var(–be); box-shadow:0 0 14px rgba(255,193,7,.6); transform:scale(1.08); }
-.cpill.active.lu { background:var(–lu); color:#001a0d; border-color:var(–lu); box-shadow:0 0 14px rgba(0,200,117,.6); transform:scale(1.08); }
-@media(max-width:500px){.cpill span:last-child{display:none}}
-.col-dim { opacity:.15 !important; transition:opacity .2s; }
-.col-bright { transition:opacity .2s; }
+  .topbar-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    line-height: 1.6;
+  }
 
-/* ══ HERO ══ */
-.hero {
-position:relative; overflow:hidden;
-padding: 44px 20px 40px;
-border-bottom: 1px solid var(–line);
-}
-.hero::before {
-content:’’;
-position:absolute; inset:0;
-background: radial-gradient(ellipse 70% 120% at 5% 60%, rgba(240,48,32,.22) 0%, transparent 55%),
-radial-gradient(ellipse 60% 100% at 90% 20%, rgba(26,106,255,.20) 0%, transparent 55%),
-radial-gradient(ellipse 50% 80% at 50% 110%, rgba(0,168,94,.16) 0%, transparent 50%);
-pointer-events:none;
-}
-.hero-in {
-max-width:1060px; margin:0 auto;
-display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;
-}
-.hero-eyebrow {
-font-family:‘Space Mono’,monospace;
-font-size:10px; letter-spacing:3px; text-transform:uppercase;
-color:#5a607a; margin-bottom:12px;
-}
-.hero-title {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:clamp(36px,7vw,72px);
-font-weight:900; line-height:.95; letter-spacing:-1px;
-color:#0d0f1c;
-}
-.hero-title .accent-nl { color:var(–nl); }
-.hero-title .accent-be { color:var(–be); }
-.hero-title .accent-lu { color:var(–lu); }
-.hero-sub {
-margin-top:14px; font-size:13px; color:var(–muted);
-font-family:‘Space Mono’,monospace; letter-spacing:.3px; line-height:1.6;
-}
-.hero-right { display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
-.status-chip {
-display:inline-flex; align-items:flex-start; gap:7px;
-padding:8px 14px; border-radius:12px;
-font-family:‘Space Mono’,monospace; font-size:11px;
-border:1px solid rgba(0,0,0,.15);
-background:rgba(255,255,255,.75);
-color:#5a607a; max-width:320px;
-word-break:break-all; line-height:1.5;
-}
-.status-chip.ok  { border-color:rgba(0,200,117,.4); color:var(–lu2); background:rgba(0,200,117,.08); }
-.status-chip.err { border-color:rgba(255,61,46,.4);  color:var(–nl2); background:rgba(255,61,46,.07); }
-.sdot { width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0; }
-.sdot.blink { animation:blink 2s infinite; }
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-@media(max-width:640px){
-.hero-in { grid-template-columns:1fr; }
-.hero-right { align-items:flex-start; }
-}
+  .topbar-badge {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--green);
+    border: 1px solid rgba(0,255,136,0.3);
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: rgba(0,255,136,0.05);
+    letter-spacing: 0.08em;
+  }
 
-/* ══ TOOLBAR ══ */
-.toolbar {
-position:sticky; top:56px; z-index:50;
-background:#13162a; backdrop-filter:blur(16px);
-border-bottom:1px solid rgba(255,255,255,.12);
-padding:0 20px;
-}
-.toolbar-in {
-max-width:1060px; margin:0 auto;
-display:flex; align-items:center; justify-content:space-between;
-gap:12px; min-height:50px; flex-wrap:wrap; padding:6px 0;
-}
-.tabs { display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; }
-.tabs::-webkit-scrollbar{display:none}
-.tab {
-display:flex; align-items:center; gap:5px;
-padding:8px 14px; border:none; border-radius:8px;
-background:transparent; color:rgba(255,255,255,.55);
-font-family:‘Barlow’,sans-serif; font-size:13px; font-weight:500;
-cursor:pointer; transition:all .18s; white-space:nowrap;
-}
-.tab:hover { background:rgba(255,255,255,.08); color:#ffffff; }
-.tab.on { background:rgba(255,255,255,.15); color:#ffffff; font-weight:600; }
-.tab-actions { display:flex; gap:6px; align-items:center; flex-shrink:0; }
-.abtn {
-display:inline-flex; align-items:center; gap:5px;
-padding:7px 13px; border-radius:8px; font-size:12px; font-weight:500;
-cursor:pointer; transition:all .18s;
-border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:rgba(255,255,255,.75);
-font-family:‘Barlow’,sans-serif;
-}
-.abtn:hover { background:rgba(255,255,255,.15); color:#ffffff; border-color:rgba(255,255,255,.3); }
-.abtn.accent { background:linear-gradient(135deg,var(–nl),#ff6b43); border-color:transparent; color:white; font-weight:600; }
-.abtn.accent:hover { opacity:.88; }
+  /* COIN SELECTOR */
+  .coin-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
 
-/* ══ MAIN ══ */
-.main { max-width:1060px; margin:0 auto; padding:28px 20px 120px; }
-.panel { display:none; }
-.panel.on { display:block; animation:fadeUp .2s ease; }
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .input-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+  }
 
-/* ══ FILTER ROW ══ */
-.filter-row {
-display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;
-}
-.fbtn {
-display:inline-flex; align-items:center; gap:5px;
-padding:8px 14px; border-radius:20px;
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:14px; font-weight:700; letter-spacing:.4px;
-cursor:pointer; transition:all .18s; border:2px solid rgba(0,0,0,.10);
-background:#ffffff; color:#5a607a;
-box-shadow:0 1px 4px rgba(0,0,0,.08);
-}
-.fbtn:hover { color:#1a1e36; background:#edf0f9; }
-.fbtn.nl.on { background:var(–nl);  color:white; box-shadow:0 0 16px rgba(255,61,46,.5); border-color:var(–nl); }
-.fbtn.de.on { background:var(–de);  color:white; box-shadow:0 0 16px rgba(41,121,255,.5); border-color:var(–de); }
-.fbtn.be.on { background:var(–be);  color:#1a1400; box-shadow:0 0 16px rgba(255,193,7,.5); border-color:var(–be); }
-.fbtn.lu.on { background:var(–lu);  color:#001a0d; box-shadow:0 0 16px rgba(0,200,117,.5); border-color:var(–lu); }
-.fbtn.all.on { background:var(–bg4); color:var(–cream); border-color:var(–line2); }
-.col-dim { opacity:.08 !important; transition:opacity .25s; filter:blur(1px); }
-.fbtn.on { font-size:15px !important; }
+  .input-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
 
-/* ══ SEARCH ══ */
-.search-bar {
-display:flex; gap:10px; align-items:center; margin-bottom:24px;
-}
-.sw { position:relative; flex:1; }
-.si {
-width:100%; background:#ffffff; border:1px solid rgba(0,0,0,.15);
-border-radius:var(–r); padding:12px 16px 12px 44px;
-color:var(–cream); font-family:‘Barlow’,sans-serif; font-size:14px;
-outline:none; transition:border-color .2s, box-shadow .2s;
-}
-.si:focus { border-color:var(–de); box-shadow:0 0 0 3px rgba(41,121,255,.15); }
-.si::placeholder { color:var(–dim); }
-.sicon { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:16px; opacity:.5; pointer-events:none; }
-.sclear {
-position:absolute; right:12px; top:50%; transform:translateY(-50%);
-background:var(–bg4); border:1px solid var(–line); border-radius:6px;
-color:var(–muted); font-size:11px; padding:3px 8px; cursor:pointer; display:none;
-font-family:‘Space Mono’,monospace;
-}
-.sclear:hover { background:var(–bg3); color:var(–cream); }
+  select, input[type="number"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+  }
 
-/* ══ LEGEND ══ */
-.legend { display:flex; gap:14px; margin-bottom:20px; flex-wrap:wrap; }
-.li { display:flex; align-items:center; gap:6px; font-size:12px; color:var(–muted); font-weight:500; }
-.ld { width:10px; height:10px; border-radius:50%; }
+  select option { background: #111; }
 
-/* ══ SECTION HEADER ══ */
-.sec-head {
-display:flex; align-items:center; gap:10px;
-margin:32px 0 14px;
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:18px; font-weight:800; letter-spacing:.5px;
-text-transform:uppercase; color:#0d0f1c;
-}
-.sec-head:first-child { margin-top:0; }
-.sec-bar { width:5px; height:20px; border-radius:3px; }
-.sec-bar.sig { background:var(–nl-grd); }
-.sec-bar.slo { background:var(–de-grd); }
-.sec-bar.emm { background:var(–be-grd); }
+  /* TASK TREE */
+  .entity-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
 
-/* ══ PRICE TABLE ══ */
-.ptbl {
-background:#ffffff; border:1px solid rgba(0,0,0,.10);
-border-radius:var(–r2); overflow:hidden; margin-bottom:8px;
-box-shadow:0 2px 16px rgba(26,106,255,.06);
-}
-.ptbl-head {
-display:grid; grid-template-columns:2fr 1fr 1fr 1fr 1fr 1.2fr;
-background:#edf0f9; border-bottom:1px solid rgba(0,0,0,.08);
-}
-.ph {
-padding:10px 14px;
-font-family:‘Space Mono’,monospace; font-size:9px;
-letter-spacing:1.5px; text-transform:uppercase; color:var(–dim);
-}
-.ph:not(:first-child){ text-align:center; border-left:1px solid var(–line); }
-.ph.nl-h { color:var(–nl2); }
-.ph.de-h { color:var(–de2); }
-.ph.be-h { color:var(–be2); }
-.ph.lu-h { color:var(–lu2); }
+  .entity-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: var(--card);
+    transition: all 0.25s;
+    letter-spacing: 0.04em;
+  }
 
-.prow {
-display:grid; grid-template-columns:2fr 1fr 1fr 1fr 1fr 1.2fr;
-border-bottom:1px solid rgba(255,255,255,.05);
-transition:background .12s; cursor:default;
-}
-.prow:last-child { border-bottom:none; }
-.prow:hover { background:rgba(26,106,255,.04); }
-.prow.hidden { display:none; }
+  .entity-chip .led {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: all 0.25s;
+  }
 
-.pc {
-padding:14px 14px; display:flex; align-items:center; font-size:13px;
-}
-.pc:not(:first-child){
-justify-content:center; text-align:center;
-border-left:1px solid rgba(255,255,255,.04);
-flex-direction:column; gap:3px;
-font-family:‘Space Mono’,monospace; font-size:12px;
-}
-.pname { font-weight:600; color:var(–white); font-size:13.5px; line-height:1.3; }
-.psub  { font-size:11px; color:var(–muted); margin-top:2px; }
+  .entity-chip.running {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(0,255,136,0.06);
+  }
+  .entity-chip.running .led {
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: blink 0.8s infinite;
+  }
+  .entity-chip.done {
+    border-color: rgba(0,255,136,0.3);
+    color: rgba(0,255,136,0.6);
+  }
+  .entity-chip.done .led { background: rgba(0,255,136,0.4); }
 
-.pnum { font-family:‘Space Mono’,monospace; font-weight:700; font-size:13px; }
-.pnum.nl { color:#d42a1a; }
-.pnum.de { color:#1a6aff; }
-.pnum.be { color:#b87800; }
-.pnum.lu { color:#007a44; }
+  @keyframes blink {
+    0%,100% { opacity:1; } 50% { opacity:0.2; }
+  }
 
-.pc.win-nl { background:rgba(240,48,32,.10); }
-.pc.win-de { background:rgba(26,106,255,.10); }
-.pc.win-be { background:rgba(245,168,0,.12); }
-.pc.win-lu { background:rgba(0,168,94,.12); }
-.pc.win-nl .pnum, .pc.win-de .pnum,
-.pc.win-be .pnum, .pc.win-lu .pnum { font-size:15px; filter:brightness(1.3); }
-.win-tag {
-display:inline-block;
-font-family:‘Space Mono’,monospace; font-size:8px;
-letter-spacing:.5px; text-transform:uppercase; font-weight:700;
-padding:2px 7px; border-radius:4px; margin-top:2px;
-}
-.win-tag.nl { background:var(–nl);  color:white; }
-.win-tag.de { background:var(–de);  color:white; }
-.win-tag.be { background:var(–be);  color:#1a1400; }
-.win-tag.lu { background:var(–lu);  color:#001a0d; }
+  /* ANALYZE BTN */
+  .analyze-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(0,255,136,0.1);
+  }
 
-.save-pc { flex-direction:column !important; gap:3px !important; }
-.save-amt { font-family:‘Space Mono’,monospace; font-weight:700; font-size:12.5px; color:#007a44; }
-.save-pct {
-font-family:‘Space Mono’,monospace; font-size:10px;
-padding:2px 6px; border-radius:4px;
-background:rgba(0,168,94,.12); color:#007a44;
-}
-.save-pct.hot { background:rgba(0,168,94,.22); color:#006636; font-weight:700; }
+  .analyze-btn:hover:not(:disabled) {
+    background: rgba(0,255,136,0.08);
+    box-shadow: 0 0 30px rgba(0,255,136,0.25);
+  }
 
-.no-results { text-align:center; padding:32px; color:var(–dim); font-family:‘Space Mono’,monospace; font-size:12px; font-style:italic; }
+  .analyze-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 
-/* ══ COUNTRY CARDS ══ */
-.country-cards {
-display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:24px;
-}
-.cc {
-border-radius:var(–r); padding:14px 16px;
-border:1px solid var(–line2);
-position:relative; overflow:hidden;
-transition:transform .2s, box-shadow .2s;
-}
-.cc:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,.4); }
-.cc::before {
-content:’’; position:absolute; inset:0; opacity:.08;
-transition:opacity .2s;
-}
-.cc:hover::before { opacity:.14; }
-.cc.nl { background:rgba(240,48,32,.08); border-color:rgba(240,48,32,.25); }
-.cc.nl::before { background:var(–nl-grd); }
-.cc.de { background:rgba(26,106,255,.08); border-color:rgba(26,106,255,.25); }
-.cc.de::before { background:var(–de-grd); }
-.cc.be { background:rgba(245,168,0,.10); border-color:rgba(245,168,0,.35); }
-.cc.be::before { background:var(–be-grd); }
-.cc.lu { background:rgba(0,168,94,.08); border-color:rgba(0,168,94,.25); }
-.cc.lu::before { background:var(–lu-grd); }
-.cc-flag { font-size:24px; margin-bottom:6px; display:block; }
-.cc-name {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:13px; font-weight:700; letter-spacing:1px;
-text-transform:uppercase; color:var(–muted); margin-bottom:2px;
-}
-.cc-price {
-font-family:‘Space Mono’,monospace; font-size:18px; font-weight:700;
-}
-.cc.nl .cc-price { color:#d42a1a; }
-.cc.de .cc-price { color:#1a6aff; }
-.cc.be .cc-price { color:#b87800; }
-.cc.lu .cc-price { color:#007a44; }
-.cc-label { font-size:10px; color:var(–dim); margin-top:2px; font-family:‘Space Mono’,monospace; }
-@media(max-width:600px){
-.country-cards { grid-template-columns:repeat(2,1fr); }
-}
+  /* RESULTS GRID */
+  .results { display: none; flex-direction: column; gap: 0.8rem; }
+  .results.visible { display: flex; }
 
-/* ══ CALCULATOR ══ */
-.calc-wrap {
-display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;
-}
-@media(max-width:700px){ .calc-wrap { grid-template-columns:1fr; } }
-.calc-form {
-background:#ffffff; border:1px solid rgba(0,0,0,.10);
-border-radius:var(–r2); overflow:hidden;
-box-shadow:0 2px 16px rgba(26,106,255,.06);
-}
-.calc-form-head {
-padding:18px 22px; border-bottom:1px solid var(–line);
-background:linear-gradient(135deg,rgba(255,61,46,.15),rgba(41,121,255,.1));
-}
-.calc-form-head h3 {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:20px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
-}
-.calc-form-head p { font-size:12px; color:var(–muted); margin-top:3px; }
-.calc-form-body { padding:20px 22px; display:flex; flex-direction:column; gap:14px; }
-.cf label {
-display:block; font-size:10px; font-weight:700; letter-spacing:2px;
-text-transform:uppercase; color:var(–muted); margin-bottom:6px;
-font-family:‘Space Mono’,monospace;
-}
-.cf select, .cf input {
-width:100%; background:#f4f5fb; border:1px solid rgba(0,0,0,.15);
-border-radius:8px; padding:10px 12px; color:var(–cream);
-font-family:‘Barlow’,sans-serif; font-size:14px; outline:none;
-transition:border-color .2s; -webkit-appearance:none; appearance:none;
-}
-.cf select:focus, .cf input:focus { border-color:var(–de); }
-.cf .hint { font-size:11px; color:var(–dim); margin-top:4px; font-family:‘Space Mono’,monospace; }
-.cf-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.section-sep {
-border-top:1px solid var(–line); padding-top:14px; margin-top:2px;
-font-family:‘Barlow Condensed’,sans-serif; font-size:14px; font-weight:700;
-letter-spacing:1px; text-transform:uppercase; color:var(–muted);
-}
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    animation: fadeUp 0.35s ease both;
+  }
 
-.calc-result-panel {
-background:#ffffff; border:1px solid rgba(0,0,0,.10);
-border-radius:var(–r2); overflow:hidden; position:sticky; top:120px;
-box-shadow:0 2px 16px rgba(26,106,255,.06);
-}
-.crp-head {
-padding:18px 22px; border-bottom:1px solid var(–line);
-background:linear-gradient(135deg,rgba(0,200,117,.12),rgba(41,121,255,.08));
-}
-.crp-head h3 {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:20px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
-}
-.crp-body { padding:20px 22px; }
-.cr-sec {
-font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:2px;
-text-transform:uppercase; color:var(–dim); margin:14px 0 8px;
-}
-.cr-sec:first-child { margin-top:0; }
-.cr-row {
-display:flex; justify-content:space-between; align-items:center;
-padding:8px 0; border-bottom:1px solid rgba(255,255,255,.05); font-size:13px; color:var(–muted);
-}
-.cr-row:last-child { border-bottom:none; }
-.cr-row span:last-child { font-family:‘Space Mono’,monospace; font-weight:700; color:var(–cream); }
-.cr-row.win span:last-child { color:var(–win); }
-.cr-row.loss span:last-child { color:var(–nl2); }
-.cr-divider { border-top:2px solid var(–line2); margin:14px 0; }
-.cr-verdict {
-margin-top:14px; padding:14px 16px;
-border-radius:var(–r); font-size:13px; font-weight:500; line-height:1.6;
-}
-.cr-verdict.ok  { background:rgba(0,200,117,.1); border:1px solid rgba(0,200,117,.3); color:var(–lu2); }
-.cr-verdict.no  { background:rgba(255,61,46,.08); border:1px solid rgba(255,61,46,.25); color:var(–nl2); }
-.big-save {
-font-family:‘Barlow Condensed’,sans-serif; font-size:40px; font-weight:900;
-color:#007a44; letter-spacing:-1px; text-align:center; margin:10px 0 4px;
-}
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(8px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
 
-/* ══ INFO ══ */
-.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
-@media(max-width:580px){ .info-grid { grid-template-columns:1fr; } }
-.icard {
-background:#ffffff; border:1px solid rgba(0,0,0,.10);
-border-radius:var(–r2); padding:20px;
-box-shadow:0 2px 12px rgba(0,0,0,.05);
-}
-.icard h3 {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:17px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
-color:#0d0f1c; margin-bottom:12px;
-display:flex; align-items:center; gap:8px;
-}
-.icard p, .icard li { font-size:13px; color:var(–muted); line-height:1.75; }
-.icard ul { padding-left:16px; }
-.lrow {
-display:flex; justify-content:space-between; align-items:center;
-padding:7px 0; border-bottom:1px solid rgba(255,255,255,.06); font-size:13px;
-}
-.lrow:last-child { border-bottom:none; }
-.lk { color:var(–muted); }
-.lv { font-family:‘Space Mono’,monospace; font-weight:700; color:var(–cream); }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.015);
+  }
 
-/* ══ EDIT ══ */
-.edit-note {
-background:rgba(245,168,0,.08); border:1px solid rgba(245,168,0,.30);
-border-radius:var(–r); padding:14px 18px; font-size:13px; color:var(–muted);
-margin-bottom:20px; line-height:1.6;
-}
-.edit-note strong { color:var(–be2); }
-.ebtn { border:none; padding:11px 22px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all .18s; font-family:‘Barlow’,sans-serif; }
-.ebtn.save { background:linear-gradient(135deg,var(–nl),#ff6b43); color:white; }
-.ebtn.save:hover { opacity:.88; }
-.ebtn.reset { background:var(–bg3); color:var(–muted); border:1px solid var(–line2); }
-.ebtn.reset:hover { background:var(–bg4); color:var(–cream); }
+  .card-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    padding: 3px 7px;
+    border-radius: 3px;
+  }
 
-/* ══ OVERLAYS ══ */
-.ai-overlay {
-position:fixed; inset:0; z-index:100;
-background:rgba(5,6,15,.88); backdrop-filter:blur(10px);
-display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
-}
-.ai-overlay.hidden { display:none; }
-.spin {
-width:52px; height:52px; border-radius:50%;
-border:3px solid rgba(255,193,7,.15);
-border-top-color:var(–be);
-animation:spin .7s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ai-title {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:22px; font-weight:900; color:var(–white); text-align:center;
-}
-.ai-sub {
-font-family:‘Space Mono’,monospace; font-size:11px;
-color:var(–muted); text-align:center;
-}
+  .tag-trend  { background: rgba(0,170,255,0.12); color: var(--blue);   border: 1px solid rgba(0,170,255,0.3); }
+  .tag-signal { background: rgba(0,255,136,0.1);  color: var(--green);  border: 1px solid rgba(0,255,136,0.3); }
+  .tag-risk   { background: rgba(255,51,85,0.1);  color: var(--red);    border: 1px solid rgba(255,51,85,0.3); }
+  .tag-advice { background: rgba(255,204,0,0.1);  color: var(--yellow); border: 1px solid rgba(255,204,0,0.3); }
 
-.modal-bg {
-position:fixed; inset:0; z-index:200;
-background:rgba(5,6,15,.85); backdrop-filter:blur(12px);
-display:flex; align-items:center; justify-content:center;
-}
-.modal-bg.hidden { display:none; }
-.modal {
-background:#ffffff; border:1px solid rgba(0,0,0,.12);
-border-radius:var(–r2); padding:32px 28px;
-max-width:420px; width:90%;
-box-shadow:0 24px 64px rgba(0,0,0,.6);
-}
-.modal h2 {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:22px; font-weight:900; color:var(–white); margin-bottom:8px;
-}
-.modal p { font-size:13px; color:var(–muted); line-height:1.7; margin-bottom:20px; }
-.modal p a { color:var(–de2); text-decoration:none; }
-.modal p a:hover { text-decoration:underline; }
-.modal-inp {
-width:100%; background:#f4f5fb; border:1px solid rgba(0,0,0,.15);
-border-radius:8px; padding:11px 14px;
-color:var(–cream); font-family:‘Space Mono’,monospace; font-size:13px;
-outline:none; transition:border-color .2s; margin-bottom:6px;
-}
-.modal-inp:focus { border-color:var(–de); }
-.modal-hint { font-size:11px; color:var(–dim); margin-bottom:18px; font-family:‘Space Mono’,monospace; }
-.modal-btns { display:flex; gap:10px; }
-.mbtn-ok {
-flex:1; padding:11px;
-background:linear-gradient(135deg,var(–de),#5c9fff);
-color:white; border:none; border-radius:8px;
-font-weight:700; font-size:14px; cursor:pointer;
-font-family:‘Barlow Condensed’,sans-serif; letter-spacing:.5px;
-transition:opacity .18s;
-}
-.mbtn-ok:hover { opacity:.88; }
-.mbtn-skip {
-padding:11px 18px; background:var(–bg3); color:var(–muted);
-border:1px solid var(–line2); border-radius:8px; font-size:13px; cursor:pointer;
-font-family:‘Barlow’,sans-serif;
-}
-.mbtn-skip:hover { background:var(–bg4); color:var(–cream); }
+  .card-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    flex: 1;
+  }
 
-footer {
-text-align:center; padding:20px; font-size:11px;
-color:#9aa0b8; border-top:1px solid rgba(0,0,0,.08);
-font-family:‘Space Mono’,monospace; letter-spacing:.5px;
-}
-footer strong { color:var(–muted); }
+  .pay-chip {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--gold);
+    background: rgba(255,170,0,0.08);
+    border: 1px solid rgba(255,170,0,0.2);
+    padding: 3px 7px;
+    border-radius: 3px;
+  }
 
-/* ── responsive table ── */
-@media(max-width:640px){
-.ptbl-head,.prow { grid-template-columns:1.6fr 1fr 1fr 1fr; }
-.ptbl-head .ph.be-h,.prow .pc.be-c { display:none; }
-/* laatste kolom WEL zichtbaar — bevat de + Kopen knop */
-.add-btn { font-size:11px; padding:4px 7px; }
-.save-amt { font-size:11px; }
-.save-pct { font-size:9px; }
-}
-@media(max-width:420px){
-.ptbl-head,.prow { grid-template-columns:1.4fr 1fr 0.9fr; }
-.ptbl-head .ph.lu-h,.prow .pc.lu-c { display:none; }
-.add-btn { font-size:10px; padding:4px 5px; }
-}
+  .card-body {
+    padding: 1rem;
+    font-size: 0.83rem;
+    line-height: 1.75;
+    color: #b0b8d0;
+    font-family: 'DM Sans', sans-serif;
+    white-space: pre-wrap;
+    min-height: 60px;
+  }
 
-/* ══ FAVORIETEN ══ */
-.fav-btn {
-background:none; border:none; cursor:pointer;
-font-size:18px; padding:0 4px; line-height:1;
-transition:transform .2s; flex-shrink:0;
-}
-.fav-btn:hover { transform:scale(1.3); }
-.fav-btn.on { filter:drop-shadow(0 0 4px #ffd700); }
+  /* Loading dots */
+  .dots { display: inline-flex; gap: 5px; }
+  .dots span {
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 1s infinite;
+  }
+  .dots span:nth-child(2) { animation-delay:.2s; }
+  .dots span:nth-child(3) { animation-delay:.4s; }
 
-.fav-bar {
-background:#fffef5; border:1px solid rgba(245,168,0,.35);
-border-radius:var(–r); padding:14px 16px; margin-bottom:20px;
-display:none;
-}
-.fav-bar.has-favs { display:block; }
-.fav-bar-title {
-font-family:‘Barlow Condensed’,sans-serif; font-size:13px;
-font-weight:800; letter-spacing:1px; text-transform:uppercase;
-color:var(–be2); margin-bottom:10px;
-}
-.fav-chips { display:flex; gap:8px; flex-wrap:wrap; }
-.fav-chip {
-display:inline-flex; align-items:center; gap:6px;
-background:var(–bg3); border:1px solid rgba(255,193,7,.25);
-border-radius:20px; padding:5px 12px;
-font-size:12px; font-weight:600; color:var(–cream); cursor:pointer;
-transition:all .15s;
-}
-.fav-chip:hover { background:var(–bg4); border-color:var(–be); }
-.fav-chip .fc-x { color:var(–muted); font-size:11px; margin-left:2px; }
+  /* Disclaimer */
+  .disclaimer {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    line-height: 1.6;
+  }
 
-/* ══ ROUTEPLANNER ══ */
-.route-card {
-background:#ffffff; border:1px solid rgba(0,0,0,.10);
-border-radius:var(–r2); overflow:hidden; margin-bottom:20px;
-}
-.route-head {
-background:linear-gradient(135deg,rgba(41,121,255,.2),rgba(0,200,117,.1));
-padding:16px 20px; border-bottom:1px solid var(–line);
-display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
-}
-.route-head h3 {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:18px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
-}
-.route-body { padding:18px 20px; }
-.route-btns { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:16px; }
-@media(max-width:480px){ .route-btns { grid-template-columns:1fr; } }
-.rbtn {
-display:flex; flex-direction:column; align-items:center; gap:6px;
-padding:14px 10px; border-radius:var(–r);
-border:2px solid rgba(0,0,0,.10); background:#f4f5fb;
-cursor:pointer; transition:all .2s; text-decoration:none;
-}
-.rbtn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.4); }
-.rbtn.de { border-color:rgba(41,121,255,.4); }
-.rbtn.de:hover { border-color:var(–de); background:rgba(41,121,255,.1); }
-.rbtn.be { border-color:rgba(255,193,7,.4); }
-.rbtn.be:hover { border-color:var(–be); background:rgba(255,193,7,.08); }
-.rbtn.lu { border-color:rgba(0,200,117,.4); }
-.rbtn.lu:hover { border-color:var(–lu); background:rgba(0,200,117,.08); }
-.rbtn-flag { font-size:28px; }
-.rbtn-name {
-font-family:‘Barlow Condensed’,sans-serif; font-size:14px;
-font-weight:800; letter-spacing:.5px; text-transform:uppercase;
-}
-.rbtn.de .rbtn-name { color:var(–de2); }
-.rbtn.be .rbtn-name { color:var(–be2); }
-.rbtn.lu .rbtn-name { color:var(–lu2); }
-.rbtn-info { font-family:‘Space Mono’,monospace; font-size:10px; color:var(–muted); text-align:center; line-height:1.4; }
-.rbtn-open {
-display:inline-flex; align-items:center; gap:4px;
-font-size:11px; font-weight:600;
-padding:3px 10px; border-radius:10px; margin-top:2px;
-}
-.rbtn.de .rbtn-open { background:rgba(41,121,255,.2); color:var(–de2); }
-.rbtn.be .rbtn-open { background:rgba(255,193,7,.15); color:var(–be2); }
-.rbtn.lu .rbtn-open { background:rgba(0,200,117,.15); color:var(–lu2); }
+  /* Payment log */
+  .pay-log {
+    background: var(--card);
+    border: 1px solid rgba(255,170,0,0.15);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    animation: fadeUp 0.35s ease both;
+  }
 
-.from-select-row {
-display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-}
-.from-select-row label {
-font-family:‘Space Mono’,monospace; font-size:11px;
-color:var(–muted); letter-spacing:1px; text-transform:uppercase;
-white-space:nowrap;
-}
-.from-select-row select {
-background:var(–bg3); border:1px solid var(–line2); border-radius:8px;
-padding:8px 12px; color:var(–cream); font-family:‘Barlow’,sans-serif;
-font-size:13px; outline:none; flex:1; min-width:140px;
--webkit-appearance:none; appearance:none;
-}
+  .pay-log-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
 
-/* ══ WINKELWAGEN ══ */
-.add-btn {
-display:inline-flex; align-items:center; gap:4px;
-background:#edf0f9; border:1px solid rgba(26,106,255,.25);
-border-radius:8px; padding:5px 10px;
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:13px; font-weight:700; color:var(–muted);
-cursor:pointer; transition:all .18s; white-space:nowrap;
-}
-.add-btn:hover { background:#1a6aff; color:white; border-color:#1a6aff; }
-.add-btn.in-cart { background:#00a85e; color:#ffffff; border-color:#00a85e; }
-
-/* ══ CART FAB — altijd zichtbaar ══ */
-.cart-fab {
-position:fixed; bottom:24px; right:20px; z-index:80;
-/* Hardcoded kleuren — geen CSS-variabelen (Safari-fix) */
-background: #2979ff;
-background: -webkit-linear-gradient(315deg, #00c875, #2979ff);
-background: linear-gradient(135deg, #2979ff, #00c875);
-color:#ffffff; border:none; border-radius:24px;
-padding:13px 20px; font-family:‘Barlow Condensed’,sans-serif;
-font-size:16px; font-weight:800; letter-spacing:.5px;
-cursor:pointer;
-display:-webkit-inline-flex;
-display:inline-flex;
--webkit-align-items:center; align-items:center; gap:8px;
-box-shadow:0 6px 24px rgba(0,0,0,.5);
--webkit-transition:transform .2s, box-shadow .2s;
-transition:transform .2s, box-shadow .2s;
-}
-.cart-fab:hover { transform:scale(1.05); box-shadow:0 8px 32px rgba(41,121,255,.4); }
-.cart-fab:active { transform:scale(0.97); }
-.cart-count {
-background:var(–nl); color:white;
-border-radius:12px; padding:1px 8px;
-font-size:13px; min-width:22px; text-align:center;
-transition:transform .2s;
-}
-.cart-count.bump { animation:bump .25s ease; }
-@keyframes bump{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
-
-/* cart panel */
-.cart-panel {
-position:fixed; inset:0; z-index:90;
-background:rgba(5,6,15,.92); backdrop-filter:blur(10px);
-display:flex; align-items:flex-end; justify-content:center;
-}
-.cart-panel.hidden { display:none; }
-.cart-sheet {
-background:#ffffff; border:1px solid rgba(0,0,0,.12);
-border-radius:20px 20px 0 0;
-width:100%; max-width:600px; max-height:88vh;
-overflow-y:auto; padding:0 0 32px;
-}
-.cart-handle {
-width:40px; height:4px; background:var(–line2);
-border-radius:2px; margin:12px auto 0;
-}
-.cart-head {
-display:flex; align-items:center; justify-content:space-between;
-padding:16px 20px; border-bottom:1px solid rgba(0,0,0,.08);
-position:sticky; top:0; background:#ffffff; z-index:1;
-}
-.cart-head h3 {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:20px; font-weight:800; text-transform:uppercase;
-}
-.cart-close {
-background:var(–bg3); border:1px solid var(–line2);
-border-radius:8px; color:var(–muted); padding:6px 12px;
-font-size:13px; cursor:pointer; font-family:‘Barlow’,sans-serif;
-}
-.cart-body { padding:16px 20px; }
-.cart-empty {
-text-align:center; padding:32px;
-color:var(–dim); font-family:‘Space Mono’,monospace; font-size:12px;
-}
-.cart-item {
-display:flex; align-items:center; gap:10px;
-padding:12px 0; border-bottom:1px solid rgba(255,255,255,.06);
-}
-.cart-item:last-child { border-bottom:none; }
-.ci-info { flex:1; }
-.ci-name { font-weight:600; font-size:13px; color:var(–cream); }
-.ci-sub { font-size:11px; color:var(–muted); margin-top:1px; }
-.ci-qty {
-display:flex; align-items:center; gap:8px;
-}
-.ci-qbtn {
-width:28px; height:28px; border-radius:8px;
-background:#edf0f9; border:1px solid rgba(0,0,0,.12);
-color:var(–cream); font-size:16px; cursor:pointer;
-display:flex; align-items:center; justify-content:center;
-font-family:‘Barlow Condensed’,sans-serif; font-weight:700;
-transition:all .15s;
-}
-.ci-qbtn:hover { background:var(–bg4); }
-.ci-qnum {
-font-family:‘Space Mono’,monospace; font-size:14px;
-font-weight:700; color:var(–cream); min-width:24px; text-align:center;
-}
-.ci-del {
-background:none; border:none; color:var(–dim);
-font-size:16px; cursor:pointer; padding:4px;
-transition:color .15s;
-}
-.ci-del:hover { color:var(–nl2); }
-
-.cart-summary {
-margin-top:16px; background:#f4f5fb;
-border-radius:var(–r); padding:16px;
-}
-.cart-dest-row {
-display:flex; align-items:center; gap:10px;
-margin-bottom:14px; flex-wrap:wrap;
-}
-.cart-dest-row label {
-font-family:‘Space Mono’,monospace; font-size:10px;
-color:var(–muted); letter-spacing:1px; text-transform:uppercase;
-white-space:nowrap;
-}
-.cart-dest-row select {
-flex:1; background:var(–bg2); border:1px solid var(–line2);
-border-radius:8px; padding:8px 12px; color:var(–cream);
-font-family:‘Barlow’,sans-serif; font-size:13px; outline:none;
--webkit-appearance:none; appearance:none;
-}
-.sum-row {
-display:flex; justify-content:space-between; align-items:center;
-padding:7px 0; border-bottom:1px solid rgba(255,255,255,.06);
-font-size:13px; color:var(–muted);
-}
-.sum-row:last-child { border-bottom:none; }
-.sum-row span:last-child { font-family:‘Space Mono’,monospace; font-weight:700; color:var(–cream); }
-.sum-row.win span:last-child { color:var(–win); }
-.sum-row.loss span:last-child { color:var(–nl2); }
-.sum-divider { border-top:2px solid var(–line2); margin:10px 0; }
-.sum-total {
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:36px; font-weight:900; text-align:center;
-margin:10px 0 4px; letter-spacing:-1px;
-}
-.sum-total.pos { color:var(–win); }
-.sum-total.neg { color:var(–nl2); }
-.cart-action {
-width:100%; margin-top:14px; padding:13px;
-background:linear-gradient(135deg,var(–nl),#ff6b43);
-color:white; border:none; border-radius:var(–r);
-font-family:‘Barlow Condensed’,sans-serif;
-font-size:16px; font-weight:800; letter-spacing:.5px;
-cursor:pointer; transition:opacity .2s;
-}
-.cart-action:hover { opacity:.88; }
+  .pay-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .pay-row:last-child { border: none; }
+  .pay-row .name { color: var(--muted); }
+  .pay-row .amt  { color: var(--gold); }
+  .pay-row .ok   { color: var(--green); font-size: 0.55rem; }
 </style>
-
 </head>
 <body>
+<div class="wrap">
 
-<!-- AI OVERLAY -->
-
-<div class="ai-overlay hidden" id="ai-overlay">
-  <div class="spin"></div>
-  <div class="ai-title" id="ai-msg">AI zoekt actuele prijzen…</div>
-  <div class="ai-sub" id="ai-sub">NL · DE · BE · LU — even geduld</div>
-</div>
-
-<!-- API KEY MODAL -->
-
-<div class="modal-bg hidden" id="key-modal">
-  <div class="modal">
-    <h2>🔑 API-sleutel instellen</h2>
-    <p>Voor automatische prijsupdates via AI is een Anthropic API-sleutel nodig.<br>
-    Haal gratis op via <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys.<br>
-    De sleutel wordt <strong>alleen lokaal</strong> in jouw browser bewaard.</p>
-    <input class="modal-inp" id="key-inp" type="password" placeholder="sk-ant-api03-…" autocomplete="off">
-    <div class="modal-hint" id="key-hint">Begint altijd met sk-ant-</div>
-    <div class="modal-btns">
-      <button class="mbtn-ok" onclick="saveKey()">✅ Opslaan & vernieuwen</button>
-      <button class="mbtn-skip" onclick="skipKey()">Overslaan</button>
-    </div>
+  <!-- PWA Install Banner -->
+  <div id="installBanner">
+    <p>📲 <span>Installeer als app</span> — zet hem op je homescreen!</p>
+    <button class="install-btn" onclick="installPWA()">INSTALLEER</button>
+    <button class="dismiss-btn" onclick="dismissInstall()">✕</button>
   </div>
-</div>
 
-<!-- HEADER -->
-
-<header>
-  <div class="hdr">
-    <div class="logo">
-      <span class="logo-smoke">🚬</span>
-      <span>Prijs<em>vergelijker</em></span>
-    </div>
-    <div class="country-pills">
-      <span class="cpill nl" onclick="filterCountry('nl',this)" title="Filter op Nederland">🇳🇱 <span>NL</span></span>
-      <span class="cpill de" onclick="filterCountry('de',this)" title="Filter op Duitsland">🇩🇪 <span>DE</span></span>
-      <span class="cpill be" onclick="filterCountry('be',this)" title="Filter op België">🇧🇪 <span>BE</span></span>
-      <span class="cpill lu" onclick="filterCountry('lu',this)" title="Filter op Luxemburg">🇱🇺 <span>LU</span></span>
-    </div>
-  </div>
-</header>
-
-<!-- HERO -->
-
-<div class="hero">
-  <div class="hero-in">
+  <!-- Header -->
+  <div class="topbar">
     <div>
-      <div class="hero-eyebrow">Leende · Kaldenkirchen · Venlo · 2026</div>
-      <div class="hero-title">
-        Sigaretten<br>
-        <span class="accent-be">Prijs</span><span class="accent-lu">ver</span><span class="accent-nl">gelijker</span>
+      <div class="topbar-logo">SIGNAL</div>
+      <div class="topbar-sub">FIAS ARCHE · CRYPTO TRADING SIGNALS<br>POWERED BY AI ENTITIES</div>
+    </div>
+    <div class="topbar-badge">⬡ FIAS v0.1</div>
+  </div>
+
+  <!-- FIAS Ecosystem Strip -->
+  <div id="fiasStrip" style="
+    display:flex; align-items:center; gap:1.2rem;
+    background: rgba(153,102,255,0.07);
+    border: 1px solid rgba(153,102,255,0.18);
+    border-radius: 8px; padding: 0.6rem 1rem;
+    margin-bottom: 1rem; flex-wrap: wrap;
+  ">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#9966ff; letter-spacing:0.1em;">⬡ FIAS ECOSYSTEM</span>
+    <div style="display:flex; gap:1.2rem; flex:1; flex-wrap:wrap;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); letter-spacing:0.08em;">FIAS TOKEN</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:1rem; color:#9966ff;" id="s-fiasPrice">⬡ Platform</div>
       </div>
-      <div class="hero-sub">Nederland · Duitsland · België · Luxemburg</div>
-    </div>
-    <div class="hero-right">
-      <div class="status-chip" id="status-chip">
-        <span class="sdot blink" id="sdot"></span>
-        <span id="status-txt">Prijzen laden…</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TOOLBAR -->
-
-<div class="toolbar">
-  <div class="toolbar-in">
-    <div class="tabs">
-      <button class="tab on" onclick="showTab('vergelijk',this)">📊 Prijzen</button>
-      <button class="tab"    onclick="showTab('calc',this)">🧮 Besparing</button>
-      <button class="tab"    onclick="showTab('route',this)">🗺️ Route</button>
-      <button class="tab"    onclick="showTab('info',this)">ℹ️ Info & Regels</button>
-      <button class="tab"    onclick="showTab('edit',this)">✏️ Aanpassen</button>
-    </div>
-    <div class="tab-actions">
-      <button class="abtn" onclick="openKeyModal()">🔑 API-sleutel</button>
-      <button class="abtn accent" onclick="fetchPrices(true)" id="refresh-btn">🔄 Vernieuwen</button>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN -->
-
-<div class="main">
-
-  <!-- ═══ PRIJZEN ═══ -->
-
-  <div id="panel-vergelijk" class="panel on">
-
-```
-<div class="country-cards" id="country-cards">
-  <div class="cc nl">
-    <span class="cc-flag">🇳🇱</span>
-    <div class="cc-name">Nederland</div>
-    <div class="cc-price" id="cc-nl">—</div>
-    <div class="cc-label">Marlboro pakje</div>
-  </div>
-  <div class="cc de">
-    <span class="cc-flag">🇩🇪</span>
-    <div class="cc-name">Duitsland</div>
-    <div class="cc-price" id="cc-de">—</div>
-    <div class="cc-label">Marlboro pakje</div>
-  </div>
-  <div class="cc be">
-    <span class="cc-flag">🇧🇪</span>
-    <div class="cc-name">België</div>
-    <div class="cc-price" id="cc-be">—</div>
-    <div class="cc-label">Marlboro pakje</div>
-  </div>
-  <div class="cc lu">
-    <span class="cc-flag">🇱🇺</span>
-    <div class="cc-name">Luxemburg</div>
-    <div class="cc-price" id="cc-lu">—</div>
-    <div class="cc-label">Marlboro pakje</div>
-  </div>
-</div>
-
-<div class="fav-bar" id="fav-bar">
-  <div class="fav-bar-title">⭐ Favorieten</div>
-  <div class="fav-chips" id="fav-chips"></div>
-</div>
-
-<div class="search-bar">
-  <div class="sw">
-    <span class="sicon">🔍</span>
-    <input class="si" id="brand-search" type="text"
-      placeholder="Zoek op merk… Marlboro, JPS, Camel, Winston, Pall Mall…"
-      oninput="filterProducts(this.value)"
-      onkeydown="if(event.key==='Escape')clearSearch()">
-    <button class="sclear" id="sclear" onclick="clearSearch()">✕ wis</button>
-  </div>
-  <a class="abtn" href="https://maps.google.com/?q=Kaldenkirchen+tabak" target="_blank" style="text-decoration:none;white-space:nowrap">📍 Kaldenkirchen</a>
-</div>
-
-<div class="filter-row">
-  <button class="fbtn nl" onclick="filterCountry('nl',this)">🇳🇱 Nederland</button>
-  <button class="fbtn de" onclick="filterCountry('de',this)">🇩🇪 Duitsland</button>
-  <button class="fbtn be" onclick="filterCountry('be',this)">🇧🇪 België</button>
-  <button class="fbtn lu" onclick="filterCountry('lu',this)">🇱🇺 Luxemburg</button>
-  <button class="fbtn all active-all" onclick="filterCountry('all',this)">✦ Alles</button>
-</div>
-
-<div class="sec-head"><div class="sec-bar sig"></div>Sigaretten — pakje 20 stuks</div>
-<div class="ptbl">
-  <div class="ptbl-head">
-    <div class="ph">Product</div>
-    <div class="ph nl-h">🇳🇱 NL</div>
-    <div class="ph de-h">🇩🇪 DE</div>
-    <div class="ph be-h">🇧🇪 BE</div>
-    <div class="ph lu-h">🇱🇺 LU</div>
-    <div class="ph">Besparing</div>
-  </div>
-  <div id="rows-sig"></div>
-</div>
-
-<div class="sec-head"><div class="sec-bar slo"></div>Sloffen — 10 pakjes</div>
-<div class="ptbl">
-  <div class="ptbl-head">
-    <div class="ph">Product</div>
-    <div class="ph nl-h">🇳🇱 NL</div>
-    <div class="ph de-h">🇩🇪 DE</div>
-    <div class="ph be-h">🇧🇪 BE</div>
-    <div class="ph lu-h">🇱🇺 LU</div>
-    <div class="ph">Besparing</div>
-  </div>
-  <div id="rows-slo"></div>
-</div>
-
-<div class="sec-head"><div class="sec-bar emm"></div>Tabak Emmers</div>
-<div class="ptbl">
-  <div class="ptbl-head">
-    <div class="ph">Product</div>
-    <div class="ph nl-h">🇳🇱 NL</div>
-    <div class="ph de-h">🇩🇪 DE</div>
-    <div class="ph be-h">🇧🇪 BE</div>
-    <div class="ph lu-h">🇱🇺 LU</div>
-    <div class="ph">Besparing</div>
-  </div>
-  <div id="rows-emm"></div>
-</div>
-
-<p style="font-size:11px;color:var(--dim);margin-top:10px;font-family:'Space Mono',monospace">
-  * Besparing t.o.v. Nederland. BE = grenstabakswinkels Hamont-Achel/Lommel. Gebruik ✏️ Aanpassen voor eigen actuele prijzen.
-</p>
-```
-
-  </div>
-
-  <!-- ═══ CALCULATOR ═══ -->
-
-  <div id="panel-calc" class="panel">
-    <div class="calc-wrap">
-      <div class="calc-form">
-        <div class="calc-form-head">
-          <h3>🧮 Besparingscalculator</h3>
-          <p>Bereken je netto voordeel: sigaretten + benzine − ritkosten</p>
-        </div>
-        <div class="calc-form-body">
-          <div class="cf-row">
-            <div class="cf">
-              <label>Vertrekpunt</label>
-              <select id="c-from" onchange="fromChanged()">
-                <option value="leende">📍 Leende</option>
-                <option value="panningen">📍 Panningen</option>
-                <option value="custom">✏️ Zelf invullen</option>
-              </select>
-            </div>
-            <div class="cf">
-              <label>Bestemming</label>
-              <select id="c-dest" onchange="destChanged()">
-                <option value="de">🇩🇪 Duitsland</option>
-                <option value="be">🇧🇪 België</option>
-                <option value="lu">🇱🇺 Luxemburg</option>
-              </select>
-            </div>
-          </div>
-          <div class="cf-row">
-            <div class="cf">
-              <label>Verbruik (L/100km)</label>
-              <input type="number" id="c-cons" value="10.5" min="4" max="25" step="0.5" oninput="consChanged()">
-              <div class="hint">Peugeot 406 ≈ 10–11 L</div>
-            </div>
-            <div class="cf">
-              <label>Rijkosten rit (€)</label>
-              <input type="number" id="c-fuel" value="8" min="0" step="0.5" oninput="calcUpdate()">
-              <div class="hint" id="fuel-hint">Auto berekend</div>
-            </div>
-          </div>
-          <div class="section-sep">🚬 Sigaretten</div>
-          <div class="cf-row">
-            <div class="cf">
-              <label>Product</label>
-              <select id="c-prod" onchange="calcUpdate()"></select>
-            </div>
-            <div class="cf">
-              <label>Aantal</label>
-              <input type="number" id="c-qty" value="10" min="0" max="400" oninput="calcUpdate()">
-              <div class="hint">0 = geen sigaretten</div>
-            </div>
-          </div>
-          <div class="section-sep">⛽ Tanken</div>
-          <div class="cf">
-            <label>Liters tanken in bestemming</label>
-            <input type="number" id="c-liters" value="50" min="0" max="200" oninput="calcUpdate()">
-            <div class="hint">0 = niet tanken onderweg</div>
-          </div>
-        </div>
-      </div>
-      <div class="calc-result-panel">
-        <div class="crp-head"><h3>💰 Resultaat</h3></div>
-        <div class="crp-body" id="calc-result">
-          <div style="text-align:center;color:var(--dim);font-family:'Space Mono',monospace;font-size:12px;padding:20px">
-            Vul links de gegevens in…
-          </div>
-        </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); letter-spacing:0.08em;">DevvE TOKEN</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:1rem; color:var(--green);" id="s-devvePrice">laden...</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem;" id="s-devveChange">—</div>
       </div>
     </div>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); text-align:right; line-height:1.6;">
+      Payments via<br><span style="color:#9966ff">DevvX Blockchain</span>
+    </span>
   </div>
 
-  <!-- ═══ ROUTEPLANNER ═══ -->
-
-  <div id="panel-route" class="panel">
-    <div class="route-card">
-      <div class="route-head">
-        <h3>🗺️ Routeplanner</h3>
-        <div class="from-select-row">
-          <label>Vertrek:</label>
-          <select id="route-from" onchange="updateRouteLinks()">
-            <option value="Leende,Nederland">📍 Leende</option>
-            <option value="Panningen,Nederland">📍 Panningen</option>
-            <option value="Venlo,Nederland">📍 Venlo</option>
-            <option value="Eindhoven,Nederland">📍 Eindhoven</option>
-          </select>
-        </div>
-      </div>
-      <div class="route-body">
-        <div class="route-btns">
-          <a class="rbtn de" id="route-de" href="#" target="_blank">
-            <span class="rbtn-flag">🇩🇪</span>
-            <span class="rbtn-name">Duitsland</span>
-            <span class="rbtn-info">Kaldenkirchen<br>~40 km · ±35 min</span>
-            <span class="rbtn-open">🗺️ Open Maps</span>
-          </a>
-          <a class="rbtn be" id="route-be" href="#" target="_blank">
-            <span class="rbtn-flag">🇧🇪</span>
-            <span class="rbtn-name">België</span>
-            <span class="rbtn-info">Hamont-Achel<br>~22 km · ±20 min</span>
-            <span class="rbtn-open">🗺️ Open Maps</span>
-          </a>
-          <a class="rbtn lu" id="route-lu" href="#" target="_blank">
-            <span class="rbtn-flag">🇱🇺</span>
-            <span class="rbtn-name">Luxemburg</span>
-            <span class="rbtn-info">Luxembourg-stad<br>~360 km · ±3 uur</span>
-            <span class="rbtn-open">🗺️ Open Maps</span>
-          </a>
-        </div>
-        <div style="background:var(--bg3);border-radius:var(--r);padding:14px 16px;font-size:12px;color:var(--muted);line-height:1.8;">
-          💡 <strong style="color:var(--cream)">Tips:</strong><br>
-          🇩🇪 <strong style="color:var(--de2)">Kaldenkirchen</strong> — Tabak XXL, meerdere winkels langs Hauptstraße<br>
-          🇧🇪 <strong style="color:var(--be2)">Hamont-Achel</strong> — Dichtbij, goed voor een snelle rit<br>
-          🇱🇺 <strong style="color:var(--lu2)">Luxemburg</strong> — Tankstations A3/A6, combineer met grote inkoop
-        </div>
-      </div>
+  <!-- Inputs -->
+  <div class="coin-selector">
+    <div class="input-group">
+      <span class="input-label">Coin</span>
+      <select id="coinSelect">
+        <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
+        <option value="Ethereum (ETH)">Ethereum (ETH)</option>
+        <option value="Solana (SOL)">Solana (SOL)</option>
+        <option value="BNB (BNB)">BNB (BNB)</option>
+        <option value="XRP (XRP)">XRP (XRP)</option>
+        <option value="FIAS (FIAS)">⬡ FIAS (FIAS)</option>
+        <option value="DevvE (DevvE)">⬡ DevvE (DevvE)</option>
+        <option value="Cardano (ADA)">Cardano (ADA)</option>
+        <option value="Avalanche (AVAX)">Avalanche (AVAX)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-label">Tijdframe</span>
+      <select id="timeframe">
+        <option value="korte termijn (1-7 dagen)">Korte termijn (1-7d)</option>
+        <option value="middellange termijn (1-4 weken)">Middellange (1-4w)</option>
+        <option value="lange termijn (1-6 maanden)">Lange termijn (1-6m)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-label">Risicoprofiel</span>
+      <select id="riskProfile">
+        <option value="conservatief (laag risico)">Conservatief</option>
+        <option value="gematigd">Gematigd</option>
+        <option value="agressief (hoog risico)">Agressief</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-label">Investering (€)</span>
+      <input type="number" id="amount" value="500" min="1" />
     </div>
   </div>
 
-  <!-- ═══ INFO ═══ -->
-
-  <div id="panel-info" class="panel">
-    <div class="info-grid">
-      <div class="icard">
-        <h3>📋 Max. hoeveelheden EU→NL</h3>
-        <div>
-          <div class="lrow"><span class="lk">Sigaretten</span><span class="lv">800 stuks (40 pkj)</span></div>
-          <div class="lrow"><span class="lk">Shagtabak</span><span class="lv">1 kg</span></div>
-          <div class="lrow"><span class="lk">Sigaren</span><span class="lv">200 stuks</span></div>
-          <div class="lrow"><span class="lk">Cigarillo's</span><span class="lv">400 stuks</span></div>
-        </div>
-        <p style="margin-top:10px;font-size:11px">⚠️ Uitsluitend voor <strong style="color:var(--cream)">eigen gebruik</strong>. Douane kan accijns naheffen.</p>
-      </div>
-      <div class="icard">
-        <h3>📍 Kaldenkirchen tips</h3>
-        <ul>
-          <li>~20 km van Venlo, goed bereikbaar</li>
-          <li>Meerdere tabakswinkels met groot assortiment</li>
-          <li>Emmer tabak véél goedkoper dan in NL</li>
-          <li>Tabak XXL Gronau (Königstr. 66)</li>
-          <li>Combineer met boodschappen doen</li>
-        </ul>
-      </div>
-      <div class="icard">
-        <h3>🇧🇪 België — handig tussenstation</h3>
-        <p>Grensgebied Hamont-Achel of Lommel ligt maar ±20 km van Leende. Goedkoper dan NL, duurder dan DE maar prima als je toch die kant op gaat.</p>
-      </div>
-      <div class="icard">
-        <h3>🇱🇺 Waarom goedkoopst?</h3>
-        <p>Luxemburg heeft de laagste tabaksaccijnzen van de EU. Een slof kost in LU ca. €60–65, in NL ca. €130. Rit van ±3 uur loont pas met 2–3+ sloffen of emmers.</p>
-      </div>
-    </div>
-    <div class="icard">
-      <h3>📈 Prijsontwikkeling NL — Marlboro 20 stuks</h3>
-      <p style="margin-top:4px">2020: €7,20 → 2022: €8,90 → 2023: €9,80 → 2024: €11,10 → 2026: ~€12,50<br>
-      Shag steeg van €7 (50g, 2020) naar €25 (2026). NL-prijzen stijgen jaarlijks door Europees accijnsbeleid.</p>
-    </div>
+  <!-- Entity chips -->
+  <div class="entity-row">
+    <div class="entity-chip" id="chip-trend"><span class="led"></span>TREND ANALYZER</div>
+    <div class="entity-chip" id="chip-signal"><span class="led"></span>SIGNAL GENERATOR</div>
+    <div class="entity-chip" id="chip-risk"><span class="led"></span>RISK ASSESSOR</div>
+    <div class="entity-chip" id="chip-advice"><span class="led"></span>TRADE ADVISOR</div>
   </div>
 
-  <!-- ═══ EDIT ═══ -->
+  <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">
+    ⬡ GENEREER TRADING SIGNAAL
+  </button>
 
-  <div id="panel-edit" class="panel">
-    <div class="edit-note">
-      💡 Heb je ergens een andere prijs gezien? Pas hier aan en klik <strong>Opslaan</strong>.
-    </div>
-    <div id="edit-rows"></div>
-    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
-      <button class="ebtn save" onclick="saveEdits()">✅ Opslaan & bijwerken</button>
-      <button class="ebtn reset" onclick="resetEdits()">🔄 Standaardprijzen herstellen</button>
-    </div>
+  <!-- Disclaimer -->
+  <div class="disclaimer" style="margin-bottom:1rem">
+    ⚠️ UITSLUITEND VOOR EDUCATIEVE DOELEINDEN · GEEN FINANCIEEL ADVIES · CRYPTO TRADING BRENGT RISICO'S MET ZICH MEE
   </div>
 
-</div><!-- /main -->
+  <!-- Results -->
+  <div class="results" id="results">
 
-<footer>
-  🚬 Sigaretten Prijsvergelijker &nbsp;·&nbsp; Alleen voor eigen gebruik &nbsp;·&nbsp; Roken is schadelijk voor de gezondheid<br>
-  <strong>Made by Rob Borghouts · 2026</strong>
-</footer>
-
-<!-- ✅ WINKELWAGEN FAB — altijd zichtbaar -->
-
-<button class="cart-fab" id="cart-fab" onclick="openCart()">
-  🛒 Winkelwagen <span class="cart-count" id="cart-count">0</span>
-</button>
-
-<!-- WINKELWAGEN PANEL -->
-
-<div class="cart-panel hidden" id="cart-panel">
-  <div class="cart-sheet">
-    <div class="cart-handle"></div>
-    <div class="cart-head">
-      <h3>🛒 Winkelwagen</h3>
-      <button class="cart-close" onclick="closeCart()">✕ Sluiten</button>
+    <div class="result-card" style="animation-delay:0s">
+      <div class="card-header">
+        <span class="card-tag tag-trend">ENTITY · TREND ANALYZER</span>
+        <span class="card-title">Markttrend Analyse</span>
+        <span class="pay-chip">⬡ 0.0014 FIAS</span>
+      </div>
+      <div class="card-body" id="body-trend"><div class="dots"><span></span><span></span><span></span></div></div>
     </div>
-    <div class="cart-body">
-      <div id="cart-items"></div>
-      <div class="cart-summary" id="cart-summary" style="display:none">
-        <div class="cart-dest-row">
-          <label>Bestemming:</label>
-          <select id="cart-dest" onchange="renderCartSummary()">
-            <option value="de">🇩🇪 Duitsland</option>
-            <option value="be">🇧🇪 België</option>
-            <option value="lu">🇱🇺 Luxemburg</option>
-          </select>
-        </div>
-        <div id="cart-sum-rows"></div>
+
+    <div class="result-card" style="animation-delay:0.1s">
+      <div class="card-header">
+        <span class="card-tag tag-signal">ENTITY · SIGNAL GENERATOR</span>
+        <span class="card-title">Trading Signaal</span>
+        <span class="pay-chip">⬡ 0.0022 FIAS</span>
+      </div>
+      <div class="card-body" id="body-signal"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
+
+    <div class="result-card" style="animation-delay:0.2s">
+      <div class="card-header">
+        <span class="card-tag tag-risk">ENTITY · RISK ASSESSOR</span>
+        <span class="card-title">Risicobeoordeling</span>
+        <span class="pay-chip">⬡ 0.0016 FIAS</span>
+      </div>
+      <div class="card-body" id="body-risk"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
+
+    <div class="result-card" style="animation-delay:0.3s">
+      <div class="card-header">
+        <span class="card-tag tag-advice">ENTITY · TRADE ADVISOR</span>
+        <span class="card-title">Concreet Advies</span>
+        <span class="pay-chip">⬡ 0.0019 FIAS</span>
+      </div>
+      <div class="card-body" id="body-advice"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
+
+    <div class="pay-log" id="payLog" style="display:none">
+      <div class="pay-log-title">⬡ DevvX Blockchain · Micropayments Settled</div>
+      <div class="pay-row"><span class="name">Trend Analyzer Entity</span><span class="amt">0.0014 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row"><span class="name">Signal Generator Entity</span><span class="amt">0.0022 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row"><span class="name">Risk Assessor Entity</span><span class="amt">0.0016 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row"><span class="name">Trade Advisor Entity</span><span class="amt">0.0019 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row" style="border-top:1px solid rgba(255,170,0,0.15); margin-top:4px; padding-top:6px">
+        <span class="name" style="color:var(--text); font-weight:600">Totaal</span>
+        <span class="amt" style="font-size:0.75rem">0.0071 FIAS</span>
+        <span class="ok">✓ COMPLEET</span>
       </div>
     </div>
+
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════
-   DATA
-═══════════════════════════════════════════ */
-const DEFAULTS = [
-  // ── Sigaretten — pakjes ──
-  {id:'camel-y',     cat:'sig', name:'Camel Yellow',          sub:'pakje 20 stuks',        nl:11.00, de:8.00,  be:8.50,  lu:6.00},
-  {id:'camel-b',     cat:'sig', name:'Camel Blue',            sub:'pakje 20 stuks',        nl:11.00, de:8.00,  be:8.50,  lu:6.00},
-  {id:'marlboro-g',  cat:'sig', name:'Marlboro Gold',         sub:'pakje 20 stuks (lang)', nl:12.50, de:8.70,  be:9.00,  lu:6.50},
-  {id:'marlboro-r',  cat:'sig', name:'Marlboro Red',          sub:'pakje 20 stuks',        nl:12.50, de:8.70,  be:9.00,  lu:6.50},
-  {id:'winston-r',   cat:'sig', name:'Winston Red',           sub:'pakje 20 stuks',        nl:10.50, de:7.80,  be:8.20,  lu:6.00},
-  {id:'winston-b',   cat:'sig', name:'Winston Blue',          sub:'pakje 20 stuks',        nl:10.50, de:7.80,  be:8.20,  lu:6.00},
-  {id:'chester-r',   cat:'sig', name:'Chesterfield Rood',     sub:'pakje 20 stuks',        nl:10.50, de:7.50,  be:7.90,  lu:5.80},
-  {id:'chester-b',   cat:'sig', name:'Chesterfield Blauw',    sub:'pakje 20 stuks',        nl:10.50, de:7.50,  be:7.90,  lu:5.80},
-  {id:'jps-r',       cat:'sig', name:'JPS Rood',              sub:'pakje 20 stuks',        nl:9.50,  de:6.80,  be:7.20,  lu:5.20},
-  {id:'jps-b',       cat:'sig', name:'JPS Blauw',             sub:'pakje 20 stuks',        nl:9.50,  de:6.80,  be:7.20,  lu:5.20},
-  {id:'pall-r',      cat:'sig', name:'Pall Mall Rood',        sub:'pakje 20 stuks',        nl:10.00, de:7.20,  be:7.50,  lu:5.40},
-  {id:'pall-b',      cat:'sig', name:'Pall Mall Blauw',       sub:'pakje 20 stuks',        nl:10.00, de:7.20,  be:7.50,  lu:5.40},
-  {id:'lucky-r',     cat:'sig', name:'Lucky Strike Rood',     sub:'pakje 20 stuks',        nl:11.50, de:8.20,  be:8.60,  lu:6.20},
-  {id:'lucky-b',     cat:'sig', name:'Lucky Strike Blauw',    sub:'pakje 20 stuks',        nl:11.50, de:8.20,  be:8.60,  lu:6.20},
-  {id:'ld-r',        cat:'sig', name:'L&M Rood',              sub:'pakje 20 stuks',        nl:10.00, de:7.20,  be:7.60,  lu:5.50},
-  {id:'ld-b',        cat:'sig', name:'L&M Blauw',             sub:'pakje 20 stuks',        nl:10.00, de:7.20,  be:7.60,  lu:5.50},
-  {id:'rothmans',    cat:'sig', name:'Rothmans',              sub:'pakje 20 stuks',        nl:11.00, de:7.80,  be:8.20,  lu:5.90},
-  // ── Sloffen — 10 pakjes ──
-  {id:'slof-camel-y',  cat:'slo', name:'Camel Yellow',        sub:'slof 10×20 stuks',      nl:105.00,de:76.00, be:80.00, lu:56.00},
-  {id:'slof-marlboro', cat:'slo', name:'Marlboro Gold',       sub:'slof 10×20 stuks',      nl:120.00,de:82.00, be:86.00, lu:61.00},
-  {id:'slof-winston',  cat:'slo', name:'Winston Red',         sub:'slof 10×20 stuks',      nl:100.00,de:73.00, be:77.00, lu:56.00},
-  {id:'slof-chester',  cat:'slo', name:'Chesterfield Rood',   sub:'slof 10×20 stuks',      nl:100.00,de:70.00, be:74.00, lu:54.00},
-  {id:'slof-jps',      cat:'slo', name:'JPS Rood',            sub:'slof 10×20 stuks',      nl:90.00, de:64.00, be:68.00, lu:48.00},
-  {id:'slof-pall',     cat:'slo', name:'Pall Mall Rood',      sub:'slof 10×20 stuks',      nl:95.00, de:68.00, be:70.00, lu:50.00},
-  {id:'slof-lucky',    cat:'slo', name:'Lucky Strike Rood',   sub:'slof 10×20 stuks',      nl:110.00,de:78.00, be:81.00, lu:58.00},
-  {id:'slof-ld',       cat:'slo', name:'L&M Rood',            sub:'slof 10×20 stuks',      nl:95.00, de:68.00, be:71.00, lu:51.00},
-  // ── Tabak Emmers ──
-  {id:'mark200',  cat:'emm', name:'Mark Rood Tabak',         sub:'emmer 200 gram',        nl:92.00, de:38.00, be:44.00, lu:34.00},
-  {id:'mark230',  cat:'emm', name:'Mark Rood Tabak',         sub:'emmer 230 gram',        nl:106.00,de:44.00, be:51.00, lu:39.00},
-  {id:'mark400',  cat:'emm', name:'Mark Rood Tabak',         sub:'emmer 400 gram',        nl:184.00,de:76.00, be:88.00, lu:68.00},
-  {id:'mark1kg',  cat:'emm', name:'Mark Rood Tabak',         sub:'emmer 1 kg',            nl:460.00,de:188.00,be:218.00,lu:168.00},
-  {id:'ches200',  cat:'emm', name:'Chesterfield Rood Tabak', sub:'emmer 200 gram',        nl:96.00, de:40.00, be:46.00, lu:36.00},
-  {id:'ches1kg',  cat:'emm', name:'Chesterfield Rood Tabak', sub:'emmer 1 kg',            nl:480.00,de:198.00,be:228.00,lu:175.00},
-];
-
-const FUEL = { euro95:{ label:'Euro 95 (E10)', nl:2.11, de:1.65, be:1.78, lu:1.39 } };
-
-const ROUTES = {
-  leende:    { de:{km:40}, be:{km:22}, lu:{km:360} },
-  panningen: { de:{km:52}, be:{km:30}, lu:{km:380} },
-  custom:    { de:{km:0 }, be:{km:0 }, lu:{km:0  } },
-};
-
-function loadP(){ try{const s=localStorage.getItem('sp26');if(s)return JSON.parse(s);}catch(e){} return DEFAULTS.map(p=>({...p})); }
-let P = loadP();
-
-const $ = id => document.getElementById(id);
-const fmt = v => '€\u00a0' + v.toFixed(2).replace('.',',');
-
-/* ═══ SUMMARY CARDS ═══ */
-function updateCards(){
-  const m = P.find(p=>p.id==='marlboro');
-  if(!m) return;
-  ['nl','de','be','lu'].forEach(k => { $('cc-'+k).textContent = fmt(m[k]); });
-}
-
-/* ═══ RENDER TABLES ═══ */
-function rowHtml(p){
-  const vals = {nl:p.nl,de:p.de,be:p.be,lu:p.lu};
-  const best = Math.min(...Object.values(vals));
-  const winKey = Object.keys(vals).find(k=>vals[k]===best);
-  const save = p.nl - best;
-  const pct  = Math.round(save/p.nl*100);
-  const flags = {nl:'🇳🇱',de:'🇩🇪',be:'🇧🇪',lu:'🇱🇺'};
-
-  const cell = k => {
-    const isWin = k===winKey;
-    return `<div class="pc ${k}-c ${isWin?'win-'+k:''}">
-      <span class="pnum ${k}">${fmt(p[k])}</span>
-      ${isWin?`<span class="win-tag ${k}">✓ goedkoopst</span>`:''}
-    </div>`;
-  };
-
-  const saveHtml = save > 0
-    ? `<div class="save-pc">
-        <span class="save-amt">${flags[winKey]} −${fmt(save)}</span>
-        <span class="save-pct ${pct>=40?'hot':''}">${pct}% goedkoper</span>
-       </div>`
-    : `<span style="color:var(--dim)">—</span>`;
-
-  const isFav = loadFavs().includes(p.id);
-  const inCart = !!loadCart()[p.id];
-  return `<div class="prow" id="row-${p.id}">
-    <div class="pc"><div style="display:flex;align-items:flex-start;gap:6px">
-      <button class="fav-btn ${isFav?'on':''}" data-id="${p.id}" onclick="toggleFav('${p.id}')" title="Favoriet">${isFav?'⭐':'☆'}</button>
-      <div><div class="pname">${p.name}</div><div class="psub">${p.sub}</div></div>
-    </div></div>
-    ${cell('nl')}${cell('de')}${cell('be')}${cell('lu')}
-    <div class="pc save-pc" style="flex-direction:column;gap:6px">
-      ${saveHtml}
-      <button class="add-btn ${inCart?'in-cart':''}" onclick="addToCart('${p.id}')" id="addbtn-${p.id}">
-        ${inCart?'✓ In wagen':'+ Kopen'}
-      </button>
-    </div>
-  </div>`;
-}
-
-function renderTables(){
-  $('rows-sig').innerHTML = P.filter(p=>p.cat==='sig').map(rowHtml).join('');
-  $('rows-slo').innerHTML = P.filter(p=>p.cat==='slo').map(rowHtml).join('');
-  $('rows-emm').innerHTML = P.filter(p=>p.cat==='emm').map(rowHtml).join('');
-  updateCards();
-  const q = $('brand-search')?.value||'';
-  if(q) filterProducts(q);
-  if(activeCountry) applyColFilter(activeCountry);
-}
-
-function populateSel(){
-  $('c-prod').innerHTML = P.map(p=>`<option value="${p.id}">${p.name} (${p.sub})</option>`).join('');
-}
-
-/* ═══ CALCULATOR ═══ */
-function calcTripCost(){
-  const from = $('c-from').value, dest = $('c-dest').value;
-  const cons = parseFloat($('c-cons').value)||10.5;
-  const km   = ROUTES[from]?.[dest]?.km||0;
-  if(!km) return null;
-  const liters = km*2*cons/100;
-  return { km, liters:Math.round(liters*10)/10, cost:Math.round(liters*FUEL.euro95.nl*100)/100 };
-}
-function updateTripCost(){
-  const from=$('c-from').value, dest=$('c-dest').value, trip=calcTripCost();
-  const hint=$('fuel-hint');
-  if(trip&&trip.km>0){
-    $('c-fuel').value=trip.cost;
-    const dl={de:'Kaldenkirchen',be:'België',lu:'Luxemburg'}[dest];
-    hint.textContent=`${from==='leende'?'Leende':'Panningen'} → ${dl}: ${trip.km*2}km, ${trip.liters}L`;
-  }else{ hint.textContent='Voer eigen rijkosten in'; }
-  calcUpdate();
-}
-function fromChanged(){updateTripCost();}
-function destChanged(){updateTripCost();}
-function consChanged(){updateTripCost();}
-
-function calcUpdate(){
-  const pid=$('c-prod').value, qty=parseFloat($('c-qty').value)||0;
-  const tripCost=parseFloat($('c-fuel').value)||0;
-  const dest=$('c-dest').value, liters=parseFloat($('c-liters').value)||0;
-  const p=P.find(x=>x.id===pid); if(!p) return;
-
-  const sigNL=p.nl*qty, sigF=p[dest]*qty, sigSave=sigNL-sigF;
-  const fd=FUEL.euro95;
-  const fuelNL=fd.nl*liters, fuelF=fd[dest]*liters, fuelSave=fuelNL-fuelF;
-  const total=sigSave+fuelSave-tripCost;
-  const ok=total>0;
-  const dn={de:'Duitsland',be:'België',lu:'Luxemburg'}[dest];
-  const df={de:'🇩🇪',be:'🇧🇪',lu:'🇱🇺'}[dest];
-
-  const sigB = qty>0?`
-    <div class="cr-sec">Sigaretten</div>
-    <div class="cr-row"><span>NL (${qty}×)</span><span>${fmt(sigNL)}</span></div>
-    <div class="cr-row"><span>${df} ${dn}</span><span>${fmt(sigF)}</span></div>
-    <div class="cr-row win"><span>Besparing</span><span>+${fmt(sigSave)}</span></div>`:'';
-
-  const fuelB = liters>0?`
-    <div class="cr-sec">Benzine (${liters}L)</div>
-    <div class="cr-row"><span>NL prijs</span><span>${fmt(fuelNL)}</span></div>
-    <div class="cr-row"><span>${df} ${dn}</span><span>${fmt(fuelF)}</span></div>
-    <div class="cr-row win"><span>Besparing</span><span>+${fmt(fuelSave)}</span></div>`:'';
-
-  $('calc-result').innerHTML=`
-    ${sigB}${fuelB}
-    <div class="cr-row" style="margin-top:10px"><span>Rijkosten heen+terug</span><span>−${fmt(tripCost)}</span></div>
-    <div class="cr-divider"></div>
-    <div class="big-save">${ok?'+':''}${fmt(total)}</div>
-    <div class="cr-verdict ${ok?'ok':'no'}">
-      ${ok?`✅ De rit loont! Totaal netto voordeel <strong>${fmt(total)}</strong>.`
-          :`❌ Rit loont nog niet. Neem meer mee of tank een volle tank.`}
-    </div>`;
-}
-
-/* ═══ EDIT ═══ */
-function renderEdit(){
-  const cats=[{k:'sig',icon:'🚬',lbl:'Sigaretten'},{k:'slo',icon:'📦',lbl:'Sloffen'},{k:'emm',icon:'🪣',lbl:'Tabak Emmers'}];
-  let h='';
-  cats.forEach(c=>{
-    h+=`<div class="sec-head"><div class="sec-bar ${c.k}"></div>${c.icon} ${c.lbl}</div>
-    <div class="ptbl" style="margin-bottom:18px">
-      <div class="ptbl-head">
-        <div class="ph">Product</div>
-        <div class="ph nl-h">🇳🇱 NL</div>
-        <div class="ph de-h">🇩🇪 DE</div>
-        <div class="ph be-h">🇧🇪 BE</div>
-        <div class="ph lu-h">🇱🇺 LU</div>
-        <div class="ph"></div>
-      </div>`;
-    P.filter(p=>p.cat===c.k).forEach(p=>{
-      const is='width:72px;background:var(--bg3);border:1px solid var(--line2);border-radius:6px;padding:7px 8px;outline:none;font-family:Space Mono,monospace;font-size:12px;-webkit-appearance:none;color:';
-      h+=`<div class="prow" style="align-items:center">
-        <div class="pc"><div class="pname">${p.name}<br><span class="psub">${p.sub}</span></div></div>
-        <div class="pc" style="padding:6px 10px"><input type="number" id="e-${p.id}-nl" value="${p.nl}" step="0.05" min="0" style="${is}var(--nl2)"></div>
-        <div class="pc" style="padding:6px 10px"><input type="number" id="e-${p.id}-de" value="${p.de}" step="0.05" min="0" style="${is}var(--de2)"></div>
-        <div class="pc be-c" style="padding:6px 10px"><input type="number" id="e-${p.id}-be" value="${p.be}" step="0.05" min="0" style="${is}var(--be2)"></div>
-        <div class="pc" style="padding:6px 10px"><input type="number" id="e-${p.id}-lu" value="${p.lu}" step="0.05" min="0" style="${is}var(--lu2)"></div>
-        <div class="pc"></div>
-      </div>`;
-    });
-    h+=`</div>`;
+async function callClaude(system, user) {
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system,
+      messages: [{ role: "user", content: user }]
+    })
   });
-  $('edit-rows').innerHTML=h;
+  const d = await r.json();
+  return d.content?.[0]?.text || "Geen resultaat.";
 }
 
-function saveEdits(){
-  P.forEach(p=>['nl','de','be','lu'].forEach(k=>{
-    const v=parseFloat($(`e-${p.id}-${k}`)?.value);
-    if(!isNaN(v)) p[k]=v;
-  }));
-  try{localStorage.setItem('sp26',JSON.stringify(P));}catch(e){}
-  renderTables();populateSel();calcUpdate();
-  alert('✅ Prijzen opgeslagen!');
+function setChip(id, state) {
+  const el = document.getElementById('chip-' + id);
+  el.className = 'entity-chip ' + state;
 }
 
-function resetEdits(){
-  if(!confirm('Standaardprijzen herstellen?')) return;
-  P=DEFAULTS.map(p=>({...p}));
-  try{localStorage.removeItem('sp26');}catch(e){}
-  renderEdit();renderTables();populateSel();calcUpdate();
+function loading(id) {
+  document.getElementById('body-' + id).innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
 }
 
-/* ═══ TABS & SEARCH ═══ */
-function showTab(id,btn){
-  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('on'));
-  $('panel-'+id).classList.add('on'); btn.classList.add('on');
-  if(id==='edit') renderEdit();
+// ─── PWA ──────────────────────────────────────────────────────
+let deferredPrompt = null;
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(console.error));
 }
-
-function filterProducts(q){
-  const t=q.trim().toLowerCase();
-  $('sclear').style.display=t?'block':'none';
-  ['rows-sig','rows-slo','rows-emm'].forEach(cid=>{
-    const c=$(cid); if(!c) return;
-    let vis=0;
-    c.querySelectorAll('.prow').forEach(row=>{
-      const m=!t||row.textContent.toLowerCase().includes(t);
-      row.classList.toggle('hidden',!m); if(m) vis++;
-    });
-    let nr=c.querySelector('.no-results');
-    if(vis===0&&t){ if(!nr){nr=document.createElement('div');nr.className='no-results';c.appendChild(nr);} nr.textContent=`Geen resultaten voor "${q}"`; }
-    else if(nr) nr.remove();
-  });
-}
-
-function clearSearch(){
-  const inp=$('brand-search'); inp.value=''; filterProducts(''); inp.focus();
-}
-
-/* ═══ STATUS ═══ */
-function setStatus(state,txt){
-  const chip=$('status-chip'), dot=$('sdot');
-  chip.className='status-chip '+(state==='ok'?'ok':state==='err'?'err':'');
-  dot.className='sdot'+(state==='idle'?' blink':'');
-  $('status-txt').textContent=txt;
-}
-function setOverlay(v,msg='',sub=''){
-  $('ai-overlay').classList.toggle('hidden',!v);
-  if(msg) $('ai-msg').textContent=msg;
-  if(sub) $('ai-sub').textContent=sub;
-}
-
-/* ═══ API KEY ═══ */
-const KKEY='sp26-apikey';
-const getKey=()=>{try{return localStorage.getItem(KKEY)||'';}catch(e){return '';}};
-
-function openKeyModal(){
-  $('key-hint').textContent='Begint altijd met sk-ant-';
-  $('key-inp').value='';
-  $('key-modal').classList.remove('hidden');
-  setTimeout(()=>$('key-inp').focus(),100);
-}
-function saveKey(){
-  const v=$('key-inp').value.trim();
-  if(!v){$('key-hint').textContent='⚠ Voer een geldige sleutel in';return;}
-  if(!v.startsWith('sk-ant-')){$('key-hint').textContent='⚠ Moet beginnen met sk-ant-';return;}
-  try{localStorage.setItem(KKEY,v);}catch(e){}
-  $('key-modal').classList.add('hidden');
-  fetchPrices(true);
-}
-function skipKey(){
-  $('key-modal').classList.add('hidden');
-  renderTables();populateSel();updateTripCost();
-  setStatus('err','Geen API-sleutel — vaste prijzen actief');
-}
-
-/* ═══ APPLY AI PRICES ═══ */
-function applyAIPrices(data){
-  const arr=Array.isArray(data)?data:(data.tobacco||[]);
-  const fuel=(!Array.isArray(data)&&data.fuel)?data.fuel:null;
-  arr.forEach(u=>{
-    const p=P.find(x=>x.id===u.id); if(!p) return;
-    ['nl','de','be','lu'].forEach(k=>{if(u[k]&&u[k]>0)p[k]=u[k];});
-  });
-  try{localStorage.setItem('sp26',JSON.stringify(P));}catch(e){}
-  if(fuel?.euro95){
-    const fd=fuel.euro95;
-    ['nl','de','be','lu'].forEach(k=>{if(fd[k]&&fd[k]>0)FUEL.euro95[k]=fd[k];});
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredPrompt = e;
+  if (!localStorage.getItem('signals_pwa_dismissed')) {
+    document.getElementById('installBanner').classList.add('show');
   }
-  renderTables();populateSel();updateTripCost();
+});
+async function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('installBanner').classList.remove('show');
 }
-
-/* ═══ FETCH PRICES ═══ */
-const CKEY='sp26-ai-cache', TTL=20*60*60*1000;
-const MODELS=['claude-haiku-4-5-20251001','claude-sonnet-4-6','claude-opus-4-6'];
-
-const PROMPT=`Je bent een prijsvergelijker voor tabak en brandstof in Nederland, Duitsland (Kaldenkirchen), België (Hamont-Achel) en Luxemburg. Geef een ENKEL JSON object terug, geen tekst of markdown.
-
-{
-  "tobacco": [
-    {"id":"camel-y","nl":11.00,"de":8.00,"be":8.50,"lu":6.00},
-    {"id":"marlboro","nl":12.50,"de":8.70,"be":9.00,"lu":6.50},
-    {"id":"winston","nl":10.50,"de":7.80,"be":8.20,"lu":6.00},
-    {"id":"chester","nl":10.50,"de":7.50,"be":7.90,"lu":5.80},
-    {"id":"mark200","nl":92.00,"de":38.00,"be":44.00,"lu":34.00},
-    {"id":"mark230","nl":106.00,"de":44.00,"be":51.00,"lu":39.00},
-    {"id":"mark400","nl":184.00,"de":76.00,"be":88.00,"lu":68.00},
-    {"id":"mark1kg","nl":460.00,"de":188.00,"be":218.00,"lu":168.00},
-    {"id":"ches200","nl":96.00,"de":40.00,"be":46.00,"lu":36.00},
-    {"id":"ches1kg","nl":480.00,"de":198.00,"be":228.00,"lu":175.00}
-  ],
-  "fuel":{"euro95":{"nl":2.11,"de":1.65,"be":1.78,"lu":1.39}}
+function dismissInstall() {
+  document.getElementById('installBanner').classList.remove('show');
+  localStorage.setItem('signals_pwa_dismissed', '1');
 }
+window.addEventListener('appinstalled', () => document.getElementById('installBanner').classList.remove('show'));
 
-Gebruik bovenstaande als fallback indien onzeker. Geef ALLEEN het JSON object.`;
-
-async function tryFetch(apiKey, model){
-  return fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version':'2023-06-01',
-      'anthropic-dangerous-direct-browser-access':'true'
-    },
-    body:JSON.stringify({ model, max_tokens:1000, messages:[{role:'user',content:PROMPT}] })
-  });
-}
-
-async function fetchPrices(force=false){
-  if(!force){
-    try{
-      const c=JSON.parse(localStorage.getItem(CKEY)||'null');
-      if(c&&(Date.now()-c.ts)<TTL){
-        applyAIPrices(c.prices);
-        const d=new Date(c.ts);
-        setStatus('ok',`✓ Bijgewerkt: ${d.toLocaleDateString('nl-NL')} ${d.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}`);
-        setOverlay(false); return;
-      }
-    }catch(e){}
-  }
-
-  const apiKey=getKey();
-  if(!apiKey){
-    renderTables();populateSel();updateTripCost();
-    setStatus('err','Geen API-sleutel — klik "API-sleutel"');
-    setOverlay(false); openKeyModal(); return;
-  }
-
-  setOverlay(true,'AI zoekt actuele prijzen…','NL · DE · BE · LU');
-  $('refresh-btn').disabled=true;
-
-  let lastErr='';
-  for(const model of MODELS){
-    try{
-      const resp = await tryFetch(apiKey, model);
-      if(resp.status===401){
-        try{localStorage.removeItem(KKEY);}catch(e){}
-        setOverlay(false); renderTables();populateSel();updateTripCost();
-        setStatus('err','API-sleutel ongeldig — opnieuw invoeren');
-        openKeyModal(); $('refresh-btn').disabled=false; return;
-      }
-      if(!resp.ok){
-        const et=await resp.text();
-        lastErr=`[${model}] ${resp.status}: ${et.slice(0,200)}`;
-        setOverlay(true, `Poging mislukt (${model})`, `${resp.status}: ${et.slice(0,120)}`);
-        await new Promise(r=>setTimeout(r,2500));
-        continue;
-      }
-      const data=await resp.json();
-      const raw=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
-      const clean=raw.replace(/```json|```/g,'').trim();
-      const m=clean.match(/\{[\s\S]*\}/)||clean.match(/\[[\s\S]*\]/);
-      if(!m){ lastErr='Geen JSON in antwoord'; continue; }
-      const parsed=JSON.parse(m[0]);
-      try{localStorage.setItem(CKEY,JSON.stringify({ts:Date.now(),prices:parsed}));}catch(e){}
-      applyAIPrices(parsed);
-      const now=new Date();
-      setStatus('ok',`✓ AI-update: ${now.toLocaleDateString('nl-NL')} ${now.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}`);
-      setOverlay(false); $('refresh-btn').disabled=false; return;
-    }catch(err){
-      lastErr=err.message.slice(0,80);
+// ─── FIAS ECOSYSTEM PRICES ────────────────────────────────────
+async function loadFiasEcosystem() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=devve&vs_currencies=usd&include_24hr_change=true');
+    const data = await res.json();
+    if (data.devve) {
+      const p = data.devve.usd;
+      const ch = data.devve.usd_24h_change;
+      document.getElementById('s-devvePrice').textContent = p < 0.01 ? '$' + p.toFixed(6) : '$' + p.toFixed(4);
+      const chEl = document.getElementById('s-devveChange');
+      chEl.textContent = (ch >= 0 ? '▲ +' : '▼ ') + ch.toFixed(2) + '%';
+      chEl.style.color = ch >= 0 ? 'var(--green)' : 'var(--red)';
     }
-  }
-
-  setStatus('err', lastErr || 'Onbekende fout');
-  setOverlay(false);
-  renderTables();populateSel();updateTripCost();
-  $('refresh-btn').disabled=false;
+  } catch(e) {}
+  document.getElementById('s-fiasPrice').textContent = '⬡ Platform';
 }
+loadFiasEcosystem();
 
-/* ═══ COUNTRY COLUMN FILTER ═══ */
-const COL_MAP = { nl:1, de:2, be:3, lu:4 };
-let activeCountry = null;
+async function runAnalysis() {
+  const coin = document.getElementById('coinSelect').value;
+  const timeframe = document.getElementById('timeframe').value;
+  const risk = document.getElementById('riskProfile').value;
+  const amount = document.getElementById('amount').value;
 
-function filterCountry(country, btn){
-  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  if(country === 'all'){
-    activeCountry = null;
-    document.querySelectorAll('.ph,.pc').forEach(el=>el.classList.remove('col-dim'));
-  } else {
-    activeCountry = country;
-    applyColFilter(country);
-  }
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.textContent = '⬡ ENTITIES VERWERKEN...';
+
+  const results = document.getElementById('results');
+  results.classList.add('visible');
+  document.getElementById('payLog').style.display = 'none';
+  ['trend','signal','risk','advice'].forEach(loading);
+
+  const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: €${amount}`;
+  const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch.";
+
+  // Entity 1: Trend Analyzer
+  setChip('trend', 'running');
+  try {
+    const trend = await callClaude(
+      `Je bent een crypto trend-analyse AI. ${disclaimer} Analyseer de algemene markttrend voor de opgegeven coin. Bespreek: huidige marktfase (bull/bear/sideways), dominante technische indicatoren (RSI, MA, volume trends), en sentiment. Schrijf in het Nederlands, max 5 zinnen, geen bullet points.`,
+      context
+    );
+    document.getElementById('body-trend').textContent = trend;
+    setChip('trend', 'done');
+  } catch { document.getElementById('body-trend').textContent = "Fout."; }
+
+  // Entity 2: Signal Generator
+  setChip('signal', 'running');
+  try {
+    const signal = await callClaude(
+      `Je bent een crypto trading signaal AI. ${disclaimer} Genereer een trading signaal voor de opgegeven situatie. Gebruik dit format:\n🟢 SIGNAAL: [BUY / SELL / HOLD]\n📍 Entry zone: [prijsrange]\n🎯 Take profit: [doel]\n🛑 Stop loss: [niveau]\n📊 Kans van slagen: [%]\n\nSchrijf in het Nederlands. Wees realistisch en voorzichtig.`,
+      context
+    );
+    document.getElementById('body-signal').textContent = signal;
+    setChip('signal', 'done');
+  } catch { document.getElementById('body-signal').textContent = "Fout."; }
+
+  // Entity 3: Risk Assessor
+  setChip('risk', 'running');
+  try {
+    const riskRes = await callClaude(
+      `Je bent een crypto risico-analyse AI. ${disclaimer} Beoordeel de risico's voor deze trade. Gebruik dit format:\n⚠️ Risico niveau: [LAAG / MEDIUM / HOOG / EXTREEM]\n💸 Max verlies bij €${amount}: [bedrag]\n🔍 Risicofactoren:\n- [factor 1]\n- [factor 2]\n- [factor 3]\n\nSchrijf in het Nederlands.`,
+      context
+    );
+    document.getElementById('body-risk').textContent = riskRes;
+    setChip('risk', 'done');
+  } catch { document.getElementById('body-risk').textContent = "Fout."; }
+
+  // Entity 4: Trade Advisor
+  setChip('advice', 'running');
+  try {
+    const advice = await callClaude(
+      `Je bent een crypto trade advisor AI. ${disclaimer} Geef concreet, praktisch advies voor iemand die €${amount} wil investeren in ${coin} voor ${timeframe} met een ${risk} risicoprofiel. Bespreek: of dit een goed moment is, hoe te spreiden, wanneer te handelen, en 1 belangrijke waarschuwing. Max 6 zinnen. Schrijf in het Nederlands.`,
+      context
+    );
+    document.getElementById('body-advice').textContent = advice;
+    setChip('advice', 'done');
+  } catch { document.getElementById('body-advice').textContent = "Fout."; }
+
+  document.getElementById('payLog').style.display = 'block';
+  btn.disabled = false;
+  btn.textContent = '⬡ NIEUW SIGNAAL GENEREREN';
 }
-
-function applyColFilter(country){
-  const showIdx = COL_MAP[country];
-  document.querySelectorAll('.ptbl-head').forEach(head=>{
-    head.querySelectorAll('.ph').forEach((col,i)=>{
-      if(i===0||i===5){col.classList.remove('col-dim');return;}
-      col.classList.toggle('col-dim', i!==showIdx);
-    });
-  });
-  document.querySelectorAll('.prow').forEach(row=>{
-    row.querySelectorAll('.pc').forEach((col,i)=>{
-      if(i===0||i===5){col.classList.remove('col-dim');return;}
-      col.classList.toggle('col-dim', i!==showIdx);
-    });
-  });
-}
-
-/* ═══ FAVORIETEN ═══ */
-const FAV_KEY = 'sp26-favs';
-function loadFavs(){ try{ return JSON.parse(localStorage.getItem(FAV_KEY)||'[]'); }catch(e){ return []; } }
-function saveFavs(favs){ try{ localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }catch(e){} }
-
-function toggleFav(id){
-  let favs = loadFavs();
-  if(favs.includes(id)){ favs = favs.filter(f=>f!==id); }
-  else { favs.push(id); }
-  saveFavs(favs);
-  renderFavBar();
-  document.querySelectorAll(`.fav-btn[data-id="${id}"]`).forEach(btn=>{
-    btn.textContent = favs.includes(id) ? '⭐' : '☆';
-    btn.classList.toggle('on', favs.includes(id));
-  });
-}
-
-function renderFavBar(){
-  const favs = loadFavs();
-  const bar = $('fav-bar');
-  const chips = $('fav-chips');
-  if(!bar||!chips) return;
-  bar.classList.toggle('has-favs', favs.length>0);
-  chips.innerHTML = favs.map(id=>{
-    const p = P.find(x=>x.id===id);
-    if(!p) return '';
-    return `<div class="fav-chip" onclick="scrollToProduct('${id}')">
-      ⭐ ${p.name} <span class="fc-sub" style="font-size:10px;color:var(--muted)">${p.sub}</span>
-      <span class="fc-x" onclick="event.stopPropagation();toggleFav('${id}')">✕</span>
-    </div>`;
-  }).join('');
-}
-
-function scrollToProduct(id){
-  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('on'));
-  $('panel-vergelijk').classList.add('on');
-  document.querySelector('.tab').classList.add('on');
-  setTimeout(()=>{
-    const inp = $('brand-search');
-    const p = P.find(x=>x.id===id);
-    if(p && inp){ inp.value=p.name; filterProducts(p.name); }
-  }, 100);
-}
-
-/* ═══ ROUTEPLANNER ═══ */
-const DESTINATIONS = {
-  de: 'Kaldenkirchen, Duitsland',
-  be: 'Hamont-Achel, België',
-  lu: 'Luxemburg stad, Luxemburg',
-};
-
-function updateRouteLinks(){
-  const from = $('route-from')?.value || 'Leende,Nederland';
-  const enc = encodeURIComponent(from);
-  $('route-de').href = `https://maps.google.com/maps?saddr=${enc}&daddr=${encodeURIComponent(DESTINATIONS.de)}&directionsmode=driving`;
-  $('route-be').href = `https://maps.google.com/maps?saddr=${enc}&daddr=${encodeURIComponent(DESTINATIONS.be)}&directionsmode=driving`;
-  $('route-lu').href = `https://maps.google.com/maps?saddr=${enc}&daddr=${encodeURIComponent(DESTINATIONS.lu)}&directionsmode=driving`;
-}
-
-/* ═══ WINKELWAGEN ═══ */
-const CART_KEY = 'sp26-cart';
-function loadCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY)||'{}'); }catch(e){ return {}; } }
-function saveCart(c){ try{ localStorage.setItem(CART_KEY,JSON.stringify(c)); }catch(e){} }
-
-function addToCart(id){
-  const c = loadCart();
-  if(c[id]){ c[id]++; } else { c[id]=1; }
-  saveCart(c);
-  updateCartFab();
-  const btn = $('addbtn-'+id);
-  if(btn){ btn.textContent='✓ In wagen'; btn.classList.add('in-cart'); }
-}
-
-/* ✅ FAB altijd zichtbaar — alleen het getal bijwerken */
-function updateCartFab(){
-  const c = loadCart();
-  const total = Object.values(c).reduce((a,b)=>a+b,0);
-  const cnt = $('cart-count');
-  if(cnt){
-    cnt.textContent = total;
-    // Geef een bounce animatie als er iets wordt toegevoegd
-    cnt.classList.remove('bump');
-    void cnt.offsetWidth; // reflow
-    if(total > 0) cnt.classList.add('bump');
-  }
-}
-
-function openCart(){
-  $('cart-panel').classList.remove('hidden');
-  renderCartItems();
-}
-function closeCart(){
-  $('cart-panel').classList.add('hidden');
-}
-
-function renderCartItems(){
-  const c = loadCart();
-  const ids = Object.keys(c);
-  const itemsEl = $('cart-items');
-  const summaryEl = $('cart-summary');
-
-  if(ids.length===0){
-    itemsEl.innerHTML='<div class="cart-empty">Winkelwagen is leeg.<br>Tik "+ Kopen" bij een product om te beginnen.</div>';
-    summaryEl.style.display='none';
-    return;
-  }
-  summaryEl.style.display='block';
-
-  itemsEl.innerHTML = ids.map(id=>{
-    const p = P.find(x=>x.id===id);
-    if(!p) return '';
-    const qty = c[id];
-    return `<div class="cart-item">
-      <div class="ci-info">
-        <div class="ci-name">${p.name}</div>
-        <div class="ci-sub">${p.sub}</div>
-      </div>
-      <div class="ci-qty">
-        <button class="ci-qbtn" onclick="changeQty('${id}',-1)">−</button>
-        <span class="ci-qnum">${qty}</span>
-        <button class="ci-qbtn" onclick="changeQty('${id}',1)">+</button>
-      </div>
-      <button class="ci-del" onclick="removeFromCart('${id}')" title="Verwijder">🗑</button>
-    </div>`;
-  }).join('');
-
-  renderCartSummary();
-}
-
-function changeQty(id, delta){
-  const c = loadCart();
-  c[id] = (c[id]||0) + delta;
-  if(c[id] <= 0) delete c[id];
-  saveCart(c);
-  updateCartFab();
-  renderCartItems();
-  const btn = $('addbtn-'+id);
-  if(btn){
-    const inCart = !!c[id];
-    btn.textContent = inCart ? '✓ In wagen' : '+ Kopen';
-    btn.classList.toggle('in-cart', inCart);
-  }
-}
-
-function removeFromCart(id){
-  const c = loadCart();
-  delete c[id];
-  saveCart(c);
-  updateCartFab();
-  renderCartItems();
-  const btn = $('addbtn-'+id);
-  if(btn){ btn.textContent='+ Kopen'; btn.classList.remove('in-cart'); }
-}
-
-function renderCartSummary(){
-  const c = loadCart();
-  const dest = $('cart-dest')?.value || 'de';
-  const destName = {de:'🇩🇪 Duitsland',be:'🇧🇪 België',lu:'🇱🇺 Luxemburg'}[dest];
-  const ids = Object.keys(c);
-  if(!ids.length) return;
-
-  let totalNL=0, totalForeign=0;
-  let rows = ids.map(id=>{
-    const p=P.find(x=>x.id===id); if(!p) return '';
-    const qty=c[id];
-    const nl=p.nl*qty, foreign=p[dest]*qty;
-    totalNL+=nl; totalForeign+=foreign;
-    return `<div class="sum-row">
-      <span>${p.name} ×${qty}</span>
-      <span>${fmt(foreign)}</span>
-    </div>`;
-  }).join('');
-
-  const save = totalNL - totalForeign;
-  const pct = Math.round(save/totalNL*100);
-  const ok = save > 0;
-
-  $('cart-sum-rows').innerHTML = `
-    <div class="sum-row" style="font-size:11px;color:var(--muted);margin-bottom:4px">
-      <span>Product</span><span>Prijs ${destName}</span>
-    </div>
-    ${rows}
-    <div class="sum-divider"></div>
-    <div class="sum-row"><span>Totaal in NL</span><span>${fmt(totalNL)}</span></div>
-    <div class="sum-row"><span>Totaal ${destName}</span><span>${fmt(totalForeign)}</span></div>
-    <div class="sum-row win"><span>Besparing</span><span>+${fmt(save)} (${pct}%)</span></div>
-    <div class="sum-total ${ok?'pos':'neg'}">${ok?'+':''}${fmt(save)}</div>
-    <button class="cart-action" onclick="closeCart();showTab('calc',document.querySelector('.tab:nth-child(2)'))">
-      🧮 Bereken met ritkosten →
-    </button>
-    <button class="cart-action" style="margin-top:8px;background:var(--bg3);color:var(--muted);border:1px solid var(--line2)"
-      onclick="clearCart()">🗑 Winkelwagen leegmaken</button>
-  `;
-}
-
-function clearCart(){
-  if(!confirm('Winkelwagen leegmaken?')) return;
-  localStorage.removeItem(CART_KEY);
-  updateCartFab();
-  renderCartItems();
-  document.querySelectorAll('.add-btn').forEach(b=>{ b.textContent='+ Kopen'; b.classList.remove('in-cart'); });
-}
-
-/* ═══ INIT ═══ */
-renderTables();
-populateSel();
-updateTripCost();
-renderFavBar();
-updateRouteLinks();
-updateCartFab();
-fetchPrices();
 </script>
-
 </body>
 </html>
