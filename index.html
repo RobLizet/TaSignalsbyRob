@@ -458,7 +458,7 @@ flex-shrink: 0;
       </select>
     </div>
     <div class="input-group">
-      <span class="input-label">Investering (€)</span>
+      <span class="input-label">Investering ($)</span>
       <input type="number" id="amount" value="500" min="1" />
     </div>
   </div>
@@ -666,7 +666,7 @@ async function runAnalysis() {
     setChip(id, '');
   });
 
-  const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: €${amount}`;
+  const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: $${amount}`;
   const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch.";
 
   // Entity 1: Trend Analyzer
@@ -699,7 +699,7 @@ async function runAnalysis() {
   setChip('risk', 'running');
   try {
     const riskRes = await callClaude(
-      `Je bent een crypto risico-analyse AI. ${disclaimer} Beoordeel de risico's voor deze trade. Gebruik dit format:\n⚠️ Risico niveau: [LAAG / MEDIUM / HOOG / EXTREEM]\n💸 Max verlies bij €${amount}: [bedrag]\n🔍 Risicofactoren:\n- [factor 1]\n- [factor 2]\n- [factor 3]\n\nSchrijf in het Nederlands.`,
+      `Je bent een crypto risico-analyse AI. ${disclaimer} Beoordeel de risico's voor deze trade. Gebruik dit format:\n⚠️ Risico niveau: [LAAG / MEDIUM / HOOG / EXTREEM]\n💸 Max verlies bij $${amount}: [bedrag]\n🔍 Risicofactoren:\n- [factor 1]\n- [factor 2]\n- [factor 3]\n\nSchrijf in het Nederlands.`,
       context
     );
     document.getElementById('body-risk').textContent = riskRes;
@@ -712,7 +712,7 @@ async function runAnalysis() {
   setChip('advice', 'running');
   try {
     const advice = await callClaude(
-      `Je bent een crypto trade advisor AI. ${disclaimer} Geef concreet, praktisch advies voor iemand die €${amount} wil investeren in ${coin} voor ${timeframe} met een ${risk} risicoprofiel. Bespreek: of dit een goed moment is, hoe te spreiden, wanneer te handelen, en 1 belangrijke waarschuwing. Max 6 zinnen. Schrijf in het Nederlands.`,
+      `Je bent een crypto trade advisor AI. ${disclaimer} Geef concreet, praktisch advies voor iemand die $${amount} wil investeren in ${coin} voor ${timeframe} met een ${risk} risicoprofiel. Bespreek: of dit een goed moment is, hoe te spreiden, wanneer te handelen, en 1 belangrijke waarschuwing. Max 6 zinnen. Schrijf in het Nederlands.`,
       context
     );
     document.getElementById('body-advice').textContent = advice;
