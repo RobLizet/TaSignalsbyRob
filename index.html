@@ -592,6 +592,15 @@ function loading(id) {
   document.getElementById('body-' + id).innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
 }
 
+function renderMd(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^#{1,3}\s+(.+)$/gm, '<strong style="color:var(--text);font-size:0.85rem">$1</strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text)">$1</strong>')
+    .replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:6px 0">')
+    .replace(/\n/g, '<br>');
+}
+
 function showError(id, msg) {
   const el = document.getElementById('body-' + id);
   el.innerHTML = '<span style="color:var(--red)">❌ ' + msg + '</span>';
@@ -641,6 +650,30 @@ async function loadFiasEcosystem() {
 }
 loadFiasEcosystem();
 
+// ─── COIN ID MAP (CoinGecko) ──────────────────────────────────
+const COIN_IDS = {
+  'Bitcoin (BTC)':     'bitcoin',
+  'Ethereum (ETH)':    'ethereum',
+  'Solana (SOL)':      'solana',
+  'BNB (BNB)':         'binancecoin',
+  'XRP (XRP)':         'ripple',
+  'Cardano (ADA)':     'cardano',
+  'Avalanche (AVAX)':  'avalanche-2',
+  'FIAS (FIAS)':       null,
+  'DevvE (DevvE)':     'devve'
+};
+
+async function fetchLivePrice(coin) {
+  const id = COIN_IDS[coin];
+  if (!id) return null;
+  try {
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true`);
+    const data = await res.json();
+    if (data[id]) return data[id];
+  } catch(e) {}
+  return null;
+}
+
 // ─── MAIN ANALYSIS ────────────────────────────────────────────
 async function runAnalysis() {
   const apiKey = document.getElementById('apiKey').value.trim();
@@ -656,7 +689,7 @@ async function runAnalysis() {
 
   const btn = document.getElementById('analyzeBtn');
   btn.disabled = true;
-  btn.textContent = '⬡ ENTITIES VERWERKEN...';
+  btn.textContent = '⬡ KOERSEN OPHALEN...';
 
   const results = document.getElementById('results');
   results.classList.add('visible');
@@ -666,8 +699,20 @@ async function runAnalysis() {
     setChip(id, '');
   });
 
-  const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: $${amount}`;
-  const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch.";
+  // Haal live koers op
+  btn.textContent = '⬡ ENTITIES VERWERKEN...';
+  const priceData = await fetchLivePrice(coin);
+  let priceContext = '';
+  if (priceData) {
+    const p    = priceData.usd;
+    const ch   = priceData.usd_24h_change?.toFixed(2);
+    const vol  = priceData.usd_24h_vol ? '$' + (priceData.usd_24h_vol / 1e9).toFixed(2) + 'B' : 'onbekend';
+    const mcap = priceData.usd_market_cap ? '$' + (priceData.usd_market_cap / 1e9).toFixed(1) + 'B' : 'onbekend';
+    priceContext = ` | LIVE KOERS: $${p.toLocaleString('en-US')} | 24h verandering: ${ch}% | 24h volume: ${vol} | Market cap: ${mcap}`;
+  }
+
+  const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: $${amount}${priceContext}`;
+  const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch. Gebruik de meegeleverde live koers als basis voor entry zones, targets en stop loss.";
 
   // Entity 1: Trend Analyzer
   setChip('trend', 'running');
@@ -676,7 +721,7 @@ async function runAnalysis() {
       `Je bent een crypto trend-analyse AI. ${disclaimer} Analyseer de algemene markttrend voor de opgegeven coin. Bespreek: huidige marktfase (bull/bear/sideways), dominante technische indicatoren (RSI, MA, volume trends), en sentiment. Schrijf in het Nederlands, max 5 zinnen, geen bullet points.`,
       context
     );
-    document.getElementById('body-trend').textContent = trend;
+    document.getElementById('body-trend').innerHTML = renderMd(trend);
     setChip('trend', 'done');
   } catch(e) {
     showError('trend', e.message);
@@ -689,7 +734,7 @@ async function runAnalysis() {
       `Je bent een crypto trading signaal AI. ${disclaimer} Genereer een trading signaal voor de opgegeven situatie. Gebruik dit format:\n🟢 SIGNAAL: [BUY / SELL / HOLD]\n📍 Entry zone: [prijsrange]\n🎯 Take profit: [doel]\n🛑 Stop loss: [niveau]\n📊 Kans van slagen: [%]\n\nSchrijf in het Nederlands. Wees realistisch en voorzichtig.`,
       context
     );
-    document.getElementById('body-signal').textContent = signal;
+    document.getElementById('body-signal').innerHTML = renderMd(signal);
     setChip('signal', 'done');
   } catch(e) {
     showError('signal', e.message);
@@ -702,7 +747,7 @@ async function runAnalysis() {
       `Je bent een crypto risico-analyse AI. ${disclaimer} Beoordeel de risico's voor deze trade. Gebruik dit format:\n⚠️ Risico niveau: [LAAG / MEDIUM / HOOG / EXTREEM]\n💸 Max verlies bij $${amount}: [bedrag]\n🔍 Risicofactoren:\n- [factor 1]\n- [factor 2]\n- [factor 3]\n\nSchrijf in het Nederlands.`,
       context
     );
-    document.getElementById('body-risk').textContent = riskRes;
+    document.getElementById('body-risk').innerHTML = renderMd(riskRes);
     setChip('risk', 'done');
   } catch(e) {
     showError('risk', e.message);
@@ -715,7 +760,7 @@ async function runAnalysis() {
       `Je bent een crypto trade advisor AI. ${disclaimer} Geef concreet, praktisch advies voor iemand die $${amount} wil investeren in ${coin} voor ${timeframe} met een ${risk} risicoprofiel. Bespreek: of dit een goed moment is, hoe te spreiden, wanneer te handelen, en 1 belangrijke waarschuwing. Max 6 zinnen. Schrijf in het Nederlands.`,
       context
     );
-    document.getElementById('body-advice').textContent = advice;
+    document.getElementById('body-advice').innerHTML = renderMd(advice);
     setChip('advice', 'done');
   } catch(e) {
     showError('advice', e.message);
