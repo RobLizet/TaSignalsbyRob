@@ -2,15 +2,8 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Crypto Trading Signals</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00ff88">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Signals">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<meta name="description" content="AI crypto trading signalen">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fias Arche — Crypto Trading Signals</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
 
@@ -57,25 +50,7 @@
     max-width: 860px;
     margin: 0 auto;
     padding: 1.5rem 1.2rem 4rem;
-    padding-top: max(1.5rem, env(safe-area-inset-top));
-    padding-bottom: max(4rem, env(safe-area-inset-bottom));
   }
-
-  #installBanner {
-    display: none;
-    background: rgba(0,255,136,0.07);
-    border: 1px solid rgba(0,255,136,0.2);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    align-items: center;
-    gap: 0.8rem;
-  }
-  #installBanner.show { display: flex; }
-  #installBanner p { font-size: 0.72rem; color: var(--text); flex: 1; line-height: 1.4; font-family: 'IBM Plex Mono', monospace; }
-  #installBanner p span { color: var(--green); }
-  .install-btn { background: var(--green); color: #000; border: none; border-radius: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 700; padding: 6px 12px; cursor: pointer; letter-spacing: 0.06em; white-space: nowrap; }
-  .dismiss-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 4px; }
 
   /* TOP BAR */
   .topbar {
@@ -355,13 +330,6 @@
 <body>
 <div class="wrap">
 
-  <!-- PWA Install Banner -->
-  <div id="installBanner">
-    <p>📲 <span>Installeer als app</span> — zet hem op je homescreen!</p>
-    <button class="install-btn" onclick="installPWA()">INSTALLEER</button>
-    <button class="dismiss-btn" onclick="dismissInstall()">✕</button>
-  </div>
-
   <!-- Header -->
   <div class="topbar">
     <div>
@@ -369,31 +337,6 @@
       <div class="topbar-sub">FIAS ARCHE · CRYPTO TRADING SIGNALS<br>POWERED BY AI ENTITIES</div>
     </div>
     <div class="topbar-badge">⬡ FIAS v0.1</div>
-  </div>
-
-  <!-- FIAS Ecosystem Strip -->
-  <div id="fiasStrip" style="
-    display:flex; align-items:center; gap:1.2rem;
-    background: rgba(153,102,255,0.07);
-    border: 1px solid rgba(153,102,255,0.18);
-    border-radius: 8px; padding: 0.6rem 1rem;
-    margin-bottom: 1rem; flex-wrap: wrap;
-  ">
-    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#9966ff; letter-spacing:0.1em;">⬡ FIAS ECOSYSTEM</span>
-    <div style="display:flex; gap:1.2rem; flex:1; flex-wrap:wrap;">
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); letter-spacing:0.08em;">FIAS TOKEN</div>
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:1rem; color:#9966ff;" id="s-fiasPrice">⬡ Platform</div>
-      </div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); letter-spacing:0.08em;">DevvE TOKEN</div>
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:1rem; color:var(--green);" id="s-devvePrice">laden...</div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem;" id="s-devveChange">—</div>
-      </div>
-    </div>
-    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); text-align:right; line-height:1.6;">
-      Payments via<br><span style="color:#9966ff">DevvX Blockchain</span>
-    </span>
   </div>
 
   <!-- Inputs -->
@@ -406,8 +349,7 @@
         <option value="Solana (SOL)">Solana (SOL)</option>
         <option value="BNB (BNB)">BNB (BNB)</option>
         <option value="XRP (XRP)">XRP (XRP)</option>
-        <option value="FIAS (FIAS)">⬡ FIAS (FIAS)</option>
-        <option value="DevvE (DevvE)">⬡ DevvE (DevvE)</option>
+        <option value="FIAS (FIAS)">FIAS (FIAS)</option>
         <option value="Cardano (ADA)">Cardano (ADA)</option>
         <option value="Avalanche (AVAX)">Avalanche (AVAX)</option>
       </select>
@@ -530,48 +472,6 @@ function setChip(id, state) {
 function loading(id) {
   document.getElementById('body-' + id).innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
 }
-
-// ─── PWA ──────────────────────────────────────────────────────
-let deferredPrompt = null;
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(console.error));
-}
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferredPrompt = e;
-  if (!localStorage.getItem('signals_pwa_dismissed')) {
-    document.getElementById('installBanner').classList.add('show');
-  }
-});
-async function installPWA() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  document.getElementById('installBanner').classList.remove('show');
-}
-function dismissInstall() {
-  document.getElementById('installBanner').classList.remove('show');
-  localStorage.setItem('signals_pwa_dismissed', '1');
-}
-window.addEventListener('appinstalled', () => document.getElementById('installBanner').classList.remove('show'));
-
-// ─── FIAS ECOSYSTEM PRICES ────────────────────────────────────
-async function loadFiasEcosystem() {
-  try {
-    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=devve&vs_currencies=usd&include_24hr_change=true');
-    const data = await res.json();
-    if (data.devve) {
-      const p = data.devve.usd;
-      const ch = data.devve.usd_24h_change;
-      document.getElementById('s-devvePrice').textContent = p < 0.01 ? '$' + p.toFixed(6) : '$' + p.toFixed(4);
-      const chEl = document.getElementById('s-devveChange');
-      chEl.textContent = (ch >= 0 ? '▲ +' : '▼ ') + ch.toFixed(2) + '%';
-      chEl.style.color = ch >= 0 ? 'var(--green)' : 'var(--red)';
-    }
-  } catch(e) {}
-  document.getElementById('s-fiasPrice').textContent = '⬡ Platform';
-}
-loadFiasEcosystem();
 
 async function runAnalysis() {
   const coin = document.getElementById('coinSelect').value;
