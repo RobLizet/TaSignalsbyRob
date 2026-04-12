@@ -1,13 +1,12 @@
 {
-  "name": "SIGNAL – Crypto Trading",
+  "name": "Crypto Trading Signals",
   "short_name": "Signals",
-  "description": "AI crypto trading signalen powered by FIAS Arche",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "AI-gegenereerde crypto trading signalen en technische analyse",
+  "start_url": "/index.html",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#060608",
   "theme_color": "#00ff88",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "icons/icon-192.png",
@@ -21,5 +20,7 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["finance", "utilities"],
+  "lang": "nl"
 }
