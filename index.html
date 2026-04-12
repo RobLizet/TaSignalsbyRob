@@ -1,388 +1,361 @@
 <!DOCTYPE html>
-
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Crypto Trading Signals</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00c8ff">
+<meta name="theme-color" content="#00ff88">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="application-name" content="Signals">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Signals">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="description" content="AI crypto trading signalen">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Dancing+Script:wght@600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
 
-:root {
-–bg: #1a1e2e;
-–surface: #1e2436;
-–card: #2a2f4a;
-–border: #2e3555;
-–green: #00c8ff;
-–red: #ff4466;
-–yellow: #ffcc00;
-–blue: #6ab0ff;
-–text: #ffffff;
-–muted: #8fa8cc;
-–gold: #ffaa00;
-}
+  :root {
+    --bg: #060608;
+    --surface: #0d0d12;
+    --card: #111118;
+    --border: #1a1a28;
+    --green: #00ff88;
+    --red: #ff3355;
+    --yellow: #ffcc00;
+    --blue: #00aaff;
+    --text: #e8eaf0;
+    --muted: #555577;
+    --gold: #ffaa00;
+  }
 
-- { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-background: var(–bg);
-color: var(–text);
-font-family: ‘DM Sans’, sans-serif;
-min-height: 100vh;
-}
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
 
-body::after {
-content: ‘’;
-position: fixed;
-inset: 0;
-background: repeating-linear-gradient(
-0deg,
-transparent,
-transparent 2px,
-rgba(0,100,255,0.012) 2px,
-rgba(0,100,255,0.012) 4px
-);
-pointer-events: none;
-z-index: 999;
-}
+  /* Scanline effect */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,255,136,0.012) 2px,
+      rgba(0,255,136,0.012) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
 
-.wrap {
-max-width: 860px;
-margin: 0 auto;
-padding: 1.5rem 1.2rem 4rem;
-padding-top: max(1.5rem, env(safe-area-inset-top));
-padding-bottom: max(4rem, env(safe-area-inset-bottom));
-}
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1.2rem 4rem;
+    padding-top: max(1.5rem, env(safe-area-inset-top));
+    padding-bottom: max(4rem, env(safe-area-inset-bottom));
+  }
 
-#installBanner {
-display: none;
-background: rgba(0,255,136,0.07);
-border: 1px solid rgba(0,255,136,0.2);
-border-radius: 8px;
-padding: 0.75rem 1rem;
-margin-bottom: 1rem;
-align-items: center;
-gap: 0.8rem;
-}
-#installBanner.show { display: flex; }
-#installBanner p { font-size: 0.72rem; color: var(–text); flex: 1; line-height: 1.4; font-family: ‘IBM Plex Mono’, monospace; }
-#installBanner p span { color: var(–green); }
-.install-btn { background: var(–green); color: #000; border: none; border-radius: 5px; font-family: ‘IBM Plex Mono’, monospace; font-size: 0.65rem; font-weight: 700; padding: 6px 12px; cursor: pointer; letter-spacing: 0.06em; white-space: nowrap; }
-.dismiss-btn { background: transparent; border: none; color: var(–muted); cursor: pointer; font-size: 1rem; padding: 4px; }
+  #installBanner {
+    display: none;
+    background: rgba(0,255,136,0.07);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  #installBanner.show { display: flex; }
+  #installBanner p { font-size: 0.72rem; color: var(--text); flex: 1; line-height: 1.4; font-family: 'IBM Plex Mono', monospace; }
+  #installBanner p span { color: var(--green); }
+  .install-btn { background: var(--green); color: #000; border: none; border-radius: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 700; padding: 6px 12px; cursor: pointer; letter-spacing: 0.06em; white-space: nowrap; }
+  .dismiss-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 4px; }
 
-.topbar {
-display: flex;
-align-items: center;
-gap: 0.8rem;
-margin-bottom: 2rem;
-padding-bottom: 1rem;
-border-bottom: 1px solid var(–border);
-}
+  /* TOP BAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
 
-.topbar-logo {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 2rem;
-color: var(–green);
-letter-spacing: 0.05em;
-line-height: 1;
-text-shadow: 0 0 20px rgba(0,200,255,0.5);
-}
+  .topbar-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--green);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(0,255,136,0.5);
+  }
 
-.topbar-sub {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.6rem;
-color: var(–muted);
-letter-spacing: 0.12em;
-line-height: 1.6;
-}
+  .topbar-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    line-height: 1.6;
+  }
 
-.topbar-badge {
-margin-left: auto;
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.6rem;
-color: var(–green);
-border: 1px solid rgba(0,255,136,0.3);
-padding: 4px 10px;
-border-radius: 3px;
-background: rgba(0,255,136,0.05);
-letter-spacing: 0.08em;
-}
+  .topbar-badge {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--green);
+    border: 1px solid rgba(0,255,136,0.3);
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: rgba(0,255,136,0.05);
+    letter-spacing: 0.08em;
+  }
 
-.coin-selector {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 0.8rem;
-margin-bottom: 1rem;
-}
+  /* COIN SELECTOR */
+  .coin-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
 
-.input-group {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 8px;
-padding: 0.9rem 1rem;
-}
+  .input-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+  }
 
-.input-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.6rem;
-color: var(–muted);
-letter-spacing: 0.1em;
-text-transform: uppercase;
-margin-bottom: 0.5rem;
-display: block;
-}
+  .input-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
 
-select, input[type=“number”], input[type=“password”], input[type=“text”] {
-width: 100%;
-background: transparent;
-border: none;
-color: var(–text);
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 1rem;
-font-weight: 600;
-outline: none;
-cursor: pointer;
-}
+  select, input[type="number"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+  }
 
-input[type=“password”], input[type=“text”] {
-font-size: 0.8rem;
-font-weight: 400;
-}
+  select option { background: #111; }
 
-select option { background: #242840; }
+  /* TASK TREE */
+  .entity-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
 
-.entity-row {
-display: flex;
-gap: 0.5rem;
-margin-bottom: 1rem;
-flex-wrap: wrap;
-}
+  .entity-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: var(--card);
+    transition: all 0.25s;
+    letter-spacing: 0.04em;
+  }
 
-.entity-chip {
-display: flex;
-align-items: center;
-gap: 0.35rem;
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.62rem;
-padding: 5px 10px;
-border-radius: 4px;
-border: 1px solid var(–border);
-color: var(–muted);
-background: var(–card);
-transition: all 0.25s;
-letter-spacing: 0.04em;
-}
+  .entity-chip .led {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: all 0.25s;
+  }
 
-.entity-chip .led {
-width: 5px; height: 5px;
-border-radius: 50%;
-background: var(–muted);
-transition: all 0.25s;
-}
+  .entity-chip.running {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(0,255,136,0.06);
+  }
+  .entity-chip.running .led {
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: blink 0.8s infinite;
+  }
+  .entity-chip.done {
+    border-color: rgba(0,255,136,0.3);
+    color: rgba(0,255,136,0.6);
+  }
+  .entity-chip.done .led { background: rgba(0,255,136,0.4); }
 
-.entity-chip.running {
-border-color: var(–green);
-color: var(–green);
-background: rgba(0,255,136,0.06);
-}
-.entity-chip.running .led {
-background: var(–green);
-box-shadow: 0 0 6px var(–green);
-animation: blink 0.8s infinite;
-}
-.entity-chip.done {
-border-color: rgba(0,255,136,0.3);
-color: rgba(0,255,136,0.6);
-}
-.entity-chip.done .led { background: rgba(0,255,136,0.4); }
+  @keyframes blink {
+    0%,100% { opacity:1; } 50% { opacity:0.2; }
+  }
 
-@keyframes blink {
-0%,100% { opacity:1; } 50% { opacity:0.2; }
-}
+  /* ANALYZE BTN */
+  .analyze-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(0,255,136,0.1);
+  }
 
-.analyze-btn {
-width: 100%;
-background: transparent;
-border: 1px solid var(–green);
-color: var(–green);
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 1.3rem;
-letter-spacing: 0.15em;
-padding: 0.75rem;
-border-radius: 6px;
-cursor: pointer;
-transition: all 0.2s;
-margin-bottom: 1.5rem;
-box-shadow: 0 0 20px rgba(0,200,255,0.1);
-}
+  .analyze-btn:hover:not(:disabled) {
+    background: rgba(0,255,136,0.08);
+    box-shadow: 0 0 30px rgba(0,255,136,0.25);
+  }
 
-.analyze-btn:hover:not(:disabled) {
-background: rgba(0,255,136,0.08);
-box-shadow: 0 0 30px rgba(0,200,255,0.25);
-}
+  .analyze-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 
-.analyze-btn:disabled {
-opacity: 0.4;
-cursor: not-allowed;
-}
+  /* RESULTS GRID */
+  .results { display: none; flex-direction: column; gap: 0.8rem; }
+  .results.visible { display: flex; }
 
-.results { display: none; flex-direction: column; gap: 0.8rem; }
-.results.visible { display: flex; }
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    animation: fadeUp 0.35s ease both;
+  }
 
-.result-card {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 8px;
-overflow: hidden;
-animation: fadeUp 0.35s ease both;
-}
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(8px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
 
-@keyframes fadeUp {
-from { opacity:0; transform: translateY(8px); }
-to   { opacity:1; transform: translateY(0); }
-}
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.015);
+  }
 
-.card-header {
-display: flex;
-align-items: center;
-gap: 0.6rem;
-padding: 0.7rem 1rem;
-border-bottom: 1px solid var(–border);
-background: rgba(255,255,255,0.015);
-}
+  .card-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    padding: 3px 7px;
+    border-radius: 3px;
+  }
 
-.card-tag {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.58rem;
-letter-spacing: 0.1em;
-padding: 3px 7px;
-border-radius: 3px;
-}
+  .tag-trend  { background: rgba(0,170,255,0.12); color: var(--blue);   border: 1px solid rgba(0,170,255,0.3); }
+  .tag-signal { background: rgba(0,255,136,0.1);  color: var(--green);  border: 1px solid rgba(0,255,136,0.3); }
+  .tag-risk   { background: rgba(255,51,85,0.1);  color: var(--red);    border: 1px solid rgba(255,51,85,0.3); }
+  .tag-advice { background: rgba(255,204,0,0.1);  color: var(--yellow); border: 1px solid rgba(255,204,0,0.3); }
 
-.tag-trend  { background: rgba(0,170,255,0.12); color: var(–blue);   border: 1px solid rgba(0,170,255,0.3); }
-.tag-signal { background: rgba(0,255,136,0.1);  color: var(–green);  border: 1px solid rgba(0,255,136,0.3); }
-.tag-risk   { background: rgba(255,51,85,0.1);  color: var(–red);    border: 1px solid rgba(255,51,85,0.3); }
-.tag-advice { background: rgba(255,204,0,0.1);  color: var(–yellow); border: 1px solid rgba(255,204,0,0.3); }
+  .card-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    flex: 1;
+  }
 
-.card-title {
-font-size: 0.82rem;
-font-weight: 500;
-flex: 1;
-}
+  .pay-chip {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--gold);
+    background: rgba(255,170,0,0.08);
+    border: 1px solid rgba(255,170,0,0.2);
+    padding: 3px 7px;
+    border-radius: 3px;
+  }
 
-.pay-chip {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.58rem;
-color: var(–gold);
-background: rgba(255,170,0,0.08);
-border: 1px solid rgba(255,170,0,0.2);
-padding: 3px 7px;
-border-radius: 3px;
-}
+  .card-body {
+    padding: 1rem;
+    font-size: 0.83rem;
+    line-height: 1.75;
+    color: #b0b8d0;
+    font-family: 'DM Sans', sans-serif;
+    white-space: pre-wrap;
+    min-height: 60px;
+  }
 
-.card-body {
-padding: 1rem;
-font-size: 0.78rem;
-line-height: 1.65;
-color: #111111;
-background: #ffffff;
-font-family: ‘DM Sans’, sans-serif;
-white-space: normal;
-min-height: 60px;
-}
+  /* Loading dots */
+  .dots { display: inline-flex; gap: 5px; }
+  .dots span {
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 1s infinite;
+  }
+  .dots span:nth-child(2) { animation-delay:.2s; }
+  .dots span:nth-child(3) { animation-delay:.4s; }
 
-.dots { display: inline-flex; gap: 5px; }
-.dots span {
-width: 5px; height: 5px;
-background: var(–green);
-border-radius: 50%;
-animation: blink 1s infinite;
-}
-.dots span:nth-child(2) { animation-delay:.2s; }
-.dots span:nth-child(3) { animation-delay:.4s; }
+  /* Disclaimer */
+  .disclaimer {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    line-height: 1.6;
+  }
 
-.disclaimer {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.58rem;
-color: var(–muted);
-text-align: center;
-padding: 0.6rem;
-border: 1px solid var(–border);
-border-radius: 6px;
-line-height: 1.6;
-}
+  /* Payment log */
+  .pay-log {
+    background: var(--card);
+    border: 1px solid rgba(255,170,0,0.15);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    animation: fadeUp 0.35s ease both;
+  }
 
-.pay-log {
-background: var(–card);
-border: 1px solid rgba(255,170,0,0.15);
-border-radius: 8px;
-padding: 0.9rem 1rem;
-animation: fadeUp 0.35s ease both;
-}
+  .pay-log-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
 
-.pay-log-title {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.6rem;
-color: var(–gold);
-letter-spacing: 0.1em;
-text-transform: uppercase;
-margin-bottom: 0.6rem;
-}
-
-.pay-row {
-display: flex;
-justify-content: space-between;
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 0.65rem;
-padding: 4px 0;
-border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.pay-row:last-child { border: none; }
-.pay-row .name { color: var(–muted); }
-.pay-row .amt  { color: var(–gold); }
-.pay-row .ok   { color: var(–green); font-size: 0.55rem; }
-
-.key-toggle {
-background: transparent;
-border: 1px solid var(–border);
-color: var(–muted);
-border-radius: 4px;
-padding: 4px 8px;
-cursor: pointer;
-font-size: 0.75rem;
-line-height: 1;
-flex-shrink: 0;
-}
-.key-toggle:hover { border-color: var(–green); color: var(–green); }
+  .pay-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .pay-row:last-child { border: none; }
+  .pay-row .name { color: var(--muted); }
+  .pay-row .amt  { color: var(--gold); }
+  .pay-row .ok   { color: var(--green); font-size: 0.55rem; }
 </style>
-
-<script>
-const ICON_192 = 'data:image/png;base64,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';
-const ICON_512 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAq1ElEQVR4nO3daWBU5d338f+ZTCY7GQiLJBqBgGxKEGRRWRQEbwuIVI27YtXHKq1apdq61AW3Um7rBm3dtdba4AIKFXHDBQQBJYAsskmQsAYGQsie87zwHsWY5czMWef6fl5pnDnnOknM73ddZxlNVLdYz5TB2gGjL8/O7aNbORy7lRQWBbML8kNOj8MpHD/Hz/HHz/GXFK/UInpDhH//443f6QG4VbwFPQDEu6b+bkdcDBRBARDCHgDiWWN/4ykFihaAI38ZSkSCDg4FAOCA7Nw+eolIMJwHKhYCZQoAs3wAQFN+MjFUpAzEdQEg9AEAkVKlDMRlASD4AQBmiOdTBHFVAAh+AIAV4rEIeP5AYg39aO6D3T5t5aZY9gkAMFfO5D55kb4n1ucgeL0MeHYFwOrZPiEPAN7R3N/saMqBEV5fFfBkAbAi/Al8AIhPDf++m10IsnP76F4sAZ4asNnBT+gDgNrMLgNeKgKeGKiZwU/oAwAaY2YZ8EIRcP0AzQh/Qh8AEAkzyoDbS4BrB0fwAwCcFs9FwJWDiiX8CX0AgBViKQNuLAGuGhDBDwBwu3gpAq4ZSLThT/ADAJwQbRFwSwnwOT0AEcIfAOA90WaQWx5b72gLIfgBAPHAi6sBju04mvAn+AEAbhbVZxI4VAIcOQVA+AMA4lE0WeXUKQHbCwDhDwCIZ14pAbYuO0R6gAQ/AMDLIj0lYOfpANt2FG/hb9XHS9ot1s/D9jqOn+Pn+L1//PGWF3aVAFs+DtjL4R8vQQ8A8aqpv9NuyZLt01ZuiiRL7Pp4YcsLQCTh74YfFoEPAPGh4d9zJzMmvG+jGWNHCbC0AHgl/Al9AIh/R/6tdypzIlkNsLoEWHYXgNvDP2dyn7ycyX3ytFy9v937BgA4K/z334kJYCSZZ+XdAZYUADeHfzj47dwnAMC9nMgFN5QA0wuAW8Of4AcANMfunHC6BJhaANwY/gQ/ACASduaGkyXAkUcB2xH+BD8AIBZ25YhTFySaVgCMNhO7wt/qfQAA1OCmEmDmKoApBcAt4c+sHwBgBTvyxe4SEHMBcFP4W7l9AADiqQTY8ihgKxH8AAA7hXPHDU+vjUVMKwBOz/4JfwCAU6zKILtWAaIuAIQ/AEB1Xi4Blt4GaEX4c6EfAMBNrMolq08xRFUArHw2cXMIfgCAWzmVUdFmcsQFwKmlf8IfAOB2ZmeVlacCLDkFQPgDAFTlVAmIVEQFwEjDIPwBAKpzogREugrgyGcBGEX4AwC8yu0ZZrgAODH7BwAA3zN7FcBQAXDiqn+3NycAAFriRJYZzWzTTgGYOfsn/AEA8cLMTDMza1ssAHYv/RP+AIB4Y3cJMJLdrr4IEAAAWCPmAsDsHwCAlrntVECzBcDOi/8IfwBAvLMz61rK8JhWALjtDwAAZ8SawU0WAGb/AACYzy2rAI5fBEj4AwBU44bsa7QA8NQ/AADcL5ZbAh1dAXBDAwIAwAlOZ2BUBYDZPwAA7hBtJv+sANh18Z/TzQcAAKfZlYWNZbvjFwECAAD7RVwAzFj+Z/YPAMD3zMjEaLL5JwXAiY/9BQAA1muY8bafAmD2DwDATzmRjREVAK7+BwDAnSLNaE0W65lGX6wXa8sjH1KDHebq/WPdBgAA8cbujNXC/2DH0//cuPxfUlgUzC7IDzk9Dqdw/Bw/x8/xOz0Op7jx+O3I2ZLilZpIBKcAWP4HAMDdIslqngMAAICCbCsAblz+BwDATezMSlYAAABQkE+k5QsAOf8PAIA3tJTZ4cxnBQAAAAXZUgA4/w8AgDF2ZSYrAAAAKIgCAACAgigAAAAoyMdHAAMAoJbs3D56iysA3AIIAIC3GMluy08BcAcAAACRsSM7uQYAAAAFUQAAAFAQBQAAAAVRAAAAUBAFAAAABVEAAABQEAUAAAAFUQAAAFAQBQAAAAVRAAAAUBAFAAAABVEAAABQEAUAAAAFUQAAAFAQBQAAAAVRAAAAUBAFAAAABVEAAABQEAUAAAAFUQAAAFAQBQAAAAVRAAAAUBAFAAAABVEAAABQEAUAAAAFUQAAAFAQBQAAAAVRAAAAUBAFAAAABVEAAABQEAUAAAAFUQAAAFAQBQAAAAX5nR4AAMSDksKiRr+eXZBv80gAY1gBAABAQRQAAAAURAEAAEBBFAAAABREAQAAQEEUAAAAFEQBAABAQRQAAAAURAEAAEBBFAAAABREAQAAQEEUAAAAFEQBAABAQRQAAAAURAEAAEBBmizWM5t7gV6sLY9pB7l6/1jeDwAeEWri60Ebx4A4YnX++rML8kPNbmGabIplAC1u32ElhUVBt4/RShw/x8/xm3P8JYVFjX7dzd9ffv4uP36L85dTAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKMjv9AAAwC6NfGJfqKlP8bNwn6bILsi3ZLtQBysAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoyO/0AADYr6SwKPyPoSP+WbIL8h0ZDwD7sQIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAQu7lODwCIlCaL9czmXqAXa8tj2kGu3j+W9wOwRKiJrwdtHIMTQiZvr2HwjzF5+80J2rgvOMDq/PVnF+SHmt3CNNkUywBa3L7DSgqLgm4fo5U4fjWPv6SwqNGvx/v3oqnjjpKjs34zflaq/v6Huf74Lc5fTgEAQGTmStPhz6kAeAYFAACMMxLwlAB4AgUAAFrW3Ky/qdcDrkYBAIDmEeaISxQAAGhcpLP+xt4PuJbf6QEAgAvFGt523g4IRIUCAAA/MmPWTvjDEygAAPA9Zv1QCgUAgOqY9UNJFAAAKmPWD2VRAACXMvmxtY7uM7sg35LtxoBZP5RHAQCgGmb9gFAAACiipLCIWT9wBAoAgLhnQvgT/Ig7FAAAcYtZP9A0CgCAuMSsH2geBQBAXGHWDxhDAQAQN5j1A8ZRAAB4HrN+IHIUAACexqwfiA4FAIAnMesHYkMBAOA5zPqB2FEAAHgGs37APD6nBwAARsQa/tkF+WOE8Ad+wAoAAFczY9b/f+EP4AgUAACuZdKsH0AjKAAAXIdZP2A9CgAA1yD4AftwESAAVyD8AXuxAgDAUQQ/4AxWAAA4hvAHnMMKAADbEfyA8ygAAGzFrX2AO1AAANiCWT/gLhQAAJZj1g+4DwUAgJWY9QMuRQEAYBVm/YCLUQAAmI1ZP+ABFAAAZmLWD3gEBQCAGZj1Ax5DAQAQK2b9gAdRAABEi1k/4GEUAADRYNYPeBwFAEAkmPUDcYICAMAoZv1AHKEAAGgJs34gDlEAADQn1vAn+AGXogAAaEzMs34h/AFXowAAaIhZP6AACgCAMGb9gEIoAABEmPUDyqEAwPW2t+ve6Ndz9qy3eSRxiVk/oCgKAKAu5Wb92QX5P/n3ksKiYHZBfsiMbZcUFhnaJ+AWFABAPcz6AVAAAMUoN+sH0Dif0wMAYBvCH8APWAEA4h/BD+BnWAEA4hvhD6BRrAAA8SuW8Cf4gTjHCgAQnwh/AM2iAADxh/AH0CIKABBfCH8AhmiyWM9s7gV6sbY8ph3k6v1jeT+gTyoINfZ1bXph0N6R2C4UwWvdfrFf0OLtu0Goia8HbRwD4ojV+etv8TGY02RTLAMw6zGbVjHzUaBe5Injb+KzAMwYt5uPv6lHyzbC9bN+F3+P7XgUsCnbt4Kbf//t4Prjtzh/OQUAeJvrwx+AO1EAAO8i/AFEjQIAeBPhDyAmPAgI8Ba3X+wHwCNYAQC8g/AHYBpWAABvYMkfgKlYAQDcj/AHYDoKAOBuhD8AS1AAAPci/AFYhmsAAJcpKSziYj8AlqMAAC4SY/gT/AAM4xQA4BKEPwA7UQAAFyD8AdiNAgA4jPAH4ASuAQAcwsV+AJzECgDgAMIfgNNYAQBsxpI/ADdgBQCwEeEPwC0oAIBNCH8AbsIpAMAGhH/8yy7Id3oIQEQoAICFuNgPgFtxCgCwSCzhn12QP0YIfwAWogAAFjAh/AHAUpwCgCm2t+vuzX1OKghJg+3k7Fkf0yYJfwBewAoAYCLCH4BXUAAAkxD+ALyEUwBAjGK90p/wB+AECgAQA2b9ALyKUwBAlAh/AF5GAQCiQPgD8DoKABAhwh9APOAaAMAgLvYDEE8oAIABzPoBxBtOAQAtIPwBxCMKANAMwh9AvKIAAE0g/AHEMwoA0AjCH0C84yJA4Aja9EKu9AegBAoA8H9iCX+CH4DXUAAAcWf4ZxfkW7FZEREpKSyyfZ8A3IVrAKA8N4Y/AFiNAgClEf4AVMUpACiJi/0AqI4VACiH8AcAVgCgGJb8AeB7rABAGYQ/APyIAgAlEP4A8FMUAMQ9wh8Afo5rABC3uNgPAJpGAUBcYtYPAM3jFADiTizhr08qIPwBKIECgLhC+AOAMRQAxA3CHwCM4xoAeF6sF/sR/gBUxAoAPI3wB4DosAIAz2LJHwCixwoAPInwB4DYUADgOYQ/AMSOAgBPIfwBwBxcAwBP4GI/ADAXBQCux6wfAMzHKQC4GuEPANbQZLGe2dwL9GJteUw7yNX7x/J+eIM+qSBk1bajKQGxhL82vTAY7Xs9JNTE14M2jgFAM6zOXy07t4/e3Au2T1u5KZYB5EzukxfL+61WUlgUzC7IDzk9DqeYdfzb23U3YTRNi6QExDrzz9mzPpa3e0JJYVGjX88uyLd5JM7i/3+O383Hb3X+cgoAnmA01Fn2BwBjKACIG4Q/ABhHAYBnNBXw+qSCMYQ/AESGAgBPaRj0BD8ARIcCAM8Jhz7hDwDRowDAkwh/AIgNTwIEFBS+3c/tt0EBsA4rAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICCKAAAACiIAgAAgIIoAAAAKIgCAACAgigAAAAoiAIAAICC/E4PAPEhZ896y7a9vV13y/ZZUlgUzC7ID8W8IQDwGFYAAABQEAUAAAAFUQAAAFAQBQAAAAVRAAAAUBAFAAAABVEAAABQEAUAAAAFUQAAAFAQBQAAAAVRAAAAUBAFAAAABVEAAABQEAUAAAAFabJYz2zuBXqxtjymHeTq/WN5P6BPKgg19nVtemHQ3pEAgH2szl9/i5+FPk02xTIAt3/WuuqfB++J42/XvdEvmzFuTxy/hTh+jp/jd/HxW5y/nAIAAEBBFAAAABREAQAAQEEUAAAAFOR3egBAS3L2rHd6CAAQd1gBAABAQRQAAAAURAEAAEBBFAAAABREAQAAQEEUAAAAFEQBAABAQRQAAAAURAEAAEBBFAAAABREAQAAQEEUAAAAFEQBAABAQRQAAAAURAEAAEBBFAAAABREAQAAQEEUAAAAFEQBAABAQRQAAAAURAEAAEBBFAAAABREAQAAQEEUAAAAFEQBAABAQRQAAAAURAEAAEBBFAAAABREAQAAQEEUAAAAFEQBAABAQRQAAAAURAEAAEBBFAAAABREAQAAQEF+pwcAxKP6jODBqhOHfnl48BmLarqdsKE+rdUhSfDXiabpP3+1LlKv+7TaGr92+FBqQumOdoF1K3okL/94QGDj6m5a5eFk+4/AHHpioKa6Z781lYPO+Ly694DVtW3a7dMDyVXiS6hv/A26Jnq9ptVUJyaESlv7v13fKXnFZ/2SVn7eN2HPjnY2Dx+IaxQAwERVxw9cdei8awurevb/uq1WmnGWfNZzgDwy5iRZ1jVHtrcJSigtUw6kpUhFoEJSqg9LalW5pFXu8HXcvy1wzN5tgWP2bgrm7SzKy/9m1Zhz3iuV9Eqtuirg/27zMSmfzz81ZfH8UxJ2fdfByFh2PzHnutoOx+xs4WWnlxQWTRARSV7y/slt/veWW2P9Huj+xNrKwWcsOjT28rdqOvfYnKTV+AfL4uP6yxv986Wo07Gytf3R8l1Wa9mfniIVgYBU+w9LalWZZFSUaRkV+7XW5d8kHbd9bYee363t0PO7FYMmztwqd8/QqiqSAmu/7J36wRtnJH/5yUlaTXVirGMFVEYBAExQH2wb2n/9fY9X9T31qxHy4QnXyoW3nCOzBgWkusn/x9LlUHK6HEoWkczOsuVnoa6Lpm+SvJ2LAqes+7jL8K8XdBn37uZLbnwp4/Wnzs/4z/SLWxpTXduOezZK17/lyaajWnrt63Lu5xd0m/FsiwfaDD2QVF0+9orZZedc+UZisr92gswadLHcXnCGvN8nTcqbXcXIkLKUDClLCf/7YFl83JH/fYN02zE/afSK+X1Hr3i374N/DdVokvLZf4elz3rul/4dW7NjGTegKgoAEKPq7n3X7btjxr3tk8uS/y7n/HG8zB5oxnY10bWusrFjV9nY8XJ56XQRkfvlzplT+py/zEgB0BMS6iLZX316Zlm0Y60ccPoXoevveyIpLbH6Vnl87M3yyNntZXdmtNtrqJts6NhNNnScJNPPKpWsshcTr/joH6df++43p8+elPXQb+5K+uqzfmbtC1AFFwECMajp1H3Lvrueuvvk5BWdvpbeT5gV/k1JkYpAbdvsvVbuIxJ6YqAmNGnK4/t+/+hD49I+6rVRuv7tYfnDZWaGf0NZUppxszxy9jrp8eRZMq9fVY8T11q1LyCesQIARElPSqksvfMf9/QJrM2ZK2PuypQDqbbsWNMav4DOZvXpmYf23THjXi2v29Zn5arf/EqeG2nn/jXRtTQpT67N6fydnfsF4gUFAIhS2bnXzExpFaieI2PvsC38XUJPSasovfuZOzOObVv6loy871RZ2MOxsST4a53aN+BlFAAgCnpKWsWhcVfMvlemFOTI9iynx2Mrzafv+/2jDyUf23H3uzLivpNkWVenhwQgcpZfA7B92spNVu8DsFvlScOXZiRUBCbLtPFOj8VuZef9v8Ka409a/bqcexvhD1jDjuxscQUgZ3KfPEIc+KnDI375/hh5Lz9VDicZeX1IguUvy6Ufvy9nFK2THtt3SMf9hyW1KiDV/qCE0lrL/vSusvGofCnqlC9FnU+VhT06yK6gxYcRsdqju2wrO/fawj/J/eePkvfyo9nGV3Li5g9lxKoFctrqLdJ5d6lkHdwnbQ4lS2UgS0ozsqQ0o5N82/5k+bz7988PWJ6XJFXc8w9EIGdyn7yWXuMvKV6pZef2aeTpZACaUt2l56az5KmJRl47X0avuFBe/d/9dRkVgfUreiQve3t00rqveqbu392mPpBSVdXh6J3Feb02bzwuf92c3Gs/qA+2DUmCr76/LM/7hfy33wR5c3BfWdE5vD2tvs6xu3dCv75nei/fupy7ZEpBpO/9r/xi+RS5q3CxDP7Gd7gsLXHTmrykVR8MT9y0umtw/57WemJSTajjsdv3dO6xZeVxfde9kTt6Zn1aq0MpUhE4S97pd7G8Mmy8zB7ol9oEK44NUElJ8UqNawCAKOhJqZV9ZGWnll63T9ocOl9m/qVy7YZOR0296Y++8oPpR/53n4j4d2zNTlqx8Mf72DVNr8nrvXHNiAkffDnohnn3ZfypsL8sz7tanhl1QDIPJ+wpaW/6ARlQ3fX4DdXH5a9/TEbdE0kIV0hK9a/kuSdelQs/C6wv6tH2pcv+HNiw8rjGXpu4ZW2XlEXzhob/XQ8kVVcOOP2Lt8dc9vYbeTP/cpS2K/MGeXzsJJl+Vis5mCoiotXVUQiAKFAAgGj4fPVG7nWfL6NXHKxPr+z48G/v0CrKjd0poOta4sbV3YIbV3eTp6b8uqZLr01rJlz1+m9zJs/VqiqSkld8PCDm8Ueh7IJJ/x4oX3Q7Q943vPR/QDIPj5AP7/qyrs/W1k/edkvKwnlDItmnVl0VSFk4b0jKwnlD6oNtQ2UTrnrt9lH3vvoX/+9n3S4PnlspydX+ki25kR8NAAoAEKV2sqdVS68JSbBcq6tNMBz+jUjcvCavtQnP6I+FHkiqrjphcNGNctmNkbxvorzw+FfVvb9rd9elUxO3rO0Syxh8ob3BzOf/fHVG4d8uLLvg+lfvbD/2a6221p+6fkXPWLYLqMqWArB92spNRi5IALykVvwtPpBngCztqicGag6Nv/LN9NnPT7BjXFao7D98WYqvyh/Jkw7/JtfNmyXnLGnz2O/+EGv4H8lXfjA987mHrzZre4Db2HXhPY8CBqJUKlktPju/vyzPu1WmTjh4yU0v7X509m8qho9boCenVtoxPjNVDBu7YLTM79vSh/qE1Yq/7mH5wxspn8wZnrz0w0FWjw9A5Hwi318N2NyLmL0DDdTVJmyRzruMvPTPctvln8iwB36Z/UWnmkl/+MeOlz6/aOfzn1629+5n7jo09tK3a7OPLRFNc/WdONXd+64dKp/2Mvr6QilYWKwfs7fVq09eYuW4APxcS5kdznyuAQCikBAqDS7IOm31SPmgj5HXD5VPew2VT3tVS6B2mZy08fO0k9cv633SxuW9z3ln4+WTn9d1XXyhfcGkVUv6pH4y57TA2uW9tRr33Pten5ZRPkiWNHrlfmPelnFLEzevyUvYu6OdleMCED3bCgDXASCeJC/7aOBbZ569dIrc1eLH8h4pINX+U2RRj1Nk0Q/Pzg9JsHy51n/TZ62HrF0w7LTVi4f99cFSPak2cfOavPQ5L41P/uLDQVpNtWNlQE9KrhLNp3eX9TlG3/OpDF2b+tGL51o5LiAe2fngPVYAgCikvv/66JVnXvjOPPmfr/5H5p0Yy7aCEkobKR/0GSkf9Llb7r2gSpJq3tHO+vLlvEs/nnPjfY+Hqu7xZcz8+4Vp77wyxokiUNe2455UOZxk5K4HEZESyd63XXJKOyz7qMULBg9MvPXZ8l9cMifWMfpLvs1pf9P4J2PdDqASwwWARwIDP0rc+k2nwLqvek7uMe2FYfJJL6OPBDYiSaoSz5FZg86RWYP2StuDDybd/vqMS69/pXzMZW+3mXrDHxM3fW3r8/drjzpmp5FnHoTtlvYHRNe1hH27W/yQpOpe/b9+VG666kZ5bGy041sv3bf3bL/qpmjfD8STSFbaf7gLoKULAc1AgUA8CT495ddr6rqXXCXPPlkvPksu4msre1s9IjdfuVZ6PnFi62/b7Hngn7dVDB61yIp9NaU+66i9kRScfdLmkNTXG7rDqK5Nh9LoR/YjPcFfZ8Z2ACfZkZFHZr1fFus/NPsSkWCz7yzWlse888Ki5vfhADeOyU4cf0zH3/5VubC2QlKq/yWX/M7obXKR6ixbOnwmQx681Pfyo6/dPG3qfpHlItLSbYinR7IPPZBU2cT34ujO8tWZRrdTJhkVkpBQa/D7GtGTAZukaXq0P0d+/zl+p8fwA3sy9ofM98tg7UD4X1r6UKAc6RNzQ8kuyA/F8n6zlRQWBd02Jjtx/LEff+WA079463dT/9LP/+Utj8jNvxojc/ubNLyfSJKqxJfk8hs3S5edRbvadexww7gZoutNrtyVFK6I6MFDWnVVcsdLB4Yafr38zAveqb5q/Dyj20mXQ8lSV+fPvqjfz7bV0M5nFlwhhq4saIGua9kX9G1xfw3x+8/xu+r4p0lM+ZozuU9etjR/PEeuANj+ICBOAyDeJC/9aGC7W857bOvXB1uPlTn3nyYL7pwp5y+qlkCt2ftKkYrAi3LFjfUdjt5VedKIL8zefmMSSndlHZbUKqOvby3708Xna/EpiQB+5EQ2/qQA2HEdABCP/Du2Zmfde9X9be+56v7FX6dqBfqr046W7666Wp6Z/qpc+NluaX+g5a0Yc7yszh0vswceOvvyWWZtszn+nduOimT87WRPK9E0vT4zK2ThsABEqGHGR7wCYMa9/KwCIF4F1izrnXXv1VOOumbEC9UvvnDeP7ecuvniun8+epTsvLKHrPvNlfL8E0/LNe+tluOLdYn+6X8Xyb+H1nQ9foOZY29Kwp6S9uWSVmnk0cciIsfItrYdZFewst/QFs9nJuzb1eKdAkC8MyMTo8lmngMAWMB3cH+rtLkvj0ub+/I40TS9NrvT9h0DRiz518ARi1885oKFelJKVRvZlz5MPuk9XmYPPFdePzlDylKMbn+4fNxbT/DX1bdqfdB3cL8ZZ9GbpFVVJIter63Temw/VRb2aPkdIqfKwh5zTj/ng9SPZo1s7nWBNct739Tp0WdvkkefbfjfusrGjhuk24xoxw2geT8rACXFK7WWLgY0A08GhDJ0XfNv33J0+vZnj06f9ey5IiL16ZmHqk4cuvydM86dP6v7M9Nv9D327B3ywHm3ylRDF+51kF3BdrKnVW3H3B0BiwuAiIivvCzti/SB3xgtAGNk7klvdH9meksFJfOFqVdlvjD1qoZfPzx83AKZNLEwljEDXmDXinhjp/ijugiQ4AZi4zt0ID3l0znDs+6+8oGOVw79Z93ct0beJn9+6QG54zWj28iS0ozao/OKrRxnWGDDqu6fytC1Rl9/sbwyrJ22N6Psl9fMtHJcAKLPZEc/DphrAQARraI8NfPFv/wqfc4/z/6r/O4to9cGZMqBtHqbPlo45ZM5w+fL6BUVklJt5PXJUpn4O/nr2eVnXTy3useJhosDoBKnM7DRAmDkbgBWAaCyg5fc9NLe+56/fe8DL9928OIbX67PCBq6QK45aXNeOrtUsspCEiw38vqQBMt9FeWGrxuIRfKyBQPK61Oq35KzDd96eKtMnTBEW9hj362PPVTXPsfQRycDiIyRLG4q0x1dARBxvgEB0ajqN3T5lB7/GXBbt1l9k84ZP3/n0x9O3H/jw4/UHt1lW7TbrBg8alGKVAQy5UCakdfvlbYH/d9tOiba/UVCq6pITvp66fFPyG/nGn1PgtT5/i0X3XJs+r7UPVNn3lzdve86K8cIeIkbsq/JAmDnMwHc8I0AIlHXpkNpB9kVvE/+dFGx5D493XfD1Z1PPfbb3Y+8ecPOZz++4sDE3z9X2zF3h9HtVQwetajssltevFKeH+mT+hb/36uRxLr90vqQf+e2jrEdiXEZhTMuWiinrvtEhn1t9D1Hy3dZS2TQ1MGpRbl773vh9v03PvxIXduOe6wcJ+B2dmZec1ke022AfEIgVKUf8aS7VDmcdL3MOOt6mXHWKjlha2FGwcL//OKCzzb84tK3tdpav2/frjaJW9Z1CWxc1c2/dUOnhF3bjvLVVAfqcjpvq+g3bHnFoJGf17dpv+88ee2UaTJ5opH9L5FB39SLT/eVHciw7CAbCKxf0SNxy9ouN3V+9LllctI0I0VF5PsHAy2Q0+5/QZv44f2n3jmz+JR3rk3Ytysrac3y3oGVn+cnbtuU66soT6lrFTxYm3vc1qqe/dZUnTjky7ay27ZjA7wo1lPxzRYAu24JFOG2QMSHE2TVsSfIqmOnyF0XF0vunqX+ARu/aD9ww1ftT9y8c9DIT/bJ+f8tlayDdZJQnyFlKT1l81GDZOagi+Tfw4zeYici8p6MWpEQ2ttadGMhbJbg3++Z9NXDr06epk2eZfSWRRGRRKlJuEaeHnWFvHj6Au201R9kjVz52dAha3cO/dV/SiWr7LCkVmXKgbR2sj+to+xoM0CeHvlLeWOwhYcCOMIts38REx4EZOYqACUA8SRXitvlSnG7c+X1k83e9mwZ/0XyFx8OMnu7LUncsq5L+pyXxt857v5/DZVPe50sn3eP5P0BqfaPlvl9R8v8vhYNEXAtM8PfjKx0/CJAAJF5Tc5bVCT536a+95rhj+g1U8Yrj18qmzd0GidvP7BWen7nxBgAxK7FAmD3LYFcUwA0rUqSam6XB19OWrHwxMSt6zs5MQatrjYh64Hr7j6wqyL1DHn/7pXS51snxgF4id2zfyPZbdoKACUAsFadJNRfLK88sqGuy+7M5x++xsmx+MpCGVl/mvjg7pLqlKHy6R1zZOwyp8aiiyZSX5fg1P6Blrht6T/MUAFw4mOCKQFws4SD+zLrxb7PvK8Vf91V8uyTb+gTlrR59PeT/TuKbbv9rykJ+/e0affHi6dWr1jVfZy8/cCv5e9/PyitDtu1/xpJrHtRrvhogrz5UELpTj5VEK7kRJYZzWzDKwA8HRD4UWDdip7Xy4x/nCuv/3mmnL/osKRWWbWvFdJ3yxD57PYX9csWBGf86bfJSz5wzdXxWkV5apsHr/9T5tNTfv1UzcQP82TTdY/LDXOt/H5slK477pAH/pUrxVdP1J9/4tulJUdnPfSbu6zaH+AWZi39h7n644C5KwBulfnUlOsqV3zab85Zl779RrdXp6VpFUlnyrt9T5MFxw+Xj3ufIKuO1USPeuWsThLqF8hpq/8m1817UyYs9u3Y1rHtk5c/HNiw6jij29Dq6hIkgoVx36HonymQ9t5rZ6Ysfv/kgxff8PKNpz3y/N0J9/57orwwokAKTx0kS44z+syAxtRJQv1SGbDxPRm1Ypacs+RL6bfZV34wPe29mWce9d9XxvpCe4PRbhuwkttXsiMqAEaeC2D2w4EoAXAjraYqMWXhu0NSFr47RE9KqawccNrSucPGf/Rm94f+paekVbSRfekDZGm37rI+u5tsyD5OvsnOke1tMqQsJV0OpWRIWUqC1PmqJKnmoLQ6vFvaH/hWOu1eKz2/WyKDvvlYhn9dKlllicUbjg2+duvk5CUfnBzpPf8Je3e069ph43VGX5+84f2Yblf0lYVaBf9x3/WtXv7rFYdHF8x7YtSF7z7a9qa328vuzCHyWc+TZFnXXrLmmFwpbpstJW3SpDw5RSoCteKvOyitKg5IZvlBaVWxR9odWCO9tq2SE4pXyQlb10ivbYcltcp3YF9m8rIFA9vNnzopccvaLrGMFbCa2eFv9uxfRCTiVm70wUBOHHw0SgqLgtkF+SErtu0FHL/5x1+fnnmo+viBKytPHPJldV7vDfVZHUrrk1MrxZdQL1oTn/Sn65pWV5ugHTqQkbh5bZeUz+efmvzlJyf5ykKWPg3P6p9/fWabA5X9hi6vGDRqUW3nHlvq0zPLdH9ibdPfh3pNq6tL0CrKU/w7izsGVi89IfmrT/snblnbRauqTDJ7fPz+c/xWHL9T+RdpAYj4FIDRpwOyEgBV+Q4dSE9e/N4pyYvfO8XpsTjNd2BfZupHs0ekfjR7hNNjAezglfAXifI2QCfuChBx//kUAIC6nMqoaDPZ0icBWjFj3z5t5SaKAADALazKJatXvaMuAEYbh1UHQAkAADjNqiyycuk/LKYVAEoAAEBVXg5/EZc/B8CI8A+ACwQBAHaIl8lnzNcAOL0KEBYvPxAAgHtZnTV2zf5FTLoI0E0lgCIAADCbHfliZ/iLmHgXgFtKgAirAQAA89iRKXaHv4jFtwE2xa4SQBEAAETLrhxx6ho2UwtAJM3ErgOmCAAAImFnbkSShWY/hM/0FQA3lgARigAAoHl254ST4S9i0SkAt5YAEYoAAOCnnMgFp8NfxMJrANxcAkR+/IHrxdpyu/cNAHBW+O+/ExNCN4S/iMUPAjL6yYEi5n96YCSO3C8PFAKA+OSG1V+3hL+IDU8CjLQEiDj7Q2q4bwoBAHiTGwI/LNIsseNTd215FHAkJUDE2dWAhpoaB8UAANzBLXnRFDeGv4iILTsJi6QEiLj/hwoAQHPcGv4iNhcAkchLgAhFAADgLdGsEtsZ/iIOPAkwmgNkuR0A4BVeCH8Rhx4FTAkAAMQjr4S/iAOnAI4UzekAEU4JAADcJdpJqlPhL+JwAQijCAAAvMiLwR/myCmAhqL9RnBaAADgFC+Hv4hLVgDCol0JEGE1AABgj1gmn24JfxGXFYAwigAAwG3iJfjDXDegsFhKQBhlAAAQCzNONbsx/EVcXADCKAIAALvFc/CHuXpwYWaUgDDKAACgMWZeWO728BfxSAEIM7MIiFAGAEB1Zt9N5oXgD/PMQI9kZhEoKSwKZhfkhygDAKCGcOiH//6bsU0vBX+YLR8HbLZIP17YiIYtkEIAAPHB6mfGeDH8RTxaAER+/IabXQTCmvuFoRwAgLs48WA4rwZ/mGcLQNiRPwCrykBD8fQEQjOXwLyI4+f4OX51jz8aXg/9I3m+ABzJ6lUBAICa4in4w+KqAIRRBAAAZojH4A+LywIQ5sTpAQCAt8Vz6B8prgvAkSgDAICmqBL6R1KmABypwQ8607GBAAAc8X85kKli8IcpWQAaauwXgFUCAIgPKod8cygATWjqF4ZiAADuRNBH5v8D9CKz8DnBAhYAAAAASUVORK5CYII=';
-(function() {
-  ['apple-touch-icon','icon'].forEach(function(rel) {
-    var l = document.createElement('link');
-    l.rel = rel; l.type = 'image/png'; l.href = ICON_192;
-    document.head.appendChild(l);
-  });
-})();
-</script>
-
 </head>
 <body>
 <div class="wrap">
 
   <!-- PWA Install Banner -->
-
   <div id="installBanner">
     <p>📲 <span>Installeer als app</span> — zet hem op je homescreen!</p>
     <button class="install-btn" onclick="installPWA()">INSTALLEER</button>
@@ -390,18 +363,15 @@ const ICON_512 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0
   </div>
 
   <!-- Header -->
-
   <div class="topbar">
     <div>
       <div class="topbar-logo">SIGNAL</div>
-      <div style="font-family:'Dancing Script','Palatino Linotype',Georgia,cursive; font-style:italic; font-size:1.05rem; color:#ffaa00; margin-top:-2px; letter-spacing:0.02em;">Made by Rob Borghouts</div>
       <div class="topbar-sub">FIAS ARCHE · CRYPTO TRADING SIGNALS<br>POWERED BY AI ENTITIES</div>
     </div>
     <div class="topbar-badge">⬡ FIAS v0.1</div>
   </div>
 
   <!-- FIAS Ecosystem Strip -->
-
   <div id="fiasStrip" style="
     display:flex; align-items:center; gap:1.2rem;
     background: rgba(153,102,255,0.07);
@@ -426,32 +396,25 @@ const ICON_512 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0
     </span>
   </div>
 
-  <!-- API Key -->
-
-  <div class="input-group" style="margin-bottom:1rem">
-    <span class="input-label">Anthropic API Key</span>
-    <div style="display:flex;gap:0.5rem;align-items:center">
-      <input type="password" id="apiKey" placeholder="sk-ant-..."
-        oninput="localStorage.setItem('signals_apikey',this.value)">
-      <button class="key-toggle" onclick="toggleKey()">👁</button>
-    </div>
-    <span style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:var(--muted);margin-top:6px;display:block">
-      Haal je key op via <a href="https://console.anthropic.com" target="_blank" style="color:var(--green)">console.anthropic.com</a> · Wordt lokaal opgeslagen op jouw apparaat
-    </span>
-  </div>
-
   <!-- Inputs -->
-
   <div class="coin-selector">
     <div class="input-group">
       <span class="input-label">Coin</span>
       <select id="coinSelect">
+        <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
+        <option value="Ethereum (ETH)">Ethereum (ETH)</option>
+        <option value="Solana (SOL)">Solana (SOL)</option>
+        <option value="BNB (BNB)">BNB (BNB)</option>
+        <option value="XRP (XRP)">XRP (XRP)</option>
+        <option value="FIAS (FIAS)">⬡ FIAS (FIAS)</option>
+        <option value="DevvE (DevvE)">⬡ DevvE (DevvE)</option>
+        <option value="Cardano (ADA)">Cardano (ADA)</option>
+        <option value="Avalanche (AVAX)">Avalanche (AVAX)</option>
       </select>
     </div>
     <div class="input-group">
       <span class="input-label">Tijdframe</span>
       <select id="timeframe">
-        <option value="scalp (15min-4uur)">Scalp (15m-4u)</option>
         <option value="korte termijn (1-7 dagen)">Korte termijn (1-7d)</option>
         <option value="middellange termijn (1-4 weken)">Middellange (1-4w)</option>
         <option value="lange termijn (1-6 maanden)">Lange termijn (1-6m)</option>
@@ -466,35 +429,12 @@ const ICON_512 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0
       </select>
     </div>
     <div class="input-group">
-      <span class="input-label">Investering ($)</span>
+      <span class="input-label">Investering (€)</span>
       <input type="number" id="amount" value="500" min="1" />
     </div>
   </div>
 
-  <!-- Leverage toggle -->
-
-  <div style="display:flex;gap:0.5rem;margin-bottom:1rem;align-items:stretch">
-    <div class="input-group" style="flex:1;margin-bottom:0;display:flex;align-items:center;gap:0.8rem;cursor:pointer" onclick="toggleLeverage()">
-      <div id="leverageDot" style="width:14px;height:14px;border-radius:50%;background:var(--muted);border:2px solid var(--border);transition:all 0.2s;flex-shrink:0"></div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Modus</div>
-        <div id="leverageLabel" style="font-family:'IBM Plex Mono',monospace;font-size:0.85rem;font-weight:600;color:var(--text)">Spot Trading</div>
-      </div>
-    </div>
-    <div class="input-group" id="leverageGroup" style="flex:1;margin-bottom:0;display:none">
-      <span class="input-label">Max Hefboom</span>
-      <select id="maxLeverage">
-        <option value="3">Max 3x</option>
-        <option value="5">Max 5x</option>
-        <option value="10">Max 10x</option>
-        <option value="20">Max 20x</option>
-        <option value="50">Max 50x</option>
-      </select>
-    </div>
-  </div>
-
   <!-- Entity chips -->
-
   <div class="entity-row">
     <div class="entity-chip" id="chip-trend"><span class="led"></span>TREND ANALYZER</div>
     <div class="entity-chip" id="chip-signal"><span class="led"></span>SIGNAL GENERATOR</div>
@@ -506,216 +446,89 @@ const ICON_512 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0
     ⬡ GENEREER TRADING SIGNAAL
   </button>
 
-  <!-- SCAN knop -->
-
-  <button class="analyze-btn" id="scanBtn" onclick="runScan()" style="border-color:var(--gold);color:var(--gold);box-shadow:0 0 20px rgba(255,170,0,0.1);margin-bottom:0.5rem">
-    🔍 SCAN ALLE COINS OP KANSEN
-  </button>
-
   <!-- Disclaimer -->
-
   <div class="disclaimer" style="margin-bottom:1rem">
     ⚠️ UITSLUITEND VOOR EDUCATIEVE DOELEINDEN · GEEN FINANCIEEL ADVIES · CRYPTO TRADING BRENGT RISICO'S MET ZICH MEE
   </div>
 
-  <!-- SCAN Results -->
-
-  <div id="scanResults" style="display:none;margin-bottom:1rem">
-    <div style="
-      background:var(--card);border:1px solid rgba(255,170,0,0.3);
-      border-radius:8px;overflow:hidden;animation:fadeUp 0.35s ease both
-    ">
-      <div style="
-        display:flex;align-items:center;gap:0.6rem;
-        padding:0.7rem 1rem;border-bottom:1px solid var(--border);
-        background:rgba(255,170,0,0.05)
-      ">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;
-          letter-spacing:0.1em;padding:3px 7px;border-radius:3px;
-          background:rgba(255,170,0,0.1);color:var(--gold);
-          border:1px solid rgba(255,170,0,0.3)">🔍 MARKET SCANNER</span>
-        <span style="font-size:0.82rem;font-weight:500;flex:1">Top Handelskansen</span>
-        <span id="scanTime" style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:var(--muted)"></span>
-      </div>
-      <div id="scanBody" style="
-        padding:1rem;font-size:0.78rem;line-height:1.65;
-        color:#111111;background:#ffffff;min-height:60px
-      ">
-        <div class="dots"><span></span><span></span><span></span></div>
-      </div>
-    </div>
-  </div>
-
   <!-- Results -->
-
   <div class="results" id="results">
 
-```
-<div class="result-card" style="animation-delay:0s">
-  <div class="card-header">
-    <span class="card-tag tag-trend">ENTITY · TREND ANALYZER</span>
-    <span class="card-title">Markttrend Analyse</span>
-    <span class="pay-chip">⬡ 0.0014 FIAS</span>
-  </div>
-  <div class="card-body" id="body-trend"><div class="dots"><span></span><span></span><span></span></div></div>
-</div>
+    <div class="result-card" style="animation-delay:0s">
+      <div class="card-header">
+        <span class="card-tag tag-trend">ENTITY · TREND ANALYZER</span>
+        <span class="card-title">Markttrend Analyse</span>
+        <span class="pay-chip">⬡ 0.0014 FIAS</span>
+      </div>
+      <div class="card-body" id="body-trend"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
 
-<div class="result-card" style="animation-delay:0.1s">
-  <div class="card-header">
-    <span class="card-tag tag-signal">ENTITY · SIGNAL GENERATOR</span>
-    <span class="card-title">Trading Signaal</span>
-    <span class="pay-chip">⬡ 0.0022 FIAS</span>
-  </div>
-  <div class="card-body" id="body-signal"><div class="dots"><span></span><span></span><span></span></div></div>
-</div>
+    <div class="result-card" style="animation-delay:0.1s">
+      <div class="card-header">
+        <span class="card-tag tag-signal">ENTITY · SIGNAL GENERATOR</span>
+        <span class="card-title">Trading Signaal</span>
+        <span class="pay-chip">⬡ 0.0022 FIAS</span>
+      </div>
+      <div class="card-body" id="body-signal"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
 
-<div class="result-card" style="animation-delay:0.2s">
-  <div class="card-header">
-    <span class="card-tag tag-risk">ENTITY · RISK ASSESSOR</span>
-    <span class="card-title">Risicobeoordeling</span>
-    <span class="pay-chip">⬡ 0.0016 FIAS</span>
-  </div>
-  <div class="card-body" id="body-risk"><div class="dots"><span></span><span></span><span></span></div></div>
-</div>
+    <div class="result-card" style="animation-delay:0.2s">
+      <div class="card-header">
+        <span class="card-tag tag-risk">ENTITY · RISK ASSESSOR</span>
+        <span class="card-title">Risicobeoordeling</span>
+        <span class="pay-chip">⬡ 0.0016 FIAS</span>
+      </div>
+      <div class="card-body" id="body-risk"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
 
-<div class="result-card" style="animation-delay:0.3s">
-  <div class="card-header">
-    <span class="card-tag tag-advice">ENTITY · TRADE ADVISOR</span>
-    <span class="card-title">Concreet Advies</span>
-    <span class="pay-chip">⬡ 0.0019 FIAS</span>
-  </div>
-  <div class="card-body" id="body-advice"><div class="dots"><span></span><span></span><span></span></div></div>
-</div>
+    <div class="result-card" style="animation-delay:0.3s">
+      <div class="card-header">
+        <span class="card-tag tag-advice">ENTITY · TRADE ADVISOR</span>
+        <span class="card-title">Concreet Advies</span>
+        <span class="pay-chip">⬡ 0.0019 FIAS</span>
+      </div>
+      <div class="card-body" id="body-advice"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
 
-<div class="pay-log" id="payLog" style="display:none">
-  <div class="pay-log-title">⬡ DevvX Blockchain · Micropayments Settled</div>
-  <div class="pay-row"><span class="name">Trend Analyzer Entity</span><span class="amt">0.0014 FIAS</span><span class="ok">✓ SETTLED</span></div>
-  <div class="pay-row"><span class="name">Signal Generator Entity</span><span class="amt">0.0022 FIAS</span><span class="ok">✓ SETTLED</span></div>
-  <div class="pay-row"><span class="name">Risk Assessor Entity</span><span class="amt">0.0016 FIAS</span><span class="ok">✓ SETTLED</span></div>
-  <div class="pay-row"><span class="name">Trade Advisor Entity</span><span class="amt">0.0019 FIAS</span><span class="ok">✓ SETTLED</span></div>
-  <div class="pay-row" style="border-top:1px solid rgba(255,170,0,0.15); margin-top:4px; padding-top:6px">
-    <span class="name" style="color:var(--text); font-weight:600">Totaal</span>
-    <span class="amt" style="font-size:0.75rem">0.0071 FIAS</span>
-    <span class="ok">✓ COMPLEET</span>
-  </div>
-</div>
-```
+    <div class="pay-log" id="payLog" style="display:none">
+      <div class="pay-log-title">⬡ DevvX Blockchain · Micropayments Settled</div>
+      <div class="pay-row"><span class="name">Trend Analyzer Entity</span><span class="amt">0.0014 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row"><span class="name">Signal Generator Entity</span><span class="amt">0.0022 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row"><span class="name">Risk Assessor Entity</span><span class="amt">0.0016 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row"><span class="name">Trade Advisor Entity</span><span class="amt">0.0019 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row" style="border-top:1px solid rgba(255,170,0,0.15); margin-top:4px; padding-top:6px">
+        <span class="name" style="color:var(--text); font-weight:600">Totaal</span>
+        <span class="amt" style="font-size:0.75rem">0.0071 FIAS</span>
+        <span class="ok">✓ COMPLEET</span>
+      </div>
+    </div>
 
   </div>
 </div>
 
 <script>
-// ─── COIN LIJSTEN ─────────────────────────────────────────────
-const SPOT_COINS = [
-  'Bitcoin (BTC)','Ethereum (ETH)','Solana (SOL)','BNB (BNB)',
-  'XRP (XRP)','Dogecoin (DOGE)','Toncoin (TON)','Chainlink (LINK)',
-  'Polkadot (DOT)','Uniswap (UNI)','Litecoin (LTC)','Polygon (MATIC)',
-  'Pepe (PEPE)','Shiba Inu (SHIB)','Sui (SUI)','Cardano (ADA)',
-  'Avalanche (AVAX)','FIAS (FIAS)','DevvE (DevvE)'
-];
-
-// Coins beschikbaar op MEXC Futures
-const MEXC_FUTURES_COINS = [
-  'Bitcoin (BTC)','Ethereum (ETH)','Solana (SOL)','BNB (BNB)',
-  'XRP (XRP)','Dogecoin (DOGE)','Cardano (ADA)','Avalanche (AVAX)',
-  'Chainlink (LINK)','Polkadot (DOT)','Litecoin (LTC)','Polygon (MATIC)',
-  'Pepe (PEPE)','Shiba Inu (SHIB)','Sui (SUI)','Toncoin (TON)',
-  'Uniswap (UNI)','Aptos (APT)','Near Protocol (NEAR)','Injective (INJ)',
-  'Arbitrum (ARB)','Optimism (OP)','Sei (SEI)','Render (RNDR)',
-  'Fetch.ai (FET)','Celestia (TIA)','Pyth Network (PYTH)','Jupiter (JUP)',
-  'Bonk (BONK)','WIF (WIF)','Notcoin (NOT)','Floki (FLOKI)'
-];
-
-function updateCoinDropdown() {
-  const sel   = document.getElementById('coinSelect');
-  const coins = leverageMode ? MEXC_FUTURES_COINS : SPOT_COINS;
-  const cur   = sel.value;
-  sel.innerHTML = coins.map(c =>
-    `<option value="${c}"${c === cur ? ' selected' : ''}>${leverageMode && ['FIAS (FIAS)','DevvE (DevvE)'].includes(c) ? '⬡ ' : ''}${c}</option>`
-  ).join('');
-}
-let leverageMode = false;
-function toggleLeverage() {
-  leverageMode = !leverageMode;
-  document.getElementById('leverageDot').style.background   = leverageMode ? '#ff4466' : 'var(--muted)';
-  document.getElementById('leverageDot').style.borderColor  = leverageMode ? '#ff4466' : 'var(--border)';
-  document.getElementById('leverageDot').style.boxShadow    = leverageMode ? '0 0 8px #ff4466' : 'none';
-  document.getElementById('leverageLabel').textContent      = leverageMode ? '⚡ Leverage (MEXC)' : 'Spot Trading';
-  document.getElementById('leverageLabel').style.color      = leverageMode ? '#ff4466' : 'var(--text)';
-  document.getElementById('leverageGroup').style.display    = leverageMode ? 'block' : 'none';
-  updateCoinDropdown();
-}
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('signals_apikey');
-  if (saved) document.getElementById('apiKey').value = saved;
-  updateCoinDropdown();
-});
-// Fallback: als DOMContentLoaded al gevuurd is (script staat onderaan)
-if (document.readyState !== 'loading') {
-  const saved = localStorage.getItem('signals_apikey');
-  if (saved) document.getElementById('apiKey').value = saved;
-  updateCoinDropdown();
-}
-
-function toggleKey() {
-  const f = document.getElementById('apiKey');
-  f.type = f.type === 'password' ? 'text' : 'password';
-}
-
-// ─── CLAUDE API ───────────────────────────────────────────────
 async function callClaude(system, user) {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) {
-    throw new Error('Geen API key ingevuld');
-  }
-
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "claude-haiku-4-5",
+      model: "claude-sonnet-4-20250514",
       max_tokens: 1000,
-      system: system,
+      system,
       messages: [{ role: "user", content: user }]
     })
   });
-
-  if (!r.ok) {
-    const err = await r.json().catch(() => ({}));
-    throw new Error(`Server fout: ${r.status}${err?.error?.message ? ' – ' + err.error.message : ''}`);
-  }
-
   const d = await r.json();
   return d.content?.[0]?.text || "Geen resultaat.";
 }
 
 function setChip(id, state) {
-  document.getElementById('chip-' + id).className = 'entity-chip ' + state;
+  const el = document.getElementById('chip-' + id);
+  el.className = 'entity-chip ' + state;
 }
 
 function loading(id) {
   document.getElementById('body-' + id).innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
-}
-
-function renderMd(text) {
-  return text
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/^#{1,3}\s+(.+)$/gm, '<strong style="color:#1a2a6c">$1</strong>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#1a2a6c">$1</strong>')
-    .replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:4px 0">')
-    .replace(/\n\n+/g, '<br>')
-    .replace(/\n/g, ' ');
-}
-
-function showError(id, msg) {
-  const el = document.getElementById('body-' + id);
-  el.innerHTML = '<span style="color:var(--red)">❌ ' + msg + '</span>';
-  setChip(id.replace('body-',''), '');
 }
 
 // ─── PWA ──────────────────────────────────────────────────────
@@ -724,8 +537,7 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(console.error));
 }
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
+  e.preventDefault(); deferredPrompt = e;
   if (!localStorage.getItem('signals_pwa_dismissed')) {
     document.getElementById('installBanner').classList.add('show');
   }
@@ -744,403 +556,89 @@ function dismissInstall() {
 window.addEventListener('appinstalled', () => document.getElementById('installBanner').classList.remove('show'));
 
 // ─── FIAS ECOSYSTEM PRICES ────────────────────────────────────
-async function fetchWithTimeout(url, ms = 6000) {
-  const ctrl = new AbortController();
-  const id = setTimeout(() => ctrl.abort(), ms);
-  try {
-    const res = await fetch(url, { signal: ctrl.signal });
-    clearTimeout(id);
-    return res;
-  } catch(e) { clearTimeout(id); throw e; }
-}
-
 async function loadFiasEcosystem() {
-  // DevvE via CoinGecko markets endpoint (betrouwbaarder)
   try {
-    const res = await fetchWithTimeout('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=devve&price_change_percentage=24h');
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=devve&vs_currencies=usd&include_24hr_change=true');
     const data = await res.json();
-    const coin = data?.[0];
-    if (coin) {
-      const p  = coin.current_price;
-      const ch = coin.price_change_percentage_24h;
+    if (data.devve) {
+      const p = data.devve.usd;
+      const ch = data.devve.usd_24h_change;
       document.getElementById('s-devvePrice').textContent = p < 0.01 ? '$' + p.toFixed(6) : '$' + p.toFixed(4);
       const chEl = document.getElementById('s-devveChange');
       chEl.textContent = (ch >= 0 ? '▲ +' : '▼ ') + ch.toFixed(2) + '%';
       chEl.style.color = ch >= 0 ? 'var(--green)' : 'var(--red)';
-    } else {
-      document.getElementById('s-devvePrice').textContent = 'n/a';
-      document.getElementById('s-devveChange').textContent = '—';
     }
-  } catch(e) {
-    document.getElementById('s-devvePrice').textContent = 'n/a';
-    document.getElementById('s-devveChange').textContent = '—';
-  }
-
-  // FIAS via DexScreener
-  try {
-    const res = await fetchWithTimeout('https://api.dexscreener.com/latest/dex/tokens/0x21e88f4482cd48deab1ca5eddabdfb14cb8ad76f');
-    const data = await res.json();
-    const pair = data.pairs?.[0];
-    if (pair) {
-      const p  = parseFloat(pair.priceUsd);
-      const ch = parseFloat(pair.priceChange?.h24 || 0);
-      const fiasEl = document.getElementById('s-fiasPrice');
-      fiasEl.textContent = '⬡ $' + (p < 0.01 ? p.toFixed(6) : p.toFixed(4));
-      fiasEl.style.color = '#9966ff';
-      let chEl = document.getElementById('s-fiasChange');
-      if (!chEl) {
-        chEl = document.createElement('div');
-        chEl.id = 's-fiasChange';
-        chEl.style.fontFamily = "'IBM Plex Mono', monospace";
-        chEl.style.fontSize = '0.55rem';
-        fiasEl.parentNode.appendChild(chEl);
-      }
-      chEl.textContent = (ch >= 0 ? '▲ +' : '▼ ') + ch.toFixed(2) + '%';
-      chEl.style.color = ch >= 0 ? 'var(--green)' : 'var(--red)';
-    } else {
-      document.getElementById('s-fiasPrice').textContent = '⬡ n/a';
-    }
-  } catch(e) {
-    document.getElementById('s-fiasPrice').textContent = '⬡ n/a';
-  }
-}
-// ─── COIN ID MAP (CoinGecko) ──────────────────────────────────
-const COIN_IDS = {
-  'Bitcoin (BTC)':          'bitcoin',
-  'Ethereum (ETH)':         'ethereum',
-  'Solana (SOL)':           'solana',
-  'BNB (BNB)':              'binancecoin',
-  'XRP (XRP)':              'ripple',
-  'Dogecoin (DOGE)':        'dogecoin',
-  'Toncoin (TON)':          'the-open-network',
-  'Chainlink (LINK)':       'chainlink',
-  'Polkadot (DOT)':         'polkadot',
-  'Uniswap (UNI)':          'uniswap',
-  'Litecoin (LTC)':         'litecoin',
-  'Polygon (MATIC)':        'matic-network',
-  'Pepe (PEPE)':            'pepe',
-  'Shiba Inu (SHIB)':       'shiba-inu',
-  'Sui (SUI)':              'sui',
-  'Cardano (ADA)':          'cardano',
-  'Avalanche (AVAX)':       'avalanche-2',
-  'Aptos (APT)':            'aptos',
-  'Near Protocol (NEAR)':   'near',
-  'Injective (INJ)':        'injective-protocol',
-  'Arbitrum (ARB)':         'arbitrum',
-  'Optimism (OP)':          'optimism',
-  'Sei (SEI)':              'sei-network',
-  'Render (RNDR)':          'render-token',
-  'Fetch.ai (FET)':         'fetch-ai',
-  'Celestia (TIA)':         'celestia',
-  'Pyth Network (PYTH)':    'pyth-network',
-  'Jupiter (JUP)':          'jupiter-exchange-solana',
-  'Bonk (BONK)':            'bonk',
-  'WIF (WIF)':              'dogwifcoin',
-  'Notcoin (NOT)':          'notcoin',
-  'Floki (FLOKI)':          'floki',
-  'FIAS (FIAS)':            'dexscreener:0x21e88f4482cd48deab1ca5eddabdfb14cb8ad76f',
-  'DevvE (DevvE)':          'devve'
-};
-
-async function fetchLivePrice(coin) {
-  const id = COIN_IDS[coin];
-  if (!id) return null;
-
-  // DexScreener voor FIAS
-  if (id.startsWith('dexscreener:')) {
-    const contract = id.split(':')[1];
-    try {
-      const res = await fetchWithTimeout(`https://api.dexscreener.com/latest/dex/tokens/${contract}`);
-      const data = await res.json();
-      const pair = data.pairs?.[0];
-      if (pair) return {
-        usd: parseFloat(pair.priceUsd),
-        usd_24h_change: parseFloat(pair.priceChange?.h24 || 0),
-        usd_24h_vol: parseFloat(pair.volume?.h24 || 0),
-        usd_market_cap: parseFloat(pair.fdv || 0)
-      };
-    } catch(e) {}
-    return null;
-  }
-
-  // CoinGecko voor de rest
-  try {
-    const res = await fetchWithTimeout(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true`);
-    const data = await res.json();
-    if (data[id]) return data[id];
   } catch(e) {}
-  return null;
+  document.getElementById('s-fiasPrice').textContent = '⬡ Platform';
 }
+loadFiasEcosystem();
 
-// ─── MARKET SCANNER ──────────────────────────────────────────
-async function fetchTrendingDex() {
-  try {
-    // DexScreener trending tokens
-    const res = await fetch('https://api.dexscreener.com/token-boosts/top/v1');
-    const data = await res.json();
-    // Pak top 10 unieke tokens
-    const seen = new Set();
-    const tokens = [];
-    for (const item of (data || [])) {
-      const name = item.tokenAddress;
-      if (!seen.has(name) && item.chainId === 'ethereum' || item.chainId === 'bsc' || item.chainId === 'solana') {
-        seen.add(name);
-        tokens.push({ symbol: item.description || item.tokenAddress.slice(0,8), address: item.tokenAddress, chain: item.chainId });
-        if (tokens.length >= 8) break;
-      }
-    }
-    return tokens;
-  } catch(e) { return []; }
-}
-
-async function fetchDexPrices(tokens) {
-  const lines = [];
-  await Promise.allSettled(tokens.map(async t => {
-    try {
-      const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${t.address}`);
-      const data = await res.json();
-      const pair = data.pairs?.[0];
-      if (pair && pair.priceUsd) {
-        const p  = parseFloat(pair.priceUsd);
-        const ch = parseFloat(pair.priceChange?.h24 || 0);
-        const vol = pair.volume?.h24
-          ? (pair.volume.h24 > 1e6 ? '$'+(pair.volume.h24/1e6).toFixed(1)+'M' : '$'+pair.volume.h24.toFixed(0))
-          : '?';
-        const liq = pair.liquidity?.usd
-          ? '$'+(pair.liquidity.usd/1e3).toFixed(0)+'K liq'
-          : '';
-        lines.push(`${pair.baseToken?.symbol || t.symbol} (${t.chain}): $${p < 0.01 ? p.toFixed(6) : p.toFixed(4)} | 24h: ${ch.toFixed(2)}% | Vol: ${vol} ${liq}`);
-      }
-    } catch(e) {}
-  }));
-  return lines;
-}
-
-async function runScan() {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) { alert('Vul eerst je Anthropic API key in!'); return; }
-
-  const risk   = document.getElementById('riskProfile').value;
-  const amount = document.getElementById('amount').value;
-  const tf     = document.getElementById('timeframe').value;
-
-  const scanBtn = document.getElementById('scanBtn');
-  scanBtn.disabled = true;
-  scanBtn.textContent = '🔍 KOERSEN SCANNEN...';
-
-  const scanResults = document.getElementById('scanResults');
-  scanResults.style.display = 'block';
-  document.getElementById('scanBody').innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
-
-  // 1. Alle coins ophalen (MEXC lijst bij leverage)
-  const scanCoins = leverageMode ? MEXC_FUTURES_COINS.slice(0, 20) : [
-    'Bitcoin (BTC)','Ethereum (ETH)','Solana (SOL)','BNB (BNB)',
-    'XRP (XRP)','Dogecoin (DOGE)','Toncoin (TON)','Chainlink (LINK)',
-    'Polkadot (DOT)','Uniswap (UNI)','Litecoin (LTC)','Polygon (MATIC)',
-    'Pepe (PEPE)','Shiba Inu (SHIB)','Sui (SUI)','Cardano (ADA)',
-    'Avalanche (AVAX)','FIAS (FIAS)','DevvE (DevvE)'
-  ];
-
-  scanBtn.textContent = '🔍 VASTE COINS OPHALEN...';
-  const priceResults = await Promise.allSettled(
-    scanCoins.map(c => fetchLivePrice(c).then(p => ({ coin: c, price: p })))
-  );
-
-  const knownLines = priceResults
-    .filter(r => r.status === 'fulfilled' && r.value.price)
-    .map(r => {
-      const { coin, price } = r.value;
-      const p  = price.usd;
-      const ch = price.usd_24h_change?.toFixed(2) ?? '?';
-      const vol = price.usd_24h_vol
-        ? (price.usd_24h_vol > 1e9 ? '$'+(price.usd_24h_vol/1e9).toFixed(2)+'B' : '$'+(price.usd_24h_vol/1e6).toFixed(1)+'M')
-        : '?';
-      return `${coin}: $${p < 0.01 ? p.toFixed(6) : p.toLocaleString('en-US')} | 24h: ${ch}% | Vol: ${vol}`;
-    });
-
-  // 2. Trending DexScreener tokens ophalen
-  scanBtn.textContent = '🔍 TRENDING TOKENS SCANNEN...';
-  const trendingTokens = await fetchTrendingDex();
-  const trendingLines  = trendingTokens.length > 0 ? await fetchDexPrices(trendingTokens) : [];
-
-  scanBtn.textContent = '🔍 AI ANALYSEERT...';
-
-  const allLines = [
-    '=== BEKENDE COINS ===',
-    ...knownLines,
-    '',
-    '=== TRENDING / NIEUWE TOKENS (DexScreener) ===',
-    ...(trendingLines.length > 0 ? trendingLines : ['Geen trending data beschikbaar'])
-  ].join('\n');
-
-  const scanMaxLev = leverageMode ? document.getElementById('maxLeverage').value : null;
-  const scanLevCtx = leverageMode ? ` | MODUS: Leverage trading | Max hefboom: ${scanMaxLev}x` : ' | MODUS: Spot trading';
-
-  try {
-    const result = await callClaude(
-      `Je bent een crypto markt scanner AI. Analyseer de onderstaande live marktdata — zowel bekende coins als trending tokens van DexScreener.
-
-Identificeer de TOP 3 meest interessante handelskansen over de HELE lijst.
-Criteria: momentum, volume, liquiditeit, risk/reward, trend.
-Risicoprofiel: ${risk} | Budget: $${amount} | Tijdframe: ${tf}${scanLevCtx}
-
-${leverageMode ? `Dit zijn LEVERAGE trades. Gebruik dit format per kans:
-🥇/🥈/🥉 [COIN] — [LONG / SHORT]
-📊 Reden: [1 zin waarom]
-💥 Hefboom: [Xx aanbevolen] (max ${scanMaxLev}x) | TP: [%winst] | SL: [%verlies]
-💀 Liquidatie bij: [prijs]
-⚠️ Risico: [LAAG/MEDIUM/HOOG] | Let op: [1 waarschuwing]` :
-`Gebruik dit format per kans:
-🥇/🥈/🥉 [COIN] — [BUY/SELL/HOLD]
-📊 Reden: [1 zin waarom]
-🎯 Kans: [%] | ⚠️ Risico: [LAAG/MEDIUM/HOOG]
-💡 Actie: [concreet wat te doen]
-⚠️ Let op: [1 waarschuwing bij nieuwe/kleine tokens]`}
-
-Sluit af met 1 zin algemeen marktsentiment. Schrijf in het Nederlands. Geen garanties.`,
-      allLines
-    );
-
-    document.getElementById('scanBody').innerHTML = renderMd(result);
-    document.getElementById('scanTime').textContent =
-      'bijgewerkt ' + new Date().toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'});
-  } catch(e) {
-    document.getElementById('scanBody').innerHTML =
-      '<span style="color:var(--red)">❌ ' + e.message + '</span>';
-  }
-
-  scanBtn.disabled = false;
-  scanBtn.textContent = '🔍 SCAN ALLE COINS OP KANSEN';
-}
 async function runAnalysis() {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) {
-    alert('Vul eerst je Anthropic API key in!');
-    return;
-  }
-
-  const coin      = document.getElementById('coinSelect').value;
+  const coin = document.getElementById('coinSelect').value;
   const timeframe = document.getElementById('timeframe').value;
-  const risk      = document.getElementById('riskProfile').value;
-  const amount    = document.getElementById('amount').value;
+  const risk = document.getElementById('riskProfile').value;
+  const amount = document.getElementById('amount').value;
 
   const btn = document.getElementById('analyzeBtn');
   btn.disabled = true;
-  btn.textContent = '⬡ KOERSEN OPHALEN...';
+  btn.textContent = '⬡ ENTITIES VERWERKEN...';
 
   const results = document.getElementById('results');
   results.classList.add('visible');
   document.getElementById('payLog').style.display = 'none';
-  ['trend','signal','risk','advice'].forEach(id => {
-    loading(id);
-    setChip(id, '');
-  });
+  ['trend','signal','risk','advice'].forEach(loading);
 
-  // Haal live koers op
-  btn.textContent = '⬡ ENTITIES VERWERKEN...';
-  const priceData = await fetchLivePrice(coin);
-  let priceContext = '';
-  if (priceData) {
-    const p    = priceData.usd;
-    const ch   = priceData.usd_24h_change?.toFixed(2);
-    const vol  = priceData.usd_24h_vol ? '$' + (priceData.usd_24h_vol / 1e9).toFixed(2) + 'B' : 'onbekend';
-    const mcap = priceData.usd_market_cap ? '$' + (priceData.usd_market_cap / 1e9).toFixed(1) + 'B' : 'onbekend';
-    priceContext = ` | LIVE KOERS: $${p.toLocaleString('en-US')} | 24h verandering: ${ch}% | 24h volume: ${vol} | Market cap: ${mcap}`;
-  }
-
-  const maxLev  = leverageMode ? document.getElementById('maxLeverage').value : null;
-  const levCtx  = leverageMode ? ` | MODUS: Leverage trading | Max hefboom: ${maxLev}x` : ' | MODUS: Spot trading';
-  const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: $${amount}${levCtx}${priceContext}`;
-  const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch. Gebruik de meegeleverde live koers als basis voor entry zones, targets en stop loss.";
-
-  const isLev   = leverageMode;
-  const maxLev2 = isLev ? document.getElementById('maxLeverage').value : null;
-  const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch. Gebruik de meegeleverde live koers als basis voor entry zones, targets en stop loss.";
+  const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: €${amount}`;
+  const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch.";
 
   // Entity 1: Trend Analyzer
   setChip('trend', 'running');
   try {
     const trend = await callClaude(
-      `Je bent een crypto trend-analyse AI. ${disclaimer} Analyseer de markttrend voor de opgegeven coin. Bespreek: huidige marktfase (bull/bear/sideways), dominante technische indicatoren (RSI, MA, volume trends), en sentiment.${isLev ? ' Geef ook aan of de trend beter geschikt is voor LONG of SHORT leverage posities.' : ''} Schrijf in het Nederlands, max 5 zinnen, geen bullet points.`,
+      `Je bent een crypto trend-analyse AI. ${disclaimer} Analyseer de algemene markttrend voor de opgegeven coin. Bespreek: huidige marktfase (bull/bear/sideways), dominante technische indicatoren (RSI, MA, volume trends), en sentiment. Schrijf in het Nederlands, max 5 zinnen, geen bullet points.`,
       context
     );
-    document.getElementById('body-trend').innerHTML = renderMd(trend);
+    document.getElementById('body-trend').textContent = trend;
     setChip('trend', 'done');
-  } catch(e) { showError('trend', e.message); }
+  } catch { document.getElementById('body-trend').textContent = "Fout."; }
 
   // Entity 2: Signal Generator
   setChip('signal', 'running');
   try {
     const signal = await callClaude(
-      `Je bent een crypto trading signaal AI. ${disclaimer} Genereer een trading signaal.
-
-${isLev ? `Gebruik dit format:
-⚡ RICHTING: [LONG / SHORT]
-📍 Entry zone: [prijsrange]
-🎯 Take profit 1: [doel] | TP2: [doel]
-🛑 Stop loss: [niveau]
-💥 Aanbevolen hefboom: [Xx] (max ${maxLev2}x)
-💀 Liquidatieprijs bij ${maxLev2}x: [niveau]
-💰 Margin vereist: [$bedrag bij $${amount}]
-📊 Risk/Reward: [ratio]` : `Gebruik dit format:
-🟢 SIGNAAL: [BUY / SELL / HOLD]
-📍 Entry zone: [prijsrange]
-🎯 Take profit: [doel]
-🛑 Stop loss: [niveau]
-📊 Kans van slagen: [%]`}
-
-Schrijf in het Nederlands. Wees realistisch en voorzichtig.`,
+      `Je bent een crypto trading signaal AI. ${disclaimer} Genereer een trading signaal voor de opgegeven situatie. Gebruik dit format:\n🟢 SIGNAAL: [BUY / SELL / HOLD]\n📍 Entry zone: [prijsrange]\n🎯 Take profit: [doel]\n🛑 Stop loss: [niveau]\n📊 Kans van slagen: [%]\n\nSchrijf in het Nederlands. Wees realistisch en voorzichtig.`,
       context
     );
-    document.getElementById('body-signal').innerHTML = renderMd(signal);
+    document.getElementById('body-signal').textContent = signal;
     setChip('signal', 'done');
-  } catch(e) { showError('signal', e.message); }
+  } catch { document.getElementById('body-signal').textContent = "Fout."; }
 
   // Entity 3: Risk Assessor
   setChip('risk', 'running');
   try {
     const riskRes = await callClaude(
-      `Je bent een crypto risico-analyse AI. ${disclaimer} Beoordeel de risico's voor deze trade.
-
-Gebruik dit format:
-⚠️ Risico niveau: [LAAG / MEDIUM / HOOG / EXTREEM]
-💸 Max verlies bij $${amount}: [bedrag]${isLev ? `\n💀 Liquidatierisico bij ${maxLev2}x: [beschrijving]\n📐 Aanbevolen positiegrootte: [bedrag om veilig te blijven]` : ''}
-🔍 Risicofactoren:
-- [factor 1]
-- [factor 2]
-- [factor 3]
-
-Schrijf in het Nederlands.`,
+      `Je bent een crypto risico-analyse AI. ${disclaimer} Beoordeel de risico's voor deze trade. Gebruik dit format:\n⚠️ Risico niveau: [LAAG / MEDIUM / HOOG / EXTREEM]\n💸 Max verlies bij €${amount}: [bedrag]\n🔍 Risicofactoren:\n- [factor 1]\n- [factor 2]\n- [factor 3]\n\nSchrijf in het Nederlands.`,
       context
     );
-    document.getElementById('body-risk').innerHTML = renderMd(riskRes);
+    document.getElementById('body-risk').textContent = riskRes;
     setChip('risk', 'done');
-  } catch(e) { showError('risk', e.message); }
+  } catch { document.getElementById('body-risk').textContent = "Fout."; }
 
   // Entity 4: Trade Advisor
   setChip('advice', 'running');
   try {
     const advice = await callClaude(
-      `Je bent een crypto trade advisor AI. ${disclaimer} Geef concreet praktisch advies voor $${amount} in ${coin} voor ${timeframe} met ${risk} risicoprofiel.${isLev ? ` Dit is een leverage trade op MEXC Futures (max ${maxLev2}x). Adviseer: exacte hefboom instelling op MEXC, hoe stop loss instellen om liquidatie te voorkomen, wanneer winst nemen, en geef 1 duidelijke waarschuwing over leverage risico's.` : ' Bespreek: of dit een goed moment is, hoe te spreiden, wanneer te handelen, en 1 waarschuwing.'} Max 6 zinnen. Schrijf in het Nederlands.`,
+      `Je bent een crypto trade advisor AI. ${disclaimer} Geef concreet, praktisch advies voor iemand die €${amount} wil investeren in ${coin} voor ${timeframe} met een ${risk} risicoprofiel. Bespreek: of dit een goed moment is, hoe te spreiden, wanneer te handelen, en 1 belangrijke waarschuwing. Max 6 zinnen. Schrijf in het Nederlands.`,
       context
     );
-    document.getElementById('body-advice').innerHTML = renderMd(advice);
+    document.getElementById('body-advice').textContent = advice;
     setChip('advice', 'done');
-  } catch(e) { showError('advice', e.message); }
+  } catch { document.getElementById('body-advice').textContent = "Fout."; }
 
   document.getElementById('payLog').style.display = 'block';
   btn.disabled = false;
   btn.textContent = '⬡ NIEUW SIGNAAL GENEREREN';
 }
-
-// ─── INIT ─────────────────────────────────────────────────────
-(function init() {
-  const saved = localStorage.getItem('signals_apikey');
-  if (saved) document.getElementById('apiKey').value = saved;
-  updateCoinDropdown();
-  loadFiasEcosystem();
-})();
 </script>
-
 </body>
 </html>
