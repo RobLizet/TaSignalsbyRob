@@ -15,18 +15,18 @@
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Dancing+Script:wght@600&display=swap');
 
   :root {
-    --bg: #e8f8f0;
-    --surface: #d0f0e2;
-    --card: #ffffff;
-    --border: #a8dfc4;
-    --green: #00b366;
+    --bg: #0e0a08;
+    --surface: #160f0a;
+    --card: #1c1410;
+    --border: #2a1f16;
+    --green: #00ff88;
     --red: #ff3355;
-    --yellow: #e6a800;
-    --blue: #0088cc;
-    --text: #1a3d2b;
-    --muted: #5a9a7a;
-    --gold: #e6a800;
-    --coffee: #00b366;
+    --yellow: #ffcc00;
+    --blue: #00aaff;
+    --text: #e8eaf0;
+    --muted: #7a6358;
+    --gold: #ffaa00;
+    --coffee: #c8956c;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,6 +43,13 @@
     content: '';
     position: fixed;
     inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(200,149,108,0.008) 2px,
+      rgba(200,149,108,0.008) 4px
+    );
     pointer-events: none;
     z-index: 999;
   }
@@ -101,8 +108,8 @@
   .made-by {
     font-family: 'Dancing Script', cursive;
     font-size: 1.1rem;
-    color: #00b366;
-    opacity: 0.9;
+    color: var(--coffee);
+    opacity: 0.75;
     margin-top: 2px;
     letter-spacing: 0.02em;
   }
@@ -400,6 +407,24 @@
     </span>
   </div>
 
+  <!-- API Key -->
+  <div id="apiKeySection" style="
+    background: var(--card);
+    border: 1px solid rgba(153,102,255,0.25);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1rem;
+  ">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#9966ff; letter-spacing:0.1em; margin-bottom:0.5rem;">⬡ ANTHROPIC API KEY</div>
+    <div style="display:flex; gap:0.5rem; align-items:center;">
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="flex:1; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; padding:8px 10px; outline:none;"
+        oninput="saveApiKey(this.value)" />
+      <button onclick="toggleKey()" style="background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:0.65rem; padding:8px 10px; border-radius:6px; cursor:pointer;" id="toggleBtn">👁</button>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.58rem; color:var(--muted); margin-top:6px; line-height:1.5;">
+      Haal je key op via <a href="https://console.anthropic.com" target="_blank" style="color:#9966ff;">console.anthropic.com</a> · Wordt lokaal opgeslagen op jouw apparaat
+    </div>
+  </div>
 
   <!-- Inputs -->
   <div class="coin-selector">
@@ -513,15 +538,27 @@
 
 <script>
 async function callClaude(system, user) {
-  const r = await fetch("/api/claude", {
+  const apiKey = localStorage.getItem('anthropic_key') || '';
+  if (!apiKey) throw new Error('Vul eerst je Anthropic API key in bovenaan de pagina.');
+
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ system, user })
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system,
+      messages: [{ role: "user", content: user }]
+    })
   });
-  if (!r.ok) throw new Error('Server fout: ' + r.status);
   const d = await r.json();
-  if (d.error) throw new Error(d.error);
-  return d.text || "Geen resultaat.";
+  if (d.error) throw new Error(d.error.message || 'API fout');
+  return d.content?.[0]?.text || "Geen resultaat.";
 }
 
 function saveApiKey(val) {
@@ -617,7 +654,7 @@ async function runAnalysis() {
     );
     document.getElementById('body-trend').textContent = trend;
     setChip('trend', 'done');
-  } catch(e) { document.getElementById('body-trend').textContent = "❌ Fout: " + e.message; setChip('trend', ''); }
+  } catch { document.getElementById('body-trend').textContent = "Fout."; }
 
   // Entity 2: Signal Generator
   setChip('signal', 'running');
@@ -628,7 +665,7 @@ async function runAnalysis() {
     );
     document.getElementById('body-signal').textContent = signal;
     setChip('signal', 'done');
-  } catch(e) { document.getElementById('body-signal').textContent = "❌ Fout: " + e.message; setChip('signal', ''); }
+  } catch { document.getElementById('body-signal').textContent = "Fout."; }
 
   // Entity 3: Risk Assessor
   setChip('risk', 'running');
@@ -639,7 +676,7 @@ async function runAnalysis() {
     );
     document.getElementById('body-risk').textContent = riskRes;
     setChip('risk', 'done');
-  } catch(e) { document.getElementById('body-risk').textContent = "❌ Fout: " + e.message; setChip('risk', ''); }
+  } catch { document.getElementById('body-risk').textContent = "Fout."; }
 
   // Entity 4: Trade Advisor
   setChip('advice', 'running');
@@ -650,7 +687,7 @@ async function runAnalysis() {
     );
     document.getElementById('body-advice').textContent = advice;
     setChip('advice', 'done');
-  } catch(e) { document.getElementById('body-advice').textContent = "❌ Fout: " + e.message; setChip('advice', ''); }
+  } catch { document.getElementById('body-advice').textContent = "Fout."; }
 
   document.getElementById('payLog').style.display = 'block';
   btn.disabled = false;
