@@ -1,5 +1,5 @@
 const CACHE = 'signals-v1';
-const ASSETS = ['/', '/index.html'];
+const ASSETS = ['/TaSignalsbyRob/', '/TaSignalsbyRob/index.html'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
