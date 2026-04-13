@@ -5,463 +5,124 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Crypto Trading Signals</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a6bff">
+<meta name="theme-color" content="#00ff88">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Signals">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <meta name="description" content="AI crypto trading signalen">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap');
-
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Dancing+Script:wght@600&display=swap');
   :root {
-    --bg: #f4f6fa;
-    --surface: #ffffff;
-    --card: #ffffff;
-    --border: #e0e4ef;
-    --border-dark: #c8cedf;
-    --blue: #1a6bff;
-    --blue-light: #e8f0ff;
-    --blue-mid: #4d8eff;
-    --green: #00b96b;
-    --green-light: #e6f9f1;
-    --red: #ff3355;
-    --red-light: #fff0f3;
-    --gold: #e8920a;
-    --gold-light: #fff7e6;
-    --purple: #7c3aed;
-    --purple-light: #f3eeff;
-    --text: #0f1523;
-    --text-mid: #3a4560;
-    --muted: #8a94b0;
-    --header-bg: #1a6bff;
-    --header-text: #ffffff;
+    --bg:#0e0a08;--surface:#160f0a;--card:#1c1410;--border:#2a1f16;
+    --green:#00ff88;--red:#ff3355;--yellow:#ffcc00;--blue:#00aaff;
+    --purple:#9966ff;--orange:#ff8800;--text:#e8eaf0;--muted:#7a6358;
+    --gold:#ffaa00;--coffee:#c8956c;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-  }
-
-  /* Blue header bar */
-  .header-bar {
-    background: var(--header-bg);
-    padding: 0 1.2rem;
-    padding-top: max(1rem, env(safe-area-inset-top));
-    padding-bottom: 1.2rem;
-  }
-
-  .header-inner {
-    max-width: 860px;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.8rem;
-  }
-
-  .topbar-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.4rem;
-    color: #ffffff;
-    letter-spacing: 0.04em;
-    line-height: 1;
-  }
-
-  .topbar-logo span {
-    color: #ffd166;
-  }
-
-  .made-by {
-    font-family: 'Dancing Script', cursive;
-    font-size: 1rem;
-    color: rgba(255,255,255,0.85);
-    margin-top: 1px;
-  }
-
-  .topbar-sub {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.58rem;
-    color: rgba(255,255,255,0.6);
-    letter-spacing: 0.1em;
-    line-height: 1.6;
-    margin-top: 2px;
-  }
-
-  .header-badges {
-    margin-left: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    align-items: flex-end;
-  }
-
-  .topbar-badge {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.6rem;
-    color: #ffffff;
-    border: 1px solid rgba(255,255,255,0.35);
-    padding: 4px 10px;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.12);
-    letter-spacing: 0.08em;
-    white-space: nowrap;
-  }
-
-  /* WRAP */
-  .wrap {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 1.2rem 1.2rem 4rem;
-    padding-bottom: max(4rem, env(safe-area-inset-bottom));
-  }
-
-  /* Install Banner */
-  #installBanner {
-    display: none;
-    background: var(--blue-light);
-    border: 1px solid rgba(26,107,255,0.25);
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    align-items: center;
-    gap: 0.8rem;
-  }
-  #installBanner.show { display: flex; }
-  #installBanner p { font-size: 0.72rem; color: var(--text-mid); flex: 1; line-height: 1.4; font-family: 'IBM Plex Mono', monospace; }
-  #installBanner p span { color: var(--blue); font-weight: 700; }
-  .install-btn { background: var(--blue); color: #fff; border: none; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 700; padding: 7px 14px; cursor: pointer; letter-spacing: 0.06em; white-space: nowrap; }
-  .dismiss-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 4px; }
-
-  /* FIAS Strip */
-  #fiasStrip {
-    background: var(--purple-light);
-    border: 1px solid rgba(124,58,237,0.18);
-    border-radius: 10px;
-    padding: 0.7rem 1rem;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-  }
-
-  /* API Key section */
-  #apiKeySection {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.9rem 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  }
-
-  /* COIN SELECTOR */
-  .coin-selector {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8rem;
-    margin-bottom: 1rem;
-  }
-
-  .input-group {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.85rem 1rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-
-  .input-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.58rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 0.4rem;
-    display: block;
-  }
-
-  select, input[type="number"] {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    outline: none;
-    cursor: pointer;
-  }
-
-  select option { background: #fff; color: #0f1523; }
-
-  /* ENTITY CHIPS */
-  .entity-row {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .entity-chip {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.6rem;
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    background: var(--card);
-    transition: all 0.25s;
-    letter-spacing: 0.04em;
-  }
-
-  .entity-chip .led {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--border-dark);
-    transition: all 0.25s;
-  }
-
-  .entity-chip.running {
-    border-color: var(--blue);
-    color: var(--blue);
-    background: var(--blue-light);
-  }
-  .entity-chip.running .led {
-    background: var(--blue);
-    box-shadow: 0 0 6px var(--blue);
-    animation: blink 0.8s infinite;
-  }
-  .entity-chip.done {
-    border-color: rgba(0,185,107,0.4);
-    color: var(--green);
-    background: var(--green-light);
-  }
-  .entity-chip.done .led { background: var(--green); }
-
-  @keyframes blink {
-    0%,100% { opacity:1; } 50% { opacity:0.2; }
-  }
-
-  /* ANALYZE BTN */
-  .analyze-btn {
-    width: 100%;
-    background: var(--blue);
-    border: none;
-    color: #ffffff;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 0.15em;
-    padding: 0.85rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 1.2rem;
-    box-shadow: 0 4px 14px rgba(26,107,255,0.3);
-  }
-
-  .analyze-btn:hover:not(:disabled) {
-    background: #1558e0;
-    box-shadow: 0 6px 20px rgba(26,107,255,0.4);
-    transform: translateY(-1px);
-  }
-
-  .analyze-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  /* RESULTS */
-  .results { display: none; flex-direction: column; gap: 0.8rem; }
-  .results.visible { display: flex; }
-
-  .result-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    animation: fadeUp 0.35s ease both;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-
-  @keyframes fadeUp {
-    from { opacity:0; transform: translateY(8px); }
-    to   { opacity:1; transform: translateY(0); }
-  }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.7rem 1rem;
-    border-bottom: 1px solid var(--border);
-    background: #fafbfd;
-  }
-
-  .card-tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.56rem;
-    letter-spacing: 0.08em;
-    padding: 3px 7px;
-    border-radius: 4px;
-    font-weight: 700;
-  }
-
-  .tag-trend  { background: var(--blue-light);   color: var(--blue);   border: 1px solid rgba(26,107,255,0.2); }
-  .tag-signal { background: var(--green-light);  color: var(--green);  border: 1px solid rgba(0,185,107,0.25); }
-  .tag-risk   { background: var(--red-light);    color: var(--red);    border: 1px solid rgba(255,51,85,0.2); }
-  .tag-advice { background: var(--gold-light);   color: var(--gold);   border: 1px solid rgba(232,146,10,0.25); }
-
-  .card-title {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text);
-    flex: 1;
-  }
-
-  .pay-chip {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.56rem;
-    color: var(--gold);
-    background: var(--gold-light);
-    border: 1px solid rgba(232,146,10,0.2);
-    padding: 3px 7px;
-    border-radius: 4px;
-  }
-
-  .card-body {
-    padding: 1rem;
-    font-size: 0.84rem;
-    line-height: 1.75;
-    color: var(--text-mid);
-    font-family: 'DM Sans', sans-serif;
-    white-space: pre-wrap;
-    min-height: 60px;
-  }
-
-  /* Loading dots */
-  .dots { display: inline-flex; gap: 5px; }
-  .dots span {
-    width: 5px; height: 5px;
-    background: var(--blue);
-    border-radius: 50%;
-    animation: blink 1s infinite;
-  }
-  .dots span:nth-child(2) { animation-delay:.2s; }
-  .dots span:nth-child(3) { animation-delay:.4s; }
-
-  /* Disclaimer */
-  .disclaimer {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.57rem;
-    color: var(--muted);
-    text-align: center;
-    padding: 0.65rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    line-height: 1.7;
-    background: var(--card);
-  }
-
-  /* Payment log */
-  .pay-log {
-    background: var(--gold-light);
-    border: 1px solid rgba(232,146,10,0.2);
-    border-radius: 10px;
-    padding: 0.9rem 1rem;
-    animation: fadeUp 0.35s ease both;
-  }
-
-  .pay-log-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--gold);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 0.6rem;
-    font-weight: 700;
-  }
-
-  .pay-row {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.63rem;
-    padding: 4px 0;
-    border-bottom: 1px solid rgba(232,146,10,0.12);
-  }
-  .pay-row:last-child { border: none; }
-  .pay-row .name { color: var(--text-mid); }
-  .pay-row .amt  { color: var(--gold); font-weight: 600; }
-  .pay-row .ok   { color: var(--green); font-size: 0.55rem; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+  body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(200,149,108,0.008) 2px,rgba(200,149,108,0.008) 4px);pointer-events:none;z-index:999;}
+  .wrap{max-width:860px;margin:0 auto;padding:1.5rem 1.2rem 4rem;padding-top:max(1.5rem,env(safe-area-inset-top));padding-bottom:max(4rem,env(safe-area-inset-bottom));}
+  #installBanner{display:none;background:rgba(0,255,136,0.07);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:.75rem 1rem;margin-bottom:1rem;align-items:center;gap:.8rem;}
+  #installBanner.show{display:flex;}
+  #installBanner p{font-size:.72rem;color:var(--text);flex:1;line-height:1.4;font-family:'IBM Plex Mono',monospace;}
+  #installBanner p span{color:var(--green);}
+  .install-btn{background:var(--green);color:#000;border:none;border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:700;padding:6px 12px;cursor:pointer;letter-spacing:.06em;white-space:nowrap;}
+  .dismiss-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:4px;}
+  .topbar{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+  .topbar-logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--coffee);letter-spacing:.05em;line-height:1;text-shadow:0 0 20px rgba(200,149,108,.5);}
+  .topbar-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;line-height:1.6;}
+  .made-by{font-family:'Dancing Script',cursive;font-size:1.1rem;color:var(--coffee);opacity:.75;margin-top:2px;}
+  .topbar-badge{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--green);border:1px solid rgba(0,255,136,.3);padding:4px 10px;border-radius:3px;background:rgba(0,255,136,.05);letter-spacing:.08em;}
+  .coin-selector{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;}
+  .input-group{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem;}
+  .input-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;display:block;}
+  select,input[type="number"]{width:100%;background:transparent;border:none;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:600;outline:none;cursor:pointer;}
+  select option{background:#111;}
+  .section-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin:1rem 0 .5rem;display:flex;align-items:center;gap:.5rem;}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+  .entity-row{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;}
+  .entity-chip{display:flex;align-items:center;gap:.35rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:5px 10px;border-radius:4px;border:1px solid var(--border);color:var(--muted);background:var(--card);transition:all .25s;letter-spacing:.04em;}
+  .entity-chip .led{width:5px;height:5px;border-radius:50%;background:var(--muted);transition:all .25s;}
+  .entity-chip.running{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+  .entity-chip.running .led{background:var(--green);box-shadow:0 0 6px var(--green);animation:blink .8s infinite;}
+  .entity-chip.done{border-color:rgba(0,255,136,.3);color:rgba(0,255,136,.6);}
+  .entity-chip.done .led{background:rgba(0,255,136,.4);}
+  .entity-chip.error{border-color:rgba(255,51,85,.4);color:var(--red);}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+  .analyze-btn{width:100%;background:transparent;border:1px solid var(--green);color:var(--green);font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.15em;padding:.75rem;border-radius:6px;cursor:pointer;transition:all .2s;margin-bottom:1.5rem;box-shadow:0 0 20px rgba(0,255,136,.1);}
+  .analyze-btn:hover:not(:disabled){background:rgba(0,255,136,.08);box-shadow:0 0 30px rgba(0,255,136,.25);}
+  .analyze-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .results{display:none;flex-direction:column;gap:.8rem;}
+  .results.visible{display:flex;}
+  .result-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;animation:fadeUp .35s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .card-header{display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015);}
+  .card-tag{font-family:'IBM Plex Mono',monospace;font-size:.54rem;letter-spacing:.08em;padding:3px 7px;border-radius:3px;white-space:nowrap;}
+  .tag-trend{background:rgba(0,170,255,.12);color:var(--blue);border:1px solid rgba(0,170,255,.3);}
+  .tag-candle{background:rgba(255,136,0,.12);color:var(--orange);border:1px solid rgba(255,136,0,.3);}
+  .tag-fib{background:rgba(255,204,0,.1);color:var(--yellow);border:1px solid rgba(255,204,0,.3);}
+  .tag-signal{background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.3);}
+  .tag-risk{background:rgba(255,51,85,.1);color:var(--red);border:1px solid rgba(255,51,85,.3);}
+  .tag-advice{background:rgba(153,102,255,.1);color:var(--purple);border:1px solid rgba(153,102,255,.3);}
+  .tag-lev{background:rgba(255,107,53,.08);color:#ff6b35;border:1px solid rgba(255,107,53,.35);}
+  .card-title{font-size:.82rem;font-weight:500;flex:1;}
+  .pay-chip{font-family:'IBM Plex Mono',monospace;font-size:.54rem;color:var(--gold);background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.2);padding:3px 7px;border-radius:3px;white-space:nowrap;}
+  .card-body{padding:1rem;font-size:.83rem;line-height:1.8;color:#b0b8d0;font-family:'DM Sans',sans-serif;white-space:pre-wrap;min-height:60px;}
+  .dots{display:inline-flex;gap:5px;}
+  .dots span{width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 1s infinite;}
+  .dots span:nth-child(2){animation-delay:.2s;}
+  .dots span:nth-child(3){animation-delay:.4s;}
+  .disclaimer{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);text-align:center;padding:.6rem;border:1px solid var(--border);border-radius:6px;line-height:1.6;}
+  .pay-log{background:var(--card);border:1px solid rgba(255,170,0,.15);border-radius:8px;padding:.9rem 1rem;animation:fadeUp .35s ease both;}
+  .pay-log-title{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;}
+  .pay-row{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.63rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+  .pay-row:last-child{border:none;}
+  .pay-row .name{color:var(--muted);}
+  .pay-row .amt{color:var(--gold);}
+  .pay-row .ok{color:var(--green);font-size:.55rem;}
 </style>
 </head>
 <body>
-
-<!-- Blue Header Bar -->
-<div class="header-bar">
-  <div class="header-inner">
-    <div>
-      <div class="topbar-logo">SIGNAL<span>SP</span></div>
-      <div class="made-by">Made by Rob Borghouts</div>
-      <div class="topbar-sub">FIAS ARCHE · CRYPTO TRADING SIGNALS · AI ENTITIES</div>
-    </div>
-    <div class="header-badges">
-      <div class="topbar-badge">⬡ FIAS v0.1</div>
-    </div>
-  </div>
-</div>
-
 <div class="wrap">
-
-  <!-- PWA Install Banner -->
   <div id="installBanner">
     <p>📲 <span>Installeer als app</span> — zet hem op je homescreen!</p>
     <button class="install-btn" onclick="installPWA()">INSTALLEER</button>
     <button class="dismiss-btn" onclick="dismissInstall()">✕</button>
   </div>
-
-  <!-- FIAS Ecosystem Strip -->
-  <div id="fiasStrip">
-    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#7c3aed; letter-spacing:0.1em; font-weight:700;">⬡ FIAS ECOSYSTEM</span>
-    <div style="display:flex; gap:1.4rem; flex:1; flex-wrap:wrap;">
+  <div class="topbar">
+    <div>
+      <div class="topbar-logo">SIGNAL</div>
+      <div class="made-by">Made by Rob Borghouts</div>
+      <div class="topbar-sub">FIAS ARCHE · CRYPTO TRADING SIGNALS<br>POWERED BY AI ENTITIES</div>
+    </div>
+    <div class="topbar-badge">⬡ FIAS v0.2</div>
+  </div>
+  <div id="fiasStrip" style="display:flex;align-items:center;gap:1.2rem;background:rgba(153,102,255,.07);border:1px solid rgba(153,102,255,.18);border-radius:8px;padding:.6rem 1rem;margin-bottom:1rem;flex-wrap:wrap;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:#9966ff;letter-spacing:.1em;">⬡ FIAS ECOSYSTEM</span>
+    <div style="display:flex;gap:1.2rem;flex:1;flex-wrap:wrap;">
       <div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.54rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">FIAS TOKEN</div>
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:1.05rem; color:#7c3aed;" id="s-fiasPrice">⬡ Platform</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em;">FIAS TOKEN</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#9966ff;" id="s-fiasPrice">⬡ Platform</div>
       </div>
       <div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.54rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">DevvE TOKEN</div>
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:1.05rem; color:var(--green);" id="s-devvePrice">laden...</div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.54rem;" id="s-devveChange">—</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em;">DevvE TOKEN</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--green);" id="s-devvePrice">laden...</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;" id="s-devveChange">—</div>
       </div>
     </div>
-    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.54rem; color:var(--muted); text-align:right; line-height:1.7;">
-      Payments via<br><span style="color:#7c3aed; font-weight:700;">DevvX Blockchain</span>
-    </span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--muted);text-align:right;line-height:1.6;">Payments via<br><span style="color:#9966ff">DevvX Blockchain</span></span>
   </div>
-
-  <!-- API Key -->
-  <div id="apiKeySection">
-    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#7c3aed; letter-spacing:0.1em; margin-bottom:0.5rem; font-weight:700;">⬡ ANTHROPIC API KEY</div>
-    <div style="display:flex; gap:0.5rem; align-items:center;">
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="flex:1; background:#f7f8fc; border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; padding:9px 12px; outline:none;"
-        oninput="saveApiKey(this.value)" />
-      <button onclick="toggleKey()" style="background:#f7f8fc; border:1px solid var(--border); color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:0.65rem; padding:9px 12px; border-radius:8px; cursor:pointer;" id="toggleBtn">👁</button>
+  <div id="apiKeySection" style="background:var(--card);border:1px solid rgba(153,102,255,.25);border-radius:8px;padding:.9rem 1rem;margin-bottom:1rem;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:#9966ff;letter-spacing:.1em;margin-bottom:.5rem;">⬡ ANTHROPIC API KEY</div>
+    <div style="display:flex;gap:.5rem;align-items:center;">
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:8px 10px;outline:none;" oninput="saveApiKey(this.value)" />
+      <button onclick="toggleKey()" style="background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:8px 10px;border-radius:6px;cursor:pointer;" id="toggleBtn">👁</button>
     </div>
-    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.57rem; color:var(--muted); margin-top:6px; line-height:1.5;">
-      Haal je key op via <a href="https://console.anthropic.com" target="_blank" style="color:#7c3aed;">console.anthropic.com</a> · Wordt lokaal opgeslagen op jouw apparaat
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:6px;line-height:1.5;">
+      Haal je key op via <a href="https://console.anthropic.com" target="_blank" style="color:#9966ff;">console.anthropic.com</a> · Wordt lokaal opgeslagen op jouw apparaat
     </div>
   </div>
-
-  <!-- Inputs -->
   <div class="coin-selector">
     <div class="input-group">
       <span class="input-label">Coin</span>
@@ -498,231 +159,355 @@
       <input type="number" id="amount" value="500" min="1" />
     </div>
   </div>
-
-  <!-- Entity chips -->
+  <div class="section-label">⬡ AI ENTITIES — 7 ACTIEF</div>
   <div class="entity-row">
-    <div class="entity-chip" id="chip-trend"><span class="led"></span>TREND ANALYZER</div>
+    <div class="entity-chip" id="chip-trend"><span class="led"></span>TREND + STRUCTUUR</div>
+    <div class="entity-chip" id="chip-candle"><span class="led"></span>CANDLE PATTERNS</div>
+    <div class="entity-chip" id="chip-fib"><span class="led"></span>FIBONACCI</div>
     <div class="entity-chip" id="chip-signal"><span class="led"></span>SIGNAL GENERATOR</div>
     <div class="entity-chip" id="chip-risk"><span class="led"></span>RISK ASSESSOR</div>
     <div class="entity-chip" id="chip-advice"><span class="led"></span>TRADE ADVISOR</div>
+    <div class="entity-chip" id="chip-lev"><span class="led"></span>LEVERAGE ADVISOR</div>
   </div>
-
-  <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">
-    ⬡ GENEREER TRADING SIGNAAL
-  </button>
-
-  <!-- Disclaimer -->
-  <div class="disclaimer" style="margin-bottom:1rem">
-    ⚠️ UITSLUITEND VOOR EDUCATIEVE DOELEINDEN · GEEN FINANCIEEL ADVIES · CRYPTO TRADING BRENGT RISICO'S MET ZICH MEE
-  </div>
-
-  <!-- Results -->
+  <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">⬡ GENEREER TRADING SIGNAAL</button>
+  <div class="disclaimer" style="margin-bottom:1rem">⚠️ UITSLUITEND VOOR EDUCATIEVE DOELEINDEN · GEEN FINANCIEEL ADVIES · CRYPTO TRADING BRENGT RISICO'S MET ZICH MEE</div>
   <div class="results" id="results">
-
     <div class="result-card" style="animation-delay:0s">
-      <div class="card-header">
-        <span class="card-tag tag-trend">ENTITY · TREND ANALYZER</span>
-        <span class="card-title">Markttrend Analyse</span>
-        <span class="pay-chip">⬡ 0.0014 FIAS</span>
-      </div>
+      <div class="card-header"><span class="card-tag tag-trend">ENTITY · TREND ANALYZER</span><span class="card-title">Marktstructuur & Trend</span><span class="pay-chip">⬡ 0.0014 FIAS</span></div>
       <div class="card-body" id="body-trend"><div class="dots"><span></span><span></span><span></span></div></div>
     </div>
-
-    <div class="result-card" style="animation-delay:0.1s">
-      <div class="card-header">
-        <span class="card-tag tag-signal">ENTITY · SIGNAL GENERATOR</span>
-        <span class="card-title">Trading Signaal</span>
-        <span class="pay-chip">⬡ 0.0022 FIAS</span>
-      </div>
+    <div class="result-card" style="animation-delay:.08s">
+      <div class="card-header"><span class="card-tag tag-candle">ENTITY · CANDLE PATTERNS</span><span class="card-title">Candlestick & Prijsstructuur</span><span class="pay-chip">⬡ 0.0018 FIAS</span></div>
+      <div class="card-body" id="body-candle"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="result-card" style="animation-delay:.16s">
+      <div class="card-header"><span class="card-tag tag-fib">ENTITY · FIBONACCI</span><span class="card-title">Fibonacci Retracement & Zones</span><span class="pay-chip">⬡ 0.0016 FIAS</span></div>
+      <div class="card-body" id="body-fib"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="result-card" style="animation-delay:.24s">
+      <div class="card-header"><span class="card-tag tag-signal">ENTITY · SIGNAL GENERATOR</span><span class="card-title">Trading Signaal</span><span class="pay-chip">⬡ 0.0022 FIAS</span></div>
       <div class="card-body" id="body-signal"><div class="dots"><span></span><span></span><span></span></div></div>
     </div>
-
-    <div class="result-card" style="animation-delay:0.2s">
-      <div class="card-header">
-        <span class="card-tag tag-risk">ENTITY · RISK ASSESSOR</span>
-        <span class="card-title">Risicobeoordeling</span>
-        <span class="pay-chip">⬡ 0.0016 FIAS</span>
-      </div>
+    <div class="result-card" style="animation-delay:.32s">
+      <div class="card-header"><span class="card-tag tag-risk">ENTITY · RISK ASSESSOR</span><span class="card-title">Risicobeoordeling</span><span class="pay-chip">⬡ 0.0016 FIAS</span></div>
       <div class="card-body" id="body-risk"><div class="dots"><span></span><span></span><span></span></div></div>
     </div>
-
-    <div class="result-card" style="animation-delay:0.3s">
-      <div class="card-header">
-        <span class="card-tag tag-advice">ENTITY · TRADE ADVISOR</span>
-        <span class="card-title">Concreet Advies</span>
-        <span class="pay-chip">⬡ 0.0019 FIAS</span>
-      </div>
+    <div class="result-card" style="animation-delay:.4s">
+      <div class="card-header"><span class="card-tag tag-advice">ENTITY · TRADE ADVISOR</span><span class="card-title">Concreet Actieplan</span><span class="pay-chip">⬡ 0.0019 FIAS</span></div>
       <div class="card-body" id="body-advice"><div class="dots"><span></span><span></span><span></span></div></div>
     </div>
-
-    <div class="pay-log" id="payLog" style="display:none">
+    <div class="result-card" style="animation-delay:.48s">
+      <div class="card-header"><span class="card-tag tag-lev">ENTITY · LEVERAGE ADVISOR</span><span class="card-title">Leverage Trade Analyse</span><span class="pay-chip">⬡ 0.0021 FIAS</span></div>
+      <div class="card-body" id="body-lev"><div class="dots"><span></span><span></span><span></span></div></div>
+    </div>
+        <div class="pay-log" id="payLog" style="display:none">
       <div class="pay-log-title">⬡ DevvX Blockchain · Micropayments Settled</div>
       <div class="pay-row"><span class="name">Trend Analyzer Entity</span><span class="amt">0.0014 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row"><span class="name">Candle Patterns Entity</span><span class="amt">0.0018 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row"><span class="name">Fibonacci Entity</span><span class="amt">0.0016 FIAS</span><span class="ok">✓ SETTLED</span></div>
       <div class="pay-row"><span class="name">Signal Generator Entity</span><span class="amt">0.0022 FIAS</span><span class="ok">✓ SETTLED</span></div>
       <div class="pay-row"><span class="name">Risk Assessor Entity</span><span class="amt">0.0016 FIAS</span><span class="ok">✓ SETTLED</span></div>
       <div class="pay-row"><span class="name">Trade Advisor Entity</span><span class="amt">0.0019 FIAS</span><span class="ok">✓ SETTLED</span></div>
-      <div class="pay-row" style="border-top:1px solid rgba(232,146,10,0.2); margin-top:4px; padding-top:6px">
-        <span class="name" style="color:var(--text); font-weight:700;">Totaal</span>
-        <span class="amt" style="font-size:0.75rem">0.0071 FIAS</span>
+      <div class="pay-row"><span class="name">Leverage Advisor Entity</span><span class="amt">0.0021 FIAS</span><span class="ok">✓ SETTLED</span></div>
+      <div class="pay-row" style="border-top:1px solid rgba(255,170,0,.15);margin-top:4px;padding-top:6px">
+        <span class="name" style="color:var(--text);font-weight:600">Totaal</span>
+        <span class="amt" style="font-size:.75rem">0.0126 FIAS</span>
         <span class="ok">✓ COMPLEET</span>
       </div>
     </div>
-
   </div>
 </div>
-
 <script>
-async function callClaude(system, user) {
-  const apiKey = localStorage.getItem('anthropic_key') || '';
-  if (!apiKey) throw new Error('Vul eerst je Anthropic API key in bovenaan de pagina.');
-
-  const r = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      system,
-      messages: [{ role: "user", content: user }]
-    })
+async function callClaude(system,user){
+  const apiKey=localStorage.getItem('anthropic_key')||'';
+  if(!apiKey)throw new Error('Vul eerst je Anthropic API key in bovenaan de pagina.');
+  const r=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,system,messages:[{role:"user",content:user}]})
   });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error.message || 'API fout');
-  return d.content?.[0]?.text || "Geen resultaat.";
+  const d=await r.json();
+  if(d.error)throw new Error(d.error.message||'API fout');
+  return d.content?.[0]?.text||"Geen resultaat.";
 }
+function saveApiKey(v){if(v)localStorage.setItem('anthropic_key',v);}
+function toggleKey(){
+  const i=document.getElementById('apiKeyInput'),b=document.getElementById('toggleBtn');
+  if(i.type==='password'){i.type='text';b.textContent='🙈';}else{i.type='password';b.textContent='👁';}
+}
+function setChip(id,state){document.getElementById('chip-'+id).className='entity-chip '+state;}
+function loading(id){document.getElementById('body-'+id).innerHTML='<div class="dots"><span></span><span></span><span></span></div>';}
 
-function saveApiKey(val) {
-  if (val) localStorage.setItem('anthropic_key', val);
-}
+let deferredPrompt=null;
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(console.error));}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(!localStorage.getItem('signals_pwa_dismissed'))document.getElementById('installBanner').classList.add('show');});
+async function installPWA(){if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBanner').classList.remove('show');}
+function dismissInstall(){document.getElementById('installBanner').classList.remove('show');localStorage.setItem('signals_pwa_dismissed','1');}
+window.addEventListener('appinstalled',()=>document.getElementById('installBanner').classList.remove('show'));
 
-function toggleKey() {
-  const inp = document.getElementById('apiKeyInput');
-  const btn = document.getElementById('toggleBtn');
-  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-  else { inp.type = 'password'; btn.textContent = '👁'; }
-}
-
-function setChip(id, state) {
-  const el = document.getElementById('chip-' + id);
-  el.className = 'entity-chip ' + state;
-}
-
-function loading(id) {
-  document.getElementById('body-' + id).innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
-}
-
-// ─── PWA ──────────────────────────────────────────────────────
-let deferredPrompt = null;
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(console.error));
-}
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferredPrompt = e;
-  if (!localStorage.getItem('signals_pwa_dismissed')) {
-    document.getElementById('installBanner').classList.add('show');
-  }
-});
-async function installPWA() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  document.getElementById('installBanner').classList.remove('show');
-}
-function dismissInstall() {
-  document.getElementById('installBanner').classList.remove('show');
-  localStorage.setItem('signals_pwa_dismissed', '1');
-}
-window.addEventListener('appinstalled', () => document.getElementById('installBanner').classList.remove('show'));
-
-// ─── FIAS ECOSYSTEM PRICES ────────────────────────────────────
-async function loadFiasEcosystem() {
-  try {
-    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=devve&vs_currencies=usd&include_24hr_change=true');
-    const data = await res.json();
-    if (data.devve) {
-      const p = data.devve.usd;
-      const ch = data.devve.usd_24h_change;
-      document.getElementById('s-devvePrice').textContent = p < 0.01 ? '$' + p.toFixed(6) : '$' + p.toFixed(4);
-      const chEl = document.getElementById('s-devveChange');
-      chEl.textContent = (ch >= 0 ? '▲ +' : '▼ ') + ch.toFixed(2) + '%';
-      chEl.style.color = ch >= 0 ? 'var(--green)' : 'var(--red)';
+async function loadFiasEcosystem(){
+  try{
+    const res=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=devve&vs_currencies=usd&include_24hr_change=true');
+    const data=await res.json();
+    if(data.devve){
+      const p=data.devve.usd,ch=data.devve.usd_24h_change;
+      document.getElementById('s-devvePrice').textContent=p<0.01?'$'+p.toFixed(6):'$'+p.toFixed(4);
+      const el=document.getElementById('s-devveChange');
+      el.textContent=(ch>=0?'▲ +':'▼ ')+ch.toFixed(2)+'%';
+      el.style.color=ch>=0?'var(--green)':'var(--red)';
     }
-  } catch(e) {}
-  document.getElementById('s-fiasPrice').textContent = '⬡ Platform';
+  }catch(e){}
+  document.getElementById('s-fiasPrice').textContent='⬡ Platform';
 }
 loadFiasEcosystem();
+const savedKey=localStorage.getItem('anthropic_key');
+if(savedKey)document.getElementById('apiKeyInput').value=savedKey;
 
-// Load saved API key
-const savedKey = localStorage.getItem('anthropic_key');
-if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
+async function runAnalysis(){
+  const coin=document.getElementById('coinSelect').value;
+  const timeframe=document.getElementById('timeframe').value;
+  const risk=document.getElementById('riskProfile').value;
+  const amount=document.getElementById('amount').value;
+  const btn=document.getElementById('analyzeBtn');
+  btn.disabled=true;btn.textContent='⬡ ENTITIES VERWERKEN...';
+  document.getElementById('results').classList.add('visible');
+  document.getElementById('payLog').style.display='none';
+  ['trend','candle','fib','signal','risk','advice','lev'].forEach(loading);
+  const ctx=`Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: €${amount}`;
+  const disc="Dit is uitsluitend voor educatieve doeleinden. Geen garanties. Wees realistisch.";
 
-async function runAnalysis() {
-  const coin = document.getElementById('coinSelect').value;
-  const timeframe = document.getElementById('timeframe').value;
-  const risk = document.getElementById('riskProfile').value;
-  const amount = document.getElementById('amount').value;
+  // Entity 1: Trend + Marktstructuur
+  setChip('trend','running');
+  try{
+    const t=await callClaude(`Je bent een expert crypto marktstructuur analist. ${disc}
+Analyseer de marktstructuur en trend. Gebruik dit format:
 
-  const btn = document.getElementById('analyzeBtn');
-  btn.disabled = true;
-  btn.textContent = '⬡ ENTITIES VERWERKEN...';
+📈 MARKTFASE: [Bull / Bear / Sideways / Distributie / Accumulatie]
 
-  const results = document.getElementById('results');
-  results.classList.add('visible');
-  document.getElementById('payLog').style.display = 'none';
-  ['trend','signal','risk','advice'].forEach(loading);
+🏗️ MARKTSTRUCTUUR:
+- Trend: [Uptrend / Downtrend / Ranging]
+- Higher Highs (HH): [aanwezig? uitleg]
+- Higher Lows (HL): [aanwezig? uitleg]
+- Lower Highs (LH): [aanwezig? bearish?]
+- Lower Lows (LL): [aanwezig? uitleg]
+- Break of Structure (BOS): [recent BOS? richting?]
+- Change of Character (CHoCH): [trendwisseling zichtbaar?]
 
-  const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: €${amount}`;
-  const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch.";
+📊 INDICATOREN:
+- RSI: [niveau + interpretatie]
+- MA50/MA200: [positie + golden/death cross?]
+- Volume: [trend bevestiging?]
+- MACD: [crossover signaal?]
 
-  setChip('trend', 'running');
-  try {
-    const trend = await callClaude(
-      `Je bent een crypto trend-analyse AI. ${disclaimer} Analyseer de algemene markttrend voor de opgegeven coin. Bespreek: huidige marktfase (bull/bear/sideways), dominante technische indicatoren (RSI, MA, volume trends), en sentiment. Schrijf in het Nederlands, max 5 zinnen, geen bullet points.`,
-      context
-    );
-    document.getElementById('body-trend').textContent = trend;
-    setChip('trend', 'done');
-  } catch { document.getElementById('body-trend').textContent = "Fout."; }
+Schrijf in het Nederlands. Kort per punt.`,ctx);
+    document.getElementById('body-trend').textContent=t;
+    setChip('trend','done');
+  }catch(e){document.getElementById('body-trend').textContent="⚠️ "+e.message;setChip('trend','error');}
 
-  setChip('signal', 'running');
-  try {
-    const signal = await callClaude(
-      `Je bent een crypto trading signaal AI. ${disclaimer} Genereer een trading signaal voor de opgegeven situatie. Gebruik dit format:\n🟢 SIGNAAL: [BUY / SELL / HOLD]\n📍 Entry zone: [prijsrange]\n🎯 Take profit: [doel]\n🛑 Stop loss: [niveau]\n📊 Kans van slagen: [%]\n\nSchrijf in het Nederlands. Wees realistisch en voorzichtig.`,
-      context
-    );
-    document.getElementById('body-signal').textContent = signal;
-    setChip('signal', 'done');
-  } catch { document.getElementById('body-signal').textContent = "Fout."; }
+  // Entity 2: Candle Patterns
+  setChip('candle','running');
+  try{
+    const c=await callClaude(`Je bent een expert candlestick patroon analist. ${disc}
+Analyseer candlestick patronen en prijsstructuur. Gebruik dit format:
 
-  setChip('risk', 'running');
-  try {
-    const riskRes = await callClaude(
-      `Je bent een crypto risico-analyse AI. ${disclaimer} Beoordeel de risico's voor deze trade. Gebruik dit format:\n⚠️ Risico niveau: [LAAG / MEDIUM / HOOG / EXTREEM]\n💸 Max verlies bij €${amount}: [bedrag]\n🔍 Risicofactoren:\n- [factor 1]\n- [factor 2]\n- [factor 3]\n\nSchrijf in het Nederlands.`,
-      context
-    );
-    document.getElementById('body-risk').textContent = riskRes;
-    setChip('risk', 'done');
-  } catch { document.getElementById('body-risk').textContent = "Fout."; }
+🕯️ RECENTE CANDLESTICK PATRONEN:
+- Dominante patroon: [naam + bullish/bearish]
+- Bevestigingscandle: [Ja/Nee]
 
-  setChip('advice', 'running');
-  try {
-    const advice = await callClaude(
-      `Je bent een crypto trade advisor AI. ${disclaimer} Geef concreet, praktisch advies voor iemand die €${amount} wil investeren in ${coin} voor ${timeframe} met een ${risk} risicoprofiel. Bespreek: of dit een goed moment is, hoe te spreiden, wanneer te handelen, en 1 belangrijke waarschuwing. Max 6 zinnen. Schrijf in het Nederlands.`,
-      context
-    );
-    document.getElementById('body-advice').textContent = advice;
-    setChip('advice', 'done');
-  } catch { document.getElementById('body-advice').textContent = "Fout."; }
+🔍 PATRONEN CHECKLIST:
+- Doji / Spinning Top: [gezien? Onzekerheid in markt?]
+- Engulfing Bull/Bear: [actief patroon?]
+- Hammer / Inverted Hammer: [bodem signaal?]
+- Shooting Star / Hanging Man: [top signaal?]
+- Morning Star / Evening Star: [3-candle reversal?]
+- Pinbar / Rejection Wick: [sterke afwijzing op niveau?]
+- Inside Bar: [consolidatie of uitbraak pending?]
+- Marubozu: [sterke momentum candle?]
 
-  document.getElementById('payLog').style.display = 'block';
-  btn.disabled = false;
-  btn.textContent = '⬡ NIEUW SIGNAAL GENEREREN';
+📐 PRIJSSTRUCTUUR:
+- Nearest support: [zone]
+- Nearest resistance: [zone]
+- Patroon: [driehoek / vlag / wig / kanaal / geen]
+- Verwachte uitbraak: [omhoog / omlaag / onduidelijk]
+
+Schrijf in het Nederlands.`,ctx);
+    document.getElementById('body-candle').textContent=c;
+    setChip('candle','done');
+  }catch(e){document.getElementById('body-candle').textContent="⚠️ "+e.message;setChip('candle','error');}
+
+  // Entity 3: Fibonacci
+  setChip('fib','running');
+  try{
+    const f=await callClaude(`Je bent een Fibonacci expert. ${disc}
+Analyseer Fibonacci niveaus voor de opgegeven coin. Gebruik dit format:
+
+📐 FIBONACCI RETRACEMENT (recente swing):
+- Swing High: [geschatte prijs]
+- Swing Low: [geschatte prijs]
+- 23.6%: [prijs] — [status]
+- 38.2%: [prijs] — [sterke zone?]
+- 50.0%: [prijs] — [psychologisch niveau]
+- 61.8%: [prijs] — [golden ratio — sterkste?]
+- 78.6%: [prijs] — [diep retracement]
+
+🎯 FIBONACCI EXTENSIE (price targets):
+- 127.2%: [prijs] — [eerste target]
+- 161.8%: [prijs] — [hoofd target]
+- 200.0%: [prijs] — [maximaal doel]
+
+⚡ CONFLUENCE ZONES:
+- Sterkste koopzone: [Fib niveau + reden]
+- Sterkste verkoopzone: [Fib niveau + reden]
+- Huidige prijs t.o.v. Fib: [positie]
+- Golden Pocket (61.8-65%): [relevante zone nu?]
+
+Schrijf in het Nederlands. Gebruik realistische prijsschattingen.`,ctx);
+    document.getElementById('body-fib').textContent=f;
+    setChip('fib','done');
+  }catch(e){document.getElementById('body-fib').textContent="⚠️ "+e.message;setChip('fib','error');}
+
+  // Entity 4: Signal Generator
+  setChip('signal','running');
+  try{
+    const s=await callClaude(`Je bent een crypto trading signaal AI. ${disc}
+Genereer een concreet trading signaal op basis van trend, candlestick patronen en Fibonacci. Gebruik dit format:
+
+🟢 SIGNAAL: [STRONG BUY / BUY / HOLD / SELL / STRONG SELL]
+⚡ BIAS: [Bullish / Bearish / Neutraal]
+🎯 CONFLUENCES:
+- [technische reden 1]
+- [technische reden 2]
+- [technische reden 3]
+
+📍 ENTRY:
+- Entry zone: [prijsrange]
+- Entry type: [Market / Limit / Stop-limit]
+- Wachten op: [bevestiging — welk signaal/candle]
+
+🎯 TARGETS:
+- TP1 (conservatief): [prijs]
+- TP2 (normaal): [prijs]
+- TP3 (maximaal): [prijs]
+
+🛑 STOP LOSS:
+- Stop loss: [prijs]
+- Invalidatie: [onder welk niveau is setup ongeldig]
+
+📊 STATISTIEKEN:
+- Risk/Reward: [x:1]
+- Kans van slagen: [%]
+- Signaalsterkte: [1-10]/10
+
+Schrijf in het Nederlands.`,ctx);
+    document.getElementById('body-signal').textContent=s;
+    setChip('signal','done');
+  }catch(e){document.getElementById('body-signal').textContent="⚠️ "+e.message;setChip('signal','error');}
+
+  // Entity 5: Risk Assessor
+  setChip('risk','running');
+  try{
+    const rv=await callClaude(`Je bent een crypto risico-analyse AI. ${disc}
+Beoordeel de risico's inclusief marktstructuur risico's. Gebruik dit format:
+
+⚠️ RISICO NIVEAU: [LAAG / MEDIUM / HOOG / EXTREEM]
+💸 MAX VERLIES bij €${amount}: [bedrag bij stop loss]
+
+🔍 TECHNISCHE RISICOFACTOREN:
+- Marktstructuur: [trend intact of gebroken?]
+- Fib invalidatie: [onder welke prijs is analyse ongeldig]
+- Candle bevestiging: [sterk / zwak / ontbreekt]
+- Volume: [bevestigt beweging?]
+
+⚡ EXTERNE RISICOFACTOREN:
+- Marktbreed risico: [BTC dominantie / sentiment]
+- Liquiditeitszones: [grote liquidaties nabij?]
+- Tijdsrisico: [weekend / news / opties expiry]
+
+🛡️ RISICOBEHEER:
+- Max positiegrootte: [% van portfolio]
+- DCA mogelijk: [ja/nee + niveaus]
+- Hedge optie: [short hedge of stable aanhouden?]
+
+Schrijf in het Nederlands.`,ctx);
+    document.getElementById('body-risk').textContent=rv;
+    setChip('risk','done');
+  }catch(e){document.getElementById('body-risk').textContent="⚠️ "+e.message;setChip('risk','error');}
+
+  // Entity 6: Trade Advisor
+  setChip('advice','running');
+  try{
+    const a=await callClaude(`Je bent een crypto trade advisor AI. ${disc}
+Geef een volledig concreet actieplan. Gebruik dit format:
+
+✅ SAMENVATTING: [1 zin: overall beeld en aanbeveling]
+
+📋 ACTIEPLAN:
+1. [Eerste concrete stap — nu meteen]
+2. [Tweede stap — wanneer en wat]
+3. [Exit strategie — hoe en wanneer]
+
+⏰ TIMING:
+- Beste instapmoment: [wanneer / op welk niveau]
+- Geduld tot: [welk niveau of signaal]
+- Vermijd handelen als: [welke situatie]
+
+💡 PRO TIPS:
+- Fibonacci: [specifieke actie op basis van Fib zones]
+- Candle: [welk patroon wachten als bevestiging]
+- Structuur: [HH/HL bevestiging of BOS wachten?]
+
+⚠️ WAARSCHUWING: [1 kritieke waarschuwing specifiek voor dit scenario]
+
+Schrijf in het Nederlands. Max 220 woorden.`,ctx);
+    document.getElementById('body-advice').textContent=a;
+    setChip('advice','done');
+  }catch(e){document.getElementById('body-advice').textContent="⚠️ "+e.message;setChip('advice','error');}
+
+
+  // Entity 7: Leverage Advisor
+  setChip('lev','running');
+  try{
+    const lv=await callClaude(`Je bent een crypto leverage trading expert. ${disc}
+Beoordeel of een leverage trade interessant is voor deze situatie. Gebruik dit format:
+
+⚡ LEVERAGE ADVIES: [STERK AAN TE RADEN / AAN TE RADEN / NEUTRAAL / AFGERADEN / STERK AFGERADEN]
+
+📊 LEVERAGE GESCHIKTHEID:
+- Trendsterkte: [sterk/matig/zwak — leverage werkt beter bij sterke trends]
+- Volatiliteit: [laag/matig/hoog — hoge vol = lager leverage]
+- Marktstructuur: [duidelijk/onduidelijk — duidelijk = beter voor leverage]
+- Volume bevestiging: [ja/nee]
+- Momentum: [sterk/zwak]
+
+🎯 AANBEVOLEN LEVERAGE:
+- Conservatief: [2x-3x] — geschikt voor risicoprofiel ${risk}
+- Normaal: [3x-5x]
+- Maximaal verantwoord: [5x-10x]
+- NIET hoger dan: [niveau + reden]
+
+💰 POSITIEBEREKENING bij €${amount}:
+- Bij 2x leverage: [totale positie] | liquidatieprijs: [schatting]
+- Bij 5x leverage: [totale positie] | liquidatieprijs: [schatting]
+- Bij 10x leverage: [totale positie] | liquidatieprijs: [schatting]
+
+⚠️ LIQUIDATIERISICO:
+- Afstand tot liquidatie (5x): [% daling nodig]
+- Funding rate impact: [positief/negatief bij huidige markt]
+- Aanbevolen margin type: [Isolated / Cross — uitleg waarom]
+
+🛡️ LEVERAGE RISICOBEHEER:
+- Max verlies scenario: [bij stop loss + leverage]
+- Wanneer leverage VERMIJDEN: [specifieke marktomstandigheden nu]
+- Alternatief advies: [spot trade beter? wanneer?]
+
+Schrijf in het Nederlands. Wees eerlijk over risico's.`,ctx);
+    document.getElementById('body-lev').textContent=lv;
+    setChip('lev','done');
+  }catch(e){document.getElementById('body-lev').textContent="⚠️ "+e.message;setChip('lev','error');}
+
+  document.getElementById('payLog').style.display='block';
+  btn.disabled=false;
+  btn.textContent='⬡ NIEUW SIGNAAL GENEREREN';
 }
 </script>
 </body>
