@@ -5,28 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Crypto Trading Signals</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00ff88">
+<meta name="theme-color" content="#1a6bff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Signals">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="description" content="AI crypto trading signalen">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Dancing+Script:wght@600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap');
 
   :root {
-    --bg: #0e0a08;
-    --surface: #160f0a;
-    --card: #1c1410;
-    --border: #2a1f16;
-    --green: #00ff88;
+    --bg: #f4f6fa;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --border: #e0e4ef;
+    --border-dark: #c8cedf;
+    --blue: #1a6bff;
+    --blue-light: #e8f0ff;
+    --blue-mid: #4d8eff;
+    --green: #00b96b;
+    --green-light: #e6f9f1;
     --red: #ff3355;
-    --yellow: #ffcc00;
-    --blue: #00aaff;
-    --text: #e8eaf0;
-    --muted: #7a6358;
-    --gold: #ffaa00;
-    --coffee: #c8956c;
+    --red-light: #fff0f3;
+    --gold: #e8920a;
+    --gold-light: #fff7e6;
+    --purple: #7c3aed;
+    --purple-light: #f3eeff;
+    --text: #0f1523;
+    --text-mid: #3a4560;
+    --muted: #8a94b0;
+    --header-bg: #1a6bff;
+    --header-text: #ffffff;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,92 +47,116 @@
     min-height: 100vh;
   }
 
-  /* Scanline effect */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(200,149,108,0.008) 2px,
-      rgba(200,149,108,0.008) 4px
-    );
-    pointer-events: none;
-    z-index: 999;
+  /* Blue header bar */
+  .header-bar {
+    background: var(--header-bg);
+    padding: 0 1.2rem;
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: 1.2rem;
   }
 
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .topbar-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .topbar-logo span {
+    color: #ffd166;
+  }
+
+  .made-by {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.85);
+    margin-top: 1px;
+  }
+
+  .topbar-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+    margin-top: 2px;
+  }
+
+  .header-badges {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-end;
+  }
+
+  .topbar-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.12);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  /* WRAP */
   .wrap {
     max-width: 860px;
     margin: 0 auto;
-    padding: 1.5rem 1.2rem 4rem;
-    padding-top: max(1.5rem, env(safe-area-inset-top));
+    padding: 1.2rem 1.2rem 4rem;
     padding-bottom: max(4rem, env(safe-area-inset-bottom));
   }
 
+  /* Install Banner */
   #installBanner {
     display: none;
-    background: rgba(0,255,136,0.07);
-    border: 1px solid rgba(0,255,136,0.2);
-    border-radius: 8px;
+    background: var(--blue-light);
+    border: 1px solid rgba(26,107,255,0.25);
+    border-radius: 10px;
     padding: 0.75rem 1rem;
     margin-bottom: 1rem;
     align-items: center;
     gap: 0.8rem;
   }
   #installBanner.show { display: flex; }
-  #installBanner p { font-size: 0.72rem; color: var(--text); flex: 1; line-height: 1.4; font-family: 'IBM Plex Mono', monospace; }
-  #installBanner p span { color: var(--green); }
-  .install-btn { background: var(--green); color: #000; border: none; border-radius: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 700; padding: 6px 12px; cursor: pointer; letter-spacing: 0.06em; white-space: nowrap; }
+  #installBanner p { font-size: 0.72rem; color: var(--text-mid); flex: 1; line-height: 1.4; font-family: 'IBM Plex Mono', monospace; }
+  #installBanner p span { color: var(--blue); font-weight: 700; }
+  .install-btn { background: var(--blue); color: #fff; border: none; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 700; padding: 7px 14px; cursor: pointer; letter-spacing: 0.06em; white-space: nowrap; }
   .dismiss-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 4px; }
 
-  /* TOP BAR */
-  .topbar {
+  /* FIAS Strip */
+  #fiasStrip {
+    background: var(--purple-light);
+    border: 1px solid rgba(124,58,237,0.18);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
+    gap: 1.2rem;
+    flex-wrap: wrap;
   }
 
-  .topbar-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    color: var(--coffee);
-    letter-spacing: 0.05em;
-    line-height: 1;
-    text-shadow: 0 0 20px rgba(200,149,108,0.5);
-  }
-
-  .topbar-sub {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--muted);
-    letter-spacing: 0.12em;
-    line-height: 1.6;
-  }
-
-  .made-by {
-    font-family: 'Dancing Script', cursive;
-    font-size: 1.1rem;
-    color: var(--coffee);
-    opacity: 0.75;
-    margin-top: 2px;
-    letter-spacing: 0.02em;
-  }
-
-  .topbar-badge {
-    margin-left: auto;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--green);
-    border: 1px solid rgba(0,255,136,0.3);
-    padding: 4px 10px;
-    border-radius: 3px;
-    background: rgba(0,255,136,0.05);
-    letter-spacing: 0.08em;
+  /* API Key section */
+  #apiKeySection {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
   }
 
   /* COIN SELECTOR */
@@ -137,17 +170,18 @@
   .input-group {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
 
   .input-label {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     color: var(--muted);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
     display: block;
   }
 
@@ -156,16 +190,16 @@
     background: transparent;
     border: none;
     color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
     font-weight: 600;
     outline: none;
     cursor: pointer;
   }
 
-  select option { background: #111; }
+  select option { background: #fff; color: #0f1523; }
 
-  /* TASK TREE */
+  /* ENTITY CHIPS */
   .entity-row {
     display: flex;
     gap: 0.5rem;
@@ -178,9 +212,9 @@
     align-items: center;
     gap: 0.35rem;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: 5px;
     border: 1px solid var(--border);
     color: var(--muted);
     background: var(--card);
@@ -191,25 +225,26 @@
   .entity-chip .led {
     width: 5px; height: 5px;
     border-radius: 50%;
-    background: var(--muted);
+    background: var(--border-dark);
     transition: all 0.25s;
   }
 
   .entity-chip.running {
-    border-color: var(--green);
-    color: var(--green);
-    background: rgba(0,255,136,0.06);
+    border-color: var(--blue);
+    color: var(--blue);
+    background: var(--blue-light);
   }
   .entity-chip.running .led {
-    background: var(--green);
-    box-shadow: 0 0 6px var(--green);
+    background: var(--blue);
+    box-shadow: 0 0 6px var(--blue);
     animation: blink 0.8s infinite;
   }
   .entity-chip.done {
-    border-color: rgba(0,255,136,0.3);
-    color: rgba(0,255,136,0.6);
+    border-color: rgba(0,185,107,0.4);
+    color: var(--green);
+    background: var(--green-light);
   }
-  .entity-chip.done .led { background: rgba(0,255,136,0.4); }
+  .entity-chip.done .led { background: var(--green); }
 
   @keyframes blink {
     0%,100% { opacity:1; } 50% { opacity:0.2; }
@@ -218,40 +253,43 @@
   /* ANALYZE BTN */
   .analyze-btn {
     width: 100%;
-    background: transparent;
-    border: 1px solid var(--green);
-    color: var(--green);
+    background: var(--blue);
+    border: none;
+    color: #ffffff;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.3rem;
     letter-spacing: 0.15em;
-    padding: 0.75rem;
-    border-radius: 6px;
+    padding: 0.85rem;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 0 20px rgba(0,255,136,0.1);
+    margin-bottom: 1.2rem;
+    box-shadow: 0 4px 14px rgba(26,107,255,0.3);
   }
 
   .analyze-btn:hover:not(:disabled) {
-    background: rgba(0,255,136,0.08);
-    box-shadow: 0 0 30px rgba(0,255,136,0.25);
+    background: #1558e0;
+    box-shadow: 0 6px 20px rgba(26,107,255,0.4);
+    transform: translateY(-1px);
   }
 
   .analyze-btn:disabled {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 
-  /* RESULTS GRID */
+  /* RESULTS */
   .results { display: none; flex-direction: column; gap: 0.8rem; }
   .results.visible { display: flex; }
 
   .result-card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     animation: fadeUp 0.35s ease both;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
 
   @keyframes fadeUp {
@@ -265,43 +303,45 @@
     gap: 0.6rem;
     padding: 0.7rem 1rem;
     border-bottom: 1px solid var(--border);
-    background: rgba(255,255,255,0.015);
+    background: #fafbfd;
   }
 
   .card-tag {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.1em;
+    font-size: 0.56rem;
+    letter-spacing: 0.08em;
     padding: 3px 7px;
-    border-radius: 3px;
+    border-radius: 4px;
+    font-weight: 700;
   }
 
-  .tag-trend  { background: rgba(0,170,255,0.12); color: var(--blue);   border: 1px solid rgba(0,170,255,0.3); }
-  .tag-signal { background: rgba(0,255,136,0.1);  color: var(--green);  border: 1px solid rgba(0,255,136,0.3); }
-  .tag-risk   { background: rgba(255,51,85,0.1);  color: var(--red);    border: 1px solid rgba(255,51,85,0.3); }
-  .tag-advice { background: rgba(255,204,0,0.1);  color: var(--yellow); border: 1px solid rgba(255,204,0,0.3); }
+  .tag-trend  { background: var(--blue-light);   color: var(--blue);   border: 1px solid rgba(26,107,255,0.2); }
+  .tag-signal { background: var(--green-light);  color: var(--green);  border: 1px solid rgba(0,185,107,0.25); }
+  .tag-risk   { background: var(--red-light);    color: var(--red);    border: 1px solid rgba(255,51,85,0.2); }
+  .tag-advice { background: var(--gold-light);   color: var(--gold);   border: 1px solid rgba(232,146,10,0.25); }
 
   .card-title {
     font-size: 0.82rem;
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--text);
     flex: 1;
   }
 
   .pay-chip {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.58rem;
+    font-size: 0.56rem;
     color: var(--gold);
-    background: rgba(255,170,0,0.08);
-    border: 1px solid rgba(255,170,0,0.2);
+    background: var(--gold-light);
+    border: 1px solid rgba(232,146,10,0.2);
     padding: 3px 7px;
-    border-radius: 3px;
+    border-radius: 4px;
   }
 
   .card-body {
     padding: 1rem;
-    font-size: 0.83rem;
+    font-size: 0.84rem;
     line-height: 1.75;
-    color: #b0b8d0;
+    color: var(--text-mid);
     font-family: 'DM Sans', sans-serif;
     white-space: pre-wrap;
     min-height: 60px;
@@ -311,7 +351,7 @@
   .dots { display: inline-flex; gap: 5px; }
   .dots span {
     width: 5px; height: 5px;
-    background: var(--green);
+    background: var(--blue);
     border-radius: 50%;
     animation: blink 1s infinite;
   }
@@ -321,20 +361,21 @@
   /* Disclaimer */
   .disclaimer {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.58rem;
+    font-size: 0.57rem;
     color: var(--muted);
     text-align: center;
-    padding: 0.6rem;
+    padding: 0.65rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    line-height: 1.6;
+    border-radius: 8px;
+    line-height: 1.7;
+    background: var(--card);
   }
 
   /* Payment log */
   .pay-log {
-    background: var(--card);
-    border: 1px solid rgba(255,170,0,0.15);
-    border-radius: 8px;
+    background: var(--gold-light);
+    border: 1px solid rgba(232,146,10,0.2);
+    border-radius: 10px;
     padding: 0.9rem 1rem;
     animation: fadeUp 0.35s ease both;
   }
@@ -346,23 +387,39 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 0.6rem;
+    font-weight: 700;
   }
 
   .pay-row {
     display: flex;
     justify-content: space-between;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.65rem;
+    font-size: 0.63rem;
     padding: 4px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(232,146,10,0.12);
   }
   .pay-row:last-child { border: none; }
-  .pay-row .name { color: var(--muted); }
-  .pay-row .amt  { color: var(--gold); }
+  .pay-row .name { color: var(--text-mid); }
+  .pay-row .amt  { color: var(--gold); font-weight: 600; }
   .pay-row .ok   { color: var(--green); font-size: 0.55rem; }
 </style>
 </head>
 <body>
+
+<!-- Blue Header Bar -->
+<div class="header-bar">
+  <div class="header-inner">
+    <div>
+      <div class="topbar-logo">SIGNAL<span>SP</span></div>
+      <div class="made-by">Made by Rob Borghouts</div>
+      <div class="topbar-sub">FIAS ARCHE · CRYPTO TRADING SIGNALS · AI ENTITIES</div>
+    </div>
+    <div class="header-badges">
+      <div class="topbar-badge">⬡ FIAS v0.1</div>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
 
   <!-- PWA Install Banner -->
@@ -372,57 +429,35 @@
     <button class="dismiss-btn" onclick="dismissInstall()">✕</button>
   </div>
 
-  <!-- Header -->
-  <div class="topbar">
-    <div>
-      <div class="topbar-logo">SIGNAL</div>
-      <div class="made-by">Made by Rob Borghouts</div>
-      <div class="topbar-sub">FIAS ARCHE · CRYPTO TRADING SIGNALS<br>POWERED BY AI ENTITIES</div>
-    </div>
-    <div class="topbar-badge">⬡ FIAS v0.1</div>
-  </div>
-
   <!-- FIAS Ecosystem Strip -->
-  <div id="fiasStrip" style="
-    display:flex; align-items:center; gap:1.2rem;
-    background: rgba(153,102,255,0.07);
-    border: 1px solid rgba(153,102,255,0.18);
-    border-radius: 8px; padding: 0.6rem 1rem;
-    margin-bottom: 1rem; flex-wrap: wrap;
-  ">
-    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#9966ff; letter-spacing:0.1em;">⬡ FIAS ECOSYSTEM</span>
-    <div style="display:flex; gap:1.2rem; flex:1; flex-wrap:wrap;">
+  <div id="fiasStrip">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#7c3aed; letter-spacing:0.1em; font-weight:700;">⬡ FIAS ECOSYSTEM</span>
+    <div style="display:flex; gap:1.4rem; flex:1; flex-wrap:wrap;">
       <div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); letter-spacing:0.08em;">FIAS TOKEN</div>
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:1rem; color:#9966ff;" id="s-fiasPrice">⬡ Platform</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.54rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">FIAS TOKEN</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:1.05rem; color:#7c3aed;" id="s-fiasPrice">⬡ Platform</div>
       </div>
       <div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); letter-spacing:0.08em;">DevvE TOKEN</div>
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:1rem; color:var(--green);" id="s-devvePrice">laden...</div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem;" id="s-devveChange">—</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.54rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">DevvE TOKEN</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:1.05rem; color:var(--green);" id="s-devvePrice">laden...</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.54rem;" id="s-devveChange">—</div>
       </div>
     </div>
-    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.55rem; color:var(--muted); text-align:right; line-height:1.6;">
-      Payments via<br><span style="color:#9966ff">DevvX Blockchain</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.54rem; color:var(--muted); text-align:right; line-height:1.7;">
+      Payments via<br><span style="color:#7c3aed; font-weight:700;">DevvX Blockchain</span>
     </span>
   </div>
 
   <!-- API Key -->
-  <div id="apiKeySection" style="
-    background: var(--card);
-    border: 1px solid rgba(153,102,255,0.25);
-    border-radius: 8px;
-    padding: 0.9rem 1rem;
-    margin-bottom: 1rem;
-  ">
-    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#9966ff; letter-spacing:0.1em; margin-bottom:0.5rem;">⬡ ANTHROPIC API KEY</div>
+  <div id="apiKeySection">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:#7c3aed; letter-spacing:0.1em; margin-bottom:0.5rem; font-weight:700;">⬡ ANTHROPIC API KEY</div>
     <div style="display:flex; gap:0.5rem; align-items:center;">
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="flex:1; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; padding:8px 10px; outline:none;"
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="flex:1; background:#f7f8fc; border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; padding:9px 12px; outline:none;"
         oninput="saveApiKey(this.value)" />
-      <button onclick="toggleKey()" style="background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:0.65rem; padding:8px 10px; border-radius:6px; cursor:pointer;" id="toggleBtn">👁</button>
+      <button onclick="toggleKey()" style="background:#f7f8fc; border:1px solid var(--border); color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:0.65rem; padding:9px 12px; border-radius:8px; cursor:pointer;" id="toggleBtn">👁</button>
     </div>
-    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.58rem; color:var(--muted); margin-top:6px; line-height:1.5;">
-      Haal je key op via <a href="https://console.anthropic.com" target="_blank" style="color:#9966ff;">console.anthropic.com</a> · Wordt lokaal opgeslagen op jouw apparaat
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.57rem; color:var(--muted); margin-top:6px; line-height:1.5;">
+      Haal je key op via <a href="https://console.anthropic.com" target="_blank" style="color:#7c3aed;">console.anthropic.com</a> · Wordt lokaal opgeslagen op jouw apparaat
     </div>
   </div>
 
@@ -526,8 +561,8 @@
       <div class="pay-row"><span class="name">Signal Generator Entity</span><span class="amt">0.0022 FIAS</span><span class="ok">✓ SETTLED</span></div>
       <div class="pay-row"><span class="name">Risk Assessor Entity</span><span class="amt">0.0016 FIAS</span><span class="ok">✓ SETTLED</span></div>
       <div class="pay-row"><span class="name">Trade Advisor Entity</span><span class="amt">0.0019 FIAS</span><span class="ok">✓ SETTLED</span></div>
-      <div class="pay-row" style="border-top:1px solid rgba(255,170,0,0.15); margin-top:4px; padding-top:6px">
-        <span class="name" style="color:var(--text); font-weight:600">Totaal</span>
+      <div class="pay-row" style="border-top:1px solid rgba(232,146,10,0.2); margin-top:4px; padding-top:6px">
+        <span class="name" style="color:var(--text); font-weight:700;">Totaal</span>
         <span class="amt" style="font-size:0.75rem">0.0071 FIAS</span>
         <span class="ok">✓ COMPLEET</span>
       </div>
@@ -645,7 +680,6 @@ async function runAnalysis() {
   const context = `Coin: ${coin} | Tijdframe: ${timeframe} | Risicoprofiel: ${risk} | Investering: €${amount}`;
   const disclaimer = "Dit is uitsluitend educatief. Geef geen garanties. Wees realistisch.";
 
-  // Entity 1: Trend Analyzer
   setChip('trend', 'running');
   try {
     const trend = await callClaude(
@@ -656,7 +690,6 @@ async function runAnalysis() {
     setChip('trend', 'done');
   } catch { document.getElementById('body-trend').textContent = "Fout."; }
 
-  // Entity 2: Signal Generator
   setChip('signal', 'running');
   try {
     const signal = await callClaude(
@@ -667,7 +700,6 @@ async function runAnalysis() {
     setChip('signal', 'done');
   } catch { document.getElementById('body-signal').textContent = "Fout."; }
 
-  // Entity 3: Risk Assessor
   setChip('risk', 'running');
   try {
     const riskRes = await callClaude(
@@ -678,7 +710,6 @@ async function runAnalysis() {
     setChip('risk', 'done');
   } catch { document.getElementById('body-risk').textContent = "Fout."; }
 
-  // Entity 4: Trade Advisor
   setChip('advice', 'running');
   try {
     const advice = await callClaude(
